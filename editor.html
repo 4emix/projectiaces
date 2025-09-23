@@ -25,11 +25,11 @@
   </main>
 
   <script type="module">
-    import { createClient } from '@supabase/supabase-js'
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    const supabaseUrl = 'https://ffgtgeklexlsjrbqoobt.supabase.co'
-    const supabaseKey = process.env.SUPABASE_KEY
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabaseUrl = "https://ffgtgeklexlsjrbqoobt.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmZ3RnZWtsZXhsc2pyYnFvb2J0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MTE2MTIsImV4cCI6MjA3NDE4NzYxMn0.lCw-TWxoveaclVVEsqjTp9AQYyjZoaevU1OR1-eoN-c";
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // verify session
     const session = JSON.parse(sessionStorage.getItem("sb_session"));
