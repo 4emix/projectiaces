@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>IACES</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&family=Roboto:wght@500;700;900&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Topbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <img src="img/logos/iaces 01.png" style="width: 180px;" class="img-fluid mr-3">
+          </a>
+          
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <a href="Local Committes.html" class="nav-item nav-link">Local Committees</a>
+                <a href="events.html" class="nav-item nav-link active">Events</a>    
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Press Center</a>
+                    <div class="dropdown-menu fade-up m-0">
+                        <a href="magazine.html" class="dropdown-item">Magazine</a>
+                        <a href="newsletter.html" class="dropdown-item">Newsletters</a>
+                    </div>
+                </div>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Documents</a>
+                    <div class="dropdown-menu fade-up m-0">
+                        <a href="https://drive.google.com/file/d/11ee8BH5SNyl5OOdgqFX5hpoPdTG5-9YM/view" class="dropdown-item">Internal Regulations</a>
+                        <a href="https://drive.google.com/drive/u/2/folders/1jS1TtFn8FM3Ik0XPSUclqaXn6jBFG2lL" class="dropdown-item">Important For LC's</a>
+                        <a href="https://drive.google.com/drive/u/2/folders/11wFz_ucNcaXksAGOK6yXcNXrmhPh5f7E" class="dropdown-item">Important For IACES</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link">Contact</a>
+                <a href="https://forms.gle/SGMXd1UoVa4hhY5n8" class="nav-item nav-link">ACCESS'24 Applications</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Topbar End -->
+
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header-event py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Events</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Events Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="section-title text-center">
+                <h1 class="display-5 mb-5">Our Events</h1>
+            </div>
+            <div class="row mt-n2 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="col-12 text-center">
+                    <ul class="list-inline mb-5" id="portfolio-flters">
+                        <li class="mx-2 active" data-filter="*">All</li>
+                        <li class="mx-2" data-filter=".first">ACCESS</li>
+                        <li class="mx-2" data-filter=".second">MTM</li>
+                        <li class="mx-2" data-filter=".third">ICEC</li>
+                        <li class="mx-2" data-filter=".forth">Other</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row g-4 portfolio-container">
+                
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/ACCESS 23/Adsız tasarım (18).png" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/ACCESS 23/Adsız tasarım (18).png" data-lightbox="ac23"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/ACCESS 23/B52160A7-A419-4545-BB91-8EDF0C1BF27D.jpg" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/DSCF5378-1.JPG" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_0833.JPG" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_0852.JPG" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_20231015_193750.jpg" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_3141.JPG" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_3208.JPG" data-lightbox="ac23"></a>
+                                <a href="img/photos/ACCESS 23/IMG_5755.JPG" data-lightbox="ac23"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important" >Ankara, Turkey</p>
+                            <h5 class="lh-base mb-0">ACCESS'23</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/MTM 23/IMG_1215.JPG" style="width: 400px; height:300px; object-fit: cover;"  alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/MTM 23/IMG_1215.JPG" data-lightbox="mtm23"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/MTM 23/_MG_8903.JPG" data-lightbox="mtm23"></a>
+                                <a href="img/photos/MTM 23/_MG_8917.JPG" data-lightbox="mtm23"></a>
+                                <a href="img/photos/MTM 23/be690439-5d1d-469c-b62e-0b3c1f376d66.jpg" data-lightbox="mtm23"></a>
+                                <a href="img/photos/MTM 23/dre_poseta-studenata-sc_29-04-23-016.jpg" data-lightbox="mtm23"></a>
+                                <a href="img/photos/MTM 23/dre_poseta-studenata-sc_29-04-23-018.jpg" data-lightbox="mtm23"></a>
+                                <a href="img/photos/MTM 23/dre_poseta-studenata-sc_29-04-23-059.jpg" data-lightbox="mtm23"></a>
+                                
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Belgrade, Serbia</p>
+                            <h5 class="lh-base mb-0">MTM'23</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item third wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/ICEC 23/IMG_0037.JPG" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/ICEC 23/IMG_0037.JPG" data-lightbox="ic23"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/ICEC 23/IMG-20230724-WA0001(1).jpg" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0023.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0043.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0078.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0098.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0148.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0247.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_0266.JPG" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_1147.jpg" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_1169.jpg" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_1197.jpg" data-lightbox="ic23"></a>
+                                <a href="img/photos/ICEC 23/IMG_2949.JPG" data-lightbox="ic23"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Porto, Portugal</p>
+                            <h5 class="lh-base mb-0">ICEC'23</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/ACCESS 22/20221001_152931.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/ACCESS 22/20221001_152931.jpg" data-lightbox="ac22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/ACCESS 22/20221001_232355.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/20221002_203139.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/IMG_5452.jpg  " data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/20221004_200948.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/20221005_131220.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/6CE0BE7E-491D-426F-89D7-5C45FA9773DE.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/DSC_1035.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/IMG_20221001_214256.jpg" data-lightbox="ac22"></a>
+                                <a href="img/photos/ACCESS 22/IMG_20221005_153745.jpg" data-lightbox="ac22"></a>
+
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Cairo, Egypt</p>
+                            <h5 class="lh-base mb-0">ACCESS ’22</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/MTM 22/GOPR0647.JPG" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/MTM 22/GOPR0647.JPG" data-lightbox="mtm22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/MTM 22/1649617720509.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/1649617720720.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220321_094617.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220321_171838.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220321_174015.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220321_234900.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220323_193419.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/20220326_094311-1.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/IMG-20220323-WA0035.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/IMG-20220324-WA0143.jpg" data-lightbox="mtm22"></a>
+                                <a href="img/photos/MTM 22/IMG20220321225621.jpg" data-lightbox="mtm22"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Budapest, Hungary</p>
+                            <h5 class="lh-base mb-0">MTM ’22</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item third wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/ICEC 22/IMG_6384.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/ICEC 22/IMG_6384.jpg" data-lightbox="ic22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/ICEC 22/IMG_20220720_161627.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6287.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6345.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6384.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6398.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6583.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6608.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6654.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_6782.jpg" data-lightbox="ic22"></a>
+                                <a href="img/photos/ICEC 22/IMG_7196.jpg" data-lightbox="ic22"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Timisoara, Romania</p>
+                            <h5 class="lh-base mb-0">ICEC ’22</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item first wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/ACCESS 21/DSC_0120.JPG" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/ACCESS 21/DSC_0120.JPG" data-lightbox="ac21"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/ACCESS 21/20211005_142216.jpg" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/20211008_160726.jpg" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/DSC_0112.JPG" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/DSC_0120.JPG" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/DSC_0266-1.JPG" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/DSC_0391.JPG" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/DSC_0527.JPG" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/IMG-20211003-WA0083.jpg" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/IMG-20211011-WA0027.jpg" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/IMG-20211011-WA0042.jpg" data-lightbox="ac21"></a>
+                                <a href="img/photos/ACCESS 21/IMG_3278.JPG" data-lightbox="ac21"></a> 
+                                <a href="img/photos/ACCESS 21/P1360648.JPG" data-lightbox="ac21"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Belgrade, Serbia</p>
+                            <h5 class="lh-base mb-0">ACCESS ’21</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item second wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/MTM 21-ICEC 21/20210726_214211.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/MTM 21-ICEC 21/20210726_214211.jpg" data-lightbox="mtm21"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_211539.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_220044.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_220911.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/2b624ddb-e4ca-4881-94d4-5a7fbf89ebf3.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/3237a7e1-67d4-4772-aeb0-bf66c153ab5a.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/392e34a5-b0ab-4d5e-bba4-4ab91d84d6bc.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/4bc3cd2f-975b-4fb3-9b02-a5f80fbddb52.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/54e1d6cf-e8b1-41d8-b237-a8f2d92266b7.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/6ce5c575-9e1b-497f-99f2-00e30ce9e0d5.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/779fb008-28db-4346-8e55-b69d2dbece37.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/87c779c5-2d07-47e6-ac14-67de67166dcf.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_20210728_154542.jpg" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8011.JPG" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8066.JPG" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8134.JPG" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8159.JPG" data-lightbox="mtm21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/PHOTO-2021-08-01-00-55-29.jpg" data-lightbox="mtm21"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Ankara, Turkey</p>
+                            <h5 class="lh-base mb-0">MTM ’21</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item third wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/MTM 21-ICEC 21/2b624ddb-e4ca-4881-94d4-5a7fbf89ebf3.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/MTM 21-ICEC 21/2b624ddb-e4ca-4881-94d4-5a7fbf89ebf3.jpg" data-lightbox="ic21"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_211539.jpg" data-lightbox=""></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_214211.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_220044.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/20210726_220911.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/2b624ddb-e4ca-4881-94d4-5a7fbf89ebf3.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/3237a7e1-67d4-4772-aeb0-bf66c153ab5a.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/392e34a5-b0ab-4d5e-bba4-4ab91d84d6bc.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/4bc3cd2f-975b-4fb3-9b02-a5f80fbddb52.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/54e1d6cf-e8b1-41d8-b237-a8f2d92266b7.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/6ce5c575-9e1b-497f-99f2-00e30ce9e0d5.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/779fb008-28db-4346-8e55-b69d2dbece37.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/87c779c5-2d07-47e6-ac14-67de67166dcf.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_20210728_154542.jpg" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8011.JPG" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8066.JPG" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8134.JPG" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/IMG_8159.JPG" data-lightbox="ic21"></a>
+                                <a href="img/photos/MTM 21-ICEC 21/PHOTO-2021-08-01-00-55-29.jpg" data-lightbox="ic21"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Ankara, Turkey</p>
+                            <h5 class="lh-base mb-0">ICEC ’21</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/LC Meets LC/COVER.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/COVER.jpg" data-lightbox="lyon23"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7320.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7384.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7395.jpg" data-lightbox="lyon23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7529.jpg" data-lightbox="lyon23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7537.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7593.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7692.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7907.jpg" data-lightbox="lyon23"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/LC Meets LC/_DSC7908.jpg" data-lightbox="lyon23"></a> 
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Lyon LC Meets LC</p>
+                            <h5 class="lh-base mb-0">Lyon ’23</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-crazy-88-pubquiz005.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-crazy-88-pubquiz005.jpg" data-lightbox="delft23"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-crazy-88-pubquiz001.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-crazy-88-pubquiz002.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-crazy-88-pubquiz007.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-internationals-night-003.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-internationals-night-004.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-internationals-night-007.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-29-iaces-internationals-night-024.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-31-iaces-excursie-002.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-31-iaces-excursie-007.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-31-iaces-excursie-009.jpg" data-lightbox="delft23"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Delft/2023-05-31-iaces-excursie-013.jpg" data-lightbox="delft23"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Delft International Event</p>
+                            <h5 class="lh-base mb-0">Delft ’23</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_20221204_091446.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_20221204_091446.jpg" data-lightbox="lyon22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/20221204_095644(0).jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/Adsız tasarım (17).png" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG20221209142154.jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_1030.jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_1094.jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_1132.jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_20221207_003731472.jpg" data-lightbox="lyon22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Lyon/IMG_20221208_114235372.jpg" data-lightbox="lyon22"></a>
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Lyon en Lumière</p>
+                            <h5 class="lh-base mb-0">Lyon ’22</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/Cairo/26103C4C-E39B-4245-9C88-229CB32DBA68.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/Cairo/26103C4C-E39B-4245-9C88-229CB32DBA68.jpg" data-lightbox="cairo22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220205_235255.jpg" data-lightbox="cairo22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220206_182006.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220206_190806.jpg" data-lightbox="cairo22"></a>  
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220206_223946.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220206_225156.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220207_163011.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220207_165300.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220210_131046.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220210_131705.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220210_163654(0).jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/20220210_164419.jpg" data-lightbox="cairo22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Cairo/IACES Event 2022 - Degla-29.jpg" data-lightbox="cairo22"></a> 
+
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Cairo Streets</p>
+                            <h5 class="lh-base mb-0">Cairo ’22</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06697.JPG" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06697.JPG"    data-lightbox="thessaloniki22"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/20220523_102428.jpg" data-lightbox="thessaloniki22"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/20220525_162423.jpg" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/20220529_200212.jpg" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06358.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06363.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06378.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06389.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06408.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06557.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06697.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Thessaloniki/DSC06844.JPG" data-lightbox="thessaloniki22"></a> 
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">Cities with no limits</p>
+                            <h5 class="lh-base mb-0">Thessaloniki ’22</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/IMG_9626.jpg" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/IMG_9626.jpg"    data-lightbox="istanbuild24"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/20240227_144128.jpg" data-lightbox="istanbuild24"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/DSC_0006 (2).jpg" data-lightbox="istanbuild24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/DSC_0099 (2).jpg" data-lightbox="istanbuild24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/DSC_0248 (1).jpg" data-lightbox="istanbuild24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/IstanBuild 24/DSC_0750.jpg" data-lightbox="istanbuild24"></a> 
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">IstanBuild</p>
+                            <h5 class="lh-base mb-0">İstanbul '24</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 portfolio-item forth wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="rounded overflow-hidden">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="img/photos/INTERNATIONAL EVENTS/Mostar/COVER.JPG" style="width: 400px; height:300px; object-fit: cover;" alt="">
+                            <div class="portfolio-overlay">     
+                                <a class="btn btn-square btn-outline-light mx-1" href="img/photos/INTERNATIONAL EVENTS/Mostar/COVER.JPG"    data-lightbox="mostar24"><i class="fa fa-eye"></i></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6512.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6513.JPG" data-lightbox="mostar24"></a>
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6514.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6515.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6516.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6517.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6518.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6519.JPG" data-lightbox="mostar24"></a> 
+                                <a href="img/photos/INTERNATIONAL EVENTS/Mostar/IMG_6520.JPG" data-lightbox="mostar24"></a> 
+
+                                <a class="btn btn-square btn-outline-light mx-1" href=""><i class="fa fa-link"></i></a>
+                            </div>
+                        </div>
+                        <div class="border border-5 border-light border-top-0 p-4">
+                            <p class="text-primary fw-medium mb-2" style="color:#353535 !important">LC Meets LC Mostar'24</p>
+                            <h5 class="lh-base mb-0">Mostar'24</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Events End -->
+        
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Address</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Stevinweg 1, 2628 CN Delft, Holland</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>iacesboard@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href="https://www.facebook.com/iacesofficial"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="https://www.instagram.com/iaces_/"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="https://www.linkedin.com/company/iaces---international-association-of-civil-engineering-students/"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Quick Links</h4>
+                    <a class="btn btn-link" href="index.html">Home</a>
+                    <a class="btn btn-link" href="Local Committes.html">Local Committes</a>
+                    <a class="btn btn-link" href="">Last Event Application</a>
+                    <a class="btn btn-link" href="events.html">Events</a>
+                    <a class="btn btn-link" href="events.html">Last ACCESS</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Our Events</h4>
+                    <a class="btn btn-link" href="index.html">About Us</a>
+                    <a class="btn btn-link" href="contact.html">Contact Us</a>
+                    <a class="btn btn-link" href="events.html">Our Events</a>
+                    <a class="btn btn-link" href="Local Committes.html">Our Local Committes</a>
+                    <a class="btn btn-link" href="index.html">Our Board</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Some Important Documents</h4>
+                    <a class="btn btn-link" href="https://drive.google.com/file/d/1DdjM7vjucol_f-MjeCWAbNTPOXrWSVLs/view">Internal Regulations</a>
+                    <a class="btn btn-link" href="https://drive.google.com/drive/u/2/folders/1jS1TtFn8FM3Ik0XPSUclqaXn6jBFG2lL">General Statues</a>
+                    <a class="btn btn-link" href="https://drive.google.com/drive/u/2/folders/11wFz_ucNcaXksAGOK6yXcNXrmhPh5f7E">Becoming an LC</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                         &copy; <a class="border-bottom" href="#">IACES</a>, All Right Reserved. <a class="border-bottom" href="https://drive.google.com/file/d/1jJaEqLV9YAC8mqoipTMztYx2i7ncfVOl/view">Emir Kara</a>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-0 back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
