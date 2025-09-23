@@ -6,16 +6,23 @@
   <title>Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="auth-wrap">
-  <main class="auth-card">
-    <form id="login-form" class="auth-grid" autocomplete="on">
-      <input id="email" type="email" placeholder="Username (email)" autocomplete="username" required />
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required />
-      <button type="submit" class="btn btn-primary">Sign in</button>
+<body>
+  <main class="card small-center">
+    <h2>Login</h2>
+    <form id="login-form">
+      <label for="email">Email</label>
+      <input id="email" type="email" required />
+
+      <label for="password">Password</label>
+      <input id="password" type="password" required />
+
+      <button type="submit" class="btn">Sign in</button>
     </form>
+    <p class="meta">Don’t have an account? Ask admin to invite you.</p>
   </main>
 
   <script type="module">
+    
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
     const supabaseUrl = "https://ffgtgeklexlsjrbqoobt.supabase.co";
@@ -25,17 +32,18 @@
     const form = document.getElementById("login-form");
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = (document.getElementById("email") as HTMLInputElement).value;
-      const password = (document.getElementById("password") as HTMLInputElement).value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
         alert("Login failed: " + error.message);
-        return;
+      } else {
+        // save session
+        sessionStorage.setItem("sb_session", JSON.stringify(data.session));
+        window.location.href = "editor.html";
       }
-      sessionStorage.setItem("sb_session", JSON.stringify(data.session));
-      window.location.href = "editor.html";
     });
   </script>
 </body>
