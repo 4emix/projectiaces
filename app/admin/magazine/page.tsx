@@ -32,7 +32,7 @@ export default function AdminMagazinePage() {
 
   const fetchIssues = async () => {
     try {
-      const response = await fetch("/api/magazine")
+      const response = await fetch("/api/magazines")
       if (response.ok) {
         const data = await response.json()
         setIssues(data)
@@ -48,7 +48,7 @@ export default function AdminMagazinePage() {
     if (!confirm("Are you sure you want to delete this magazine issue?")) return
 
     try {
-      const response = await fetch(`/api/magazine/${id}`, {
+      const response = await fetch(`/api/magazines/${id}`, {
         method: "DELETE",
       })
 
@@ -72,7 +72,7 @@ export default function AdminMagazinePage() {
 
   const toggleActive = async (id: string, isActive: boolean) => {
     try {
-      const response = await fetch(`/api/magazine/${id}`, {
+      const response = await fetch(`/api/magazines/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

@@ -24,7 +24,7 @@ export default function NewBoardMemberPage() {
     image_url: "",
     linkedin_url: "",
     email: "",
-    order_index: 0,
+    display_order: 0,
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,12 +131,12 @@ export default function NewBoardMemberPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="order_index">Display Order</Label>
+                <Label htmlFor="display_order">Display Order</Label>
                 <Input
-                  id="order_index"
+                  id="display_order"
                   type="number"
-                  value={formData.order_index}
-                  onChange={(e) => handleChange("order_index", Number.parseInt(e.target.value) || 0)}
+                  value={formData.display_order}
+                  onChange={(e) => handleChange("display_order", Number.parseInt(e.target.value) || 0)}
                   placeholder="0"
                 />
               </div>

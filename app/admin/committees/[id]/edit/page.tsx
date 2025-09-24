@@ -112,7 +112,15 @@ export default function EditCommitteePage({ params }: { params: { id: string } }
   }
 
   return (
-    <ContentEditor title="Edit Committee" backUrl="/admin/committees" onSave={handleSave} onPreview={handlePreview}>
+    <ContentEditor
+      title="Edit Committee"
+      backUrl="/admin/committees"
+      onSave={handleSave}
+      onPreview={handlePreview}
+      isSaving={saving}
+      saveLabel="Save Committee"
+    >
+    >
       <div className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <TextField

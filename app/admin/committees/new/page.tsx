@@ -62,7 +62,13 @@ export default function NewCommitteePage() {
   }
 
   return (
-    <ContentEditor title="Add New Committee" backUrl="/admin/committees" onSave={handleSave}>
+    <ContentEditor
+      title="Add New Committee"
+      backUrl="/admin/committees"
+      onSave={handleSave}
+      isSaving={saving}
+      saveLabel="Create Committee"
+    >
       <div className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <TextField

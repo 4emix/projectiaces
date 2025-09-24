@@ -34,7 +34,7 @@ export default function NewMagazineIssuePage() {
     setLoading(true)
 
     try {
-      const response = await fetch("/api/magazine", {
+      const response = await fetch("/api/magazines", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -4,12 +4,17 @@ import { createClient } from "@/lib/supabase/server"
 export async function GET() {
   try {
     const supabase = await createClient()
-    const { data, error } = await supabase
-      .from("magazine_articles")
-      .select("*")
-      .eq("is_active", true)
-      .order("publication_date", { ascending: false })
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
+    let query = supabase.from("magazine_articles").select("*").order("publication_date", { ascending: false })
+
+    if (!user) {
+      query = query.eq("is_active", true)
+    }
+
+    const { data, error } = await query
     if (error) {
       console.error("Error fetching magazine articles:", error)
       return NextResponse.json({ error: "Failed to fetch magazine articles" }, { status: 500 })
@@ -37,6 +42,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("[v0] Magazines API - creating article:", body)
 
+    const { is_active, ...articleData } = body
     const { data, error } = await supabase
       .from("magazine_articles")
       .insert({

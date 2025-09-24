@@ -94,7 +94,14 @@ export default function HeroAdminPage() {
   }
 
   return (
-    <ContentEditor title="Edit Hero Section" backUrl="/admin" onSave={handleSave} onPreview={handlePreview}>
+    <ContentEditor
+      title="Edit Hero Section"
+      backUrl="/admin"
+      onSave={handleSave}
+      onPreview={handlePreview}
+      isSaving={saving}
+      saveLabel="Save Hero Content"
+    >
       <div className="space-y-6">
         <TextField
           label="Main Title"

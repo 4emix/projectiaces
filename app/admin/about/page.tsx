@@ -93,7 +93,14 @@ export default function AboutAdminPage() {
   }
 
   return (
-    <ContentEditor title="Edit About Section" backUrl="/admin" onSave={handleSave} onPreview={handlePreview}>
+    <ContentEditor
+      title="Edit About Section"
+      backUrl="/admin"
+      onSave={handleSave}
+      onPreview={handlePreview}
+      isSaving={saving}
+      saveLabel="Save About Content"
+    >
       <div className="space-y-6">
         <TextField
           label="Section Title"
