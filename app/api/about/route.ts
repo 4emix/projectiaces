@@ -1,8 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { ContentService } from "@/lib/content-service"
 
 export const dynamic = "force-dynamic"
+
+function isFallbackId(value: unknown) {
+  return typeof value === "string" && value.startsWith("fallback-")
+}
 
 export async function GET() {
   try {
@@ -16,6 +20,10 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
@@ -32,13 +40,13 @@ export async function PUT(request: NextRequest) {
     console.log("[v0] About API - received data:", { id, updates })
 
     let result
-    if (id) {
+    if (id && !isFallbackId(id)) {
       // Update existing record
       result = await ContentService.updateAboutContent(id, updates)
     } else {
       // Create new record or update existing active one
       const existingAbout = await ContentService.getActiveAboutContent()
-      if (existingAbout) {
+      if (existingAbout && !isFallbackId(existingAbout.id)) {
         result = await ContentService.updateAboutContent(existingAbout.id, updates)
       } else {
         // Create new about content

@@ -2,10 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import type { HeroContent } from "@/lib/types"
 
 export default function HeroAdminPage() {
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  )
   const [heroData, setHeroData] = useState<Partial<HeroContent>>({
     title: "",
     subtitle: "",
@@ -46,6 +50,15 @@ export default function HeroAdminPage() {
   }, [toast])
 
   const handleSave = async () => {
+    if (!isSupabaseConfigured) {
+      toast({
+        title: "Supabase configuration required",
+        description: "Connect Supabase to enable saving changes to the hero section.",
+        variant: "destructive",
+      })
+      return
+    }
+
     setSaving(true)
     try {
       const response = await fetch("/api/hero", {
@@ -100,10 +113,19 @@ export default function HeroAdminPage() {
       onSave={handleSave}
       onPreview={handlePreview}
       isSaving={saving}
+      saveDisabled={!isSupabaseConfigured}
       saveLabel="Save Hero Content"
       description="Control the main headline, supporting text, and call-to-action visitors see first."
     >
       <div className="space-y-6">
+        {!isSupabaseConfigured && (
+          <Alert variant="destructive">
+            <AlertTitle>Editing is temporarily disabled</AlertTitle>
+            <AlertDescription>
+              Supabase credentials are not configured. The content shown below is read-only fallback data.
+            </AlertDescription>
+          </Alert>
+        )}
         <TextField
           label="Main Title"
           value={heroData.title || ""}

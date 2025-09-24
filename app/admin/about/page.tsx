@@ -2,10 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import type { AboutContent } from "@/lib/types"
 
 export default function AboutAdminPage() {
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  )
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
     title: "",
     content: "",
@@ -45,6 +49,15 @@ export default function AboutAdminPage() {
   }, [toast])
 
   const handleSave = async () => {
+    if (!isSupabaseConfigured) {
+      toast({
+        title: "Supabase configuration required",
+        description: "Connect Supabase to enable saving changes to the about section.",
+        variant: "destructive",
+      })
+      return
+    }
+
     setSaving(true)
     try {
       const response = await fetch("/api/about", {
@@ -99,10 +112,19 @@ export default function AboutAdminPage() {
       onSave={handleSave}
       onPreview={handlePreview}
       isSaving={saving}
+      saveDisabled={!isSupabaseConfigured}
       saveLabel="Save About Content"
       description="Share your organization's mission, vision, and story with visitors."
     >
       <div className="space-y-6">
+        {!isSupabaseConfigured && (
+          <Alert variant="destructive">
+            <AlertTitle>Editing is temporarily disabled</AlertTitle>
+            <AlertDescription>
+              Supabase credentials are not configured. The content shown below is read-only fallback data.
+            </AlertDescription>
+          </Alert>
+        )}
         <TextField
           label="Section Title"
           value={aboutData.title || ""}
