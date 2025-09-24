@@ -68,6 +68,7 @@ export default function NewCommitteePage() {
       onSave={handleSave}
       isSaving={saving}
       saveLabel="Create Committee"
+      description="Create a new local committee entry with key details and visibility settings."
     >
       <div className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">

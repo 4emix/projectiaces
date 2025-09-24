@@ -4,8 +4,6 @@ import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Save } from "lucide-react"
 import type { BoardMember } from "@/lib/types"
 
 export default function EditBoardMemberPage({ params }: { params: { id: string } }) {
@@ -151,8 +149,15 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
   }
 
   return (
-    <>
-      <ContentEditor title="Edit Board Member" backUrl="/admin/board" onPreview={handlePreview}>
+    <ContentEditor
+      title="Edit Board Member"
+      backUrl="/admin/board"
+      onPreview={handlePreview}
+      onSave={handleSave}
+      isSaving={saving}
+      saveLabel="Save Board Member"
+      description="Update leadership information and manage public visibility."
+    >
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <TextField
@@ -236,18 +241,5 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
           )}
         </div>
       </ContentEditor>
-
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          size="lg"
-          className="shadow-lg hover:shadow-xl transition-shadow"
-        >
-          <Save className="w-4 h-4 mr-2" />
-          {saving ? "Saving..." : "Save Changes"}
-        </Button>
-      </div>
-    </>
   )
 }

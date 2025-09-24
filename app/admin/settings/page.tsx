@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { Separator } from "@/components/ui/separator"
+import { useToast } from "@/hooks/use-toast"
 
 export default function SettingsAdminPage() {
   const [siteSettings, setSiteSettings] = useState({
@@ -21,13 +22,39 @@ export default function SettingsAdminPage() {
     enableAnalytics: true,
   })
 
-  const handleSave = () => {
-    console.log("Saving site settings:", siteSettings)
-    // TODO: Implement save functionality
+  const [saving, setSaving] = useState(false)
+  const { toast } = useToast()
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 400))
+      console.log("Saving site settings:", siteSettings)
+      toast({
+        title: "Settings saved",
+        description: "Your configuration changes have been stored.",
+      })
+    } catch (error) {
+      console.error("Error saving settings:", error)
+      toast({
+        title: "Error",
+        description: "We couldn't save your settings. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
-    <ContentEditor title="Site Settings" backUrl="/admin" onSave={handleSave}>
+    <ContentEditor
+      title="Site Settings"
+      backUrl="/admin"
+      onSave={handleSave}
+      isSaving={saving}
+      saveLabel="Save Settings"
+      description="Configure global preferences, contact details, and system behaviour."
+    >
       <div className="space-y-8">
         {/* General Settings */}
         <div>

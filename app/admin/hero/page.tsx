@@ -101,6 +101,7 @@ export default function HeroAdminPage() {
       onPreview={handlePreview}
       isSaving={saving}
       saveLabel="Save Hero Content"
+      description="Control the main headline, supporting text, and call-to-action visitors see first."
     >
       <div className="space-y-6">
         <TextField

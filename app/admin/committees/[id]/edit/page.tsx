@@ -119,7 +119,7 @@ export default function EditCommitteePage({ params }: { params: { id: string } }
       onPreview={handlePreview}
       isSaving={saving}
       saveLabel="Save Committee"
-    >
+      description="Modify committee details and publish your updates."
     >
       <div className="space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
