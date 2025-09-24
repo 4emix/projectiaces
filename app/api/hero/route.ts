@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { ContentService } from "@/lib/content-service"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     const heroContent = await ContentService.getActiveHeroContent()
