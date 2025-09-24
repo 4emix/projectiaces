@@ -100,6 +100,7 @@ export default function AboutAdminPage() {
       onPreview={handlePreview}
       isSaving={saving}
       saveLabel="Save About Content"
+      description="Share your organization's mission, vision, and story with visitors."
     >
       <div className="space-y-6">
         <TextField
