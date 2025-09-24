@@ -4,6 +4,9 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
+
+import { SupabaseListener } from "@/components/auth/supabase-listener"
+
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -21,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        <SupabaseListener />
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
       </body>
