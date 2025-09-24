@@ -16,6 +16,9 @@ function toNullableString(value: string | null | undefined) {
 }
 
 export default function HeroAdminPage() {
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  )
   const [heroData, setHeroData] = useState<Partial<HeroContent>>({
     title: "",
     subtitle: "",
@@ -62,6 +65,11 @@ export default function HeroAdminPage() {
       toast({
         title: "Title is required",
         description: "Please provide a headline for the hero section before saving.",
+
+    if (!isSupabaseConfigured) {
+      toast({
+        title: "Supabase configuration required",
+        description: "Connect Supabase to enable saving changes to the hero section.",
         variant: "destructive",
       })
       return
@@ -147,15 +155,24 @@ export default function HeroAdminPage() {
       onSave={handleSave}
       onPreview={handlePreview}
       isSaving={saving}
+      saveDisabled={!isSupabaseConfigured}
       saveLabel="Save Hero Content"
       description="Control the main headline, supporting text, and call-to-action visitors see first."
     >
       <div className="space-y-6">
+
         {isFallbackContent && (
           <Alert variant="destructive">
             <AlertTitle>No active hero content found</AlertTitle>
             <AlertDescription>
               Saving will create a new hero entry once Supabase is connected. Until then, fallback content is shown on the site.
+
+        {!isSupabaseConfigured && (
+          <Alert variant="destructive">
+            <AlertTitle>Editing is temporarily disabled</AlertTitle>
+            <AlertDescription>
+              Supabase credentials are not configured. The content shown below is read-only fallback data.
+
             </AlertDescription>
           </Alert>
         )}
