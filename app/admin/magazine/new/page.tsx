@@ -5,6 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -18,6 +19,9 @@ export default function NewMagazineIssuePage() {
   const { toast } = useToast()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  )
   const [formData, setFormData] = useState({
     title: "",
     volume: 1,
@@ -31,6 +35,15 @@ export default function NewMagazineIssuePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!isSupabaseConfigured) {
+      toast({
+        title: "Supabase configuration required",
+        description: "Connect Supabase to enable creating magazine issues.",
+        variant: "destructive",
+      })
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -80,6 +93,15 @@ export default function NewMagazineIssuePage() {
           <p className="text-muted-foreground">Add a new magazine issue to the collection</p>
         </div>
       </div>
+
+      {!isSupabaseConfigured && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertTitle>Magazine creation is unavailable</AlertTitle>
+          <AlertDescription>
+            Supabase credentials are not configured. Configure Supabase to add or edit magazine issues.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Card>
         <CardHeader>
@@ -175,7 +197,7 @@ export default function NewMagazineIssuePage() {
               <Label htmlFor="is_active">Publish immediately</Label>
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading || !isSupabaseConfigured} className="w-full">
               <Save className="w-4 h-4 mr-2" />
               {loading ? "Creating..." : "Create Magazine Issue"}
             </Button>

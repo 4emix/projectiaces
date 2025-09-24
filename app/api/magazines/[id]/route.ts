@@ -1,8 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+
+export const dynamic = "force-dynamic"
 
 export async function GET(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const { data, error } = await supabase
       .from("magazine_articles")
@@ -28,6 +34,10 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
@@ -61,6 +71,10 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
 export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
