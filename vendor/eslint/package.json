@@ -1,0 +1,7 @@
+{
+  "name": "eslint",
+  "version": "8.57.0",
+  "description": "Stub ESLint implementation for environments without registry access.",
+  "main": "index.js",
+  "license": "MIT"
+}
