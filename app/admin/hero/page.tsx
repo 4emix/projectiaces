@@ -65,6 +65,11 @@ export default function HeroAdminPage() {
       toast({
         title: "Title is required",
         description: "Please provide a headline for the hero section before saving.",
+        variant: "destructive",
+      })
+      return
+    }
+
     if (!isSupabaseConfigured) {
       toast({
         title: "Supabase configuration required",
@@ -164,6 +169,9 @@ export default function HeroAdminPage() {
             <AlertTitle>No active hero content found</AlertTitle>
             <AlertDescription>
               Saving will create a new hero entry once Supabase is connected. Until then, fallback content is shown on the site.
+            </AlertDescription>
+          </Alert>
+        )}
         {!isSupabaseConfigured && (
           <Alert variant="destructive">
             <AlertTitle>Editing is temporarily disabled</AlertTitle>

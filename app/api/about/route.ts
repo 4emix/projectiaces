@@ -5,9 +5,7 @@ import { isFallbackId } from "@/lib/fallback-data"
 import type { AboutContent } from "@/lib/types"
 
 export const dynamic = "force-dynamic"
-function isFallbackId(value: unknown) {
-  return typeof value === "string" && value.startsWith("fallback-")
-}
+
 function toNullableString(value: unknown) {
   if (typeof value === "string") {
     const trimmed = value.trim()
@@ -19,11 +17,6 @@ function toNullableString(value: unknown) {
   }
 
   return undefined
-}
-export const dynamic = "force-dynamic"
-
-function isFallbackId(value: unknown) {
-  return typeof value === "string" && value.startsWith("fallback-")
 }
 
 

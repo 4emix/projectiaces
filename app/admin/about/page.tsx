@@ -73,6 +73,10 @@ export default function AboutAdminPage() {
       toast({
         title: "Content is required",
         description: "Add a description to tell visitors about your organization.",
+        variant: "destructive",
+      })
+      return
+    }
 
     if (!isSupabaseConfigured) {
       toast({
@@ -173,6 +177,9 @@ export default function AboutAdminPage() {
             <AlertTitle>No active about content found</AlertTitle>
             <AlertDescription>
               Saving will create a new about entry once Supabase is connected. Until then, fallback content is shown on the site.
+            </AlertDescription>
+          </Alert>
+        )}
         {!isSupabaseConfigured && (
           <Alert variant="destructive">
             <AlertTitle>Editing is temporarily disabled</AlertTitle>
