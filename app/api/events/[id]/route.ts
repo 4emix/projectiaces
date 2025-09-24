@@ -1,9 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const dynamic = "force-dynamic"
+
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
+    const { id } = params
     const supabase = await createClient()
     const {
       data: { user },
@@ -40,9 +46,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
+    const { id } = params
     const supabase = await createClient()
     const {
       data: { user },

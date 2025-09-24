@@ -1,12 +1,25 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { ContentService } from "@/lib/content-service"
+
+export const dynamic = "force-dynamic"
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const debugInfo: string[] = []
 
   try {
     debugInfo.push(`Starting PUT request for ID: ${params.id}`)
+
+    if (!isSupabaseConfigured()) {
+      debugInfo.push("Supabase configuration missing")
+      return NextResponse.json(
+        {
+          error: "Supabase is not configured",
+          debug: debugInfo,
+        },
+        { status: 503 },
+      )
+    }
 
     const supabase = await createClient()
     debugInfo.push("Supabase client created")
@@ -70,6 +83,17 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   const debugInfo: string[] = []
 
   try {
+    if (!isSupabaseConfigured()) {
+      debugInfo.push("Supabase configuration missing")
+      return NextResponse.json(
+        {
+          error: "Supabase is not configured",
+          debug: debugInfo,
+        },
+        { status: 503 },
+      )
+    }
+
     const supabase = await createClient()
     debugInfo.push("Supabase client created")
 

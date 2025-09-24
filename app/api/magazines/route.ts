@@ -1,8 +1,15 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { fallbackMagazineIssuesForAdmin } from "@/lib/fallback-data"
+
+export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(fallbackMagazineIssuesForAdmin)
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
@@ -17,18 +24,22 @@ export async function GET() {
     const { data, error } = await query
     if (error) {
       console.error("Error fetching magazine articles:", error)
-      return NextResponse.json({ error: "Failed to fetch magazine articles" }, { status: 500 })
+      return NextResponse.json(fallbackMagazineIssuesForAdmin)
     }
 
-    return NextResponse.json(data || [])
+    return NextResponse.json(data && data.length > 0 ? data : fallbackMagazineIssuesForAdmin)
   } catch (error) {
     console.error("Error in GET /api/magazines:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json(fallbackMagazineIssuesForAdmin)
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
     const supabase = await createClient()
     const {
       data: { user },
@@ -42,7 +53,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("[v0] Magazines API - creating article:", body)
 
-    const { is_active, ...articleData } = body
     const { data, error } = await supabase
       .from("magazine_articles")
       .insert({

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import type { Session } from "@supabase/supabase-js"
 
-import { createClient } from "@/lib/supabase/server"
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 type AuthChangePayload = {
   event: string
@@ -9,6 +9,10 @@ type AuthChangePayload = {
 }
 
 export async function POST(request: Request) {
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({ success: true })
+  }
+
   const supabase = await createClient()
   const { event, session }: AuthChangePayload = await request.json()
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Eye, FileText } from "lucide-react"
 import Link from "next/link"
@@ -25,6 +26,17 @@ export default function AdminMagazinePage() {
   const { toast } = useToast()
   const [issues, setIssues] = useState<MagazineIssue[]>([])
   const [loading, setLoading] = useState(true)
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  )
+
+  const showSupabaseToast = () => {
+    toast({
+      title: "Supabase configuration required",
+      description: "Connect Supabase to enable creating and editing magazine issues.",
+      variant: "destructive",
+    })
+  }
 
   useEffect(() => {
     fetchIssues()
@@ -45,6 +57,11 @@ export default function AdminMagazinePage() {
   }
 
   const handleDelete = async (id: string) => {
+    if (!isSupabaseConfigured) {
+      showSupabaseToast()
+      return
+    }
+
     if (!confirm("Are you sure you want to delete this magazine issue?")) return
 
     try {
@@ -71,6 +88,11 @@ export default function AdminMagazinePage() {
   }
 
   const toggleActive = async (id: string, isActive: boolean) => {
+    if (!isSupabaseConfigured) {
+      showSupabaseToast()
+      return
+    }
+
     try {
       const response = await fetch(`/api/magazines/${id}`, {
         method: "PATCH",
@@ -113,13 +135,30 @@ export default function AdminMagazinePage() {
           <h1 className="text-3xl font-bold text-foreground">Magazine Management</h1>
           <p className="text-muted-foreground">Manage magazine issues and publications</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/magazine/new">
+        {isSupabaseConfigured ? (
+          <Button asChild>
+            <Link href="/admin/magazine/new">
+              <Plus className="w-4 h-4 mr-2" />
+              Add New Issue
+            </Link>
+          </Button>
+        ) : (
+          <Button onClick={showSupabaseToast} variant="outline">
             <Plus className="w-4 h-4 mr-2" />
             Add New Issue
-          </Link>
-        </Button>
+          </Button>
+        )}
       </div>
+
+      {!isSupabaseConfigured && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertTitle>Magazine management is read-only</AlertTitle>
+          <AlertDescription>
+            Supabase credentials are not configured. The issues listed below are static fallback data and cannot be changed until
+            Supabase is connected.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid gap-6">
         {issues.length === 0 ? (
@@ -128,12 +167,19 @@ export default function AdminMagazinePage() {
               <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-lg font-medium mb-2">No magazine issues found</h3>
               <p className="text-muted-foreground mb-4">Get started by creating your first magazine issue.</p>
-              <Button asChild>
-                <Link href="/admin/magazine/new">
+              {isSupabaseConfigured ? (
+                <Button asChild>
+                  <Link href="/admin/magazine/new">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create First Issue
+                  </Link>
+                </Button>
+              ) : (
+                <Button onClick={showSupabaseToast} variant="outline">
                   <Plus className="w-4 h-4 mr-2" />
                   Create First Issue
-                </Link>
-              </Button>
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : (
@@ -174,12 +220,19 @@ export default function AdminMagazinePage() {
                         </a>
                       </Button>
                     )}
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/admin/magazine/${issue.id}/edit`}>
+                    {isSupabaseConfigured ? (
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href={`/admin/magazine/${issue.id}/edit`}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" onClick={showSupabaseToast}>
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
-                      </Link>
-                    </Button>
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" onClick={() => toggleActive(issue.id, issue.is_active)}>
                       {issue.is_active ? "Deactivate" : "Activate"}
                     </Button>
