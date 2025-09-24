@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic"
 function isFallbackId(value: unknown) {
   return typeof value === "string" && value.startsWith("fallback-")
 }
-
 export async function GET() {
   try {
     const heroContent = await ContentService.getActiveHeroContent()
