@@ -6,6 +6,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import type { AboutContent } from "@/lib/types"
 
+function toNullableString(value: string | null | undefined) {
+  if (typeof value !== "string") {
+    return null
+  }
+
+  const trimmed = value.trim()
+  return trimmed.length === 0 ? null : trimmed
+}
+
 export default function AboutAdminPage() {
   const isSupabaseConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -21,6 +30,7 @@ export default function AboutAdminPage() {
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [isFallbackContent, setIsFallbackContent] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -31,6 +41,7 @@ export default function AboutAdminPage() {
           const data = await response.json()
           if (data) {
             setAboutData(data)
+            setIsFallbackContent(Boolean(data?.id?.startsWith("fallback-")))
           }
         }
       } catch (error) {
@@ -49,10 +60,25 @@ export default function AboutAdminPage() {
   }, [toast])
 
   const handleSave = async () => {
+    if (!aboutData.title || !aboutData.title.trim()) {
+      toast({
+        title: "Title is required",
+        description: "Please provide a title for the about section before saving.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!aboutData.content || !aboutData.content.trim()) {
+      toast({
+        title: "Content is required",
+        description: "Add a description to tell visitors about your organization.",
+
     if (!isSupabaseConfigured) {
       toast({
         title: "Supabase configuration required",
         description: "Connect Supabase to enable saving changes to the about section.",
+
         variant: "destructive",
       })
       return
@@ -60,23 +86,48 @@ export default function AboutAdminPage() {
 
     setSaving(true)
     try {
+      const payload = {
+        ...(aboutData.id ? { id: aboutData.id } : {}),
+        title: aboutData.title.trim(),
+        content: aboutData.content.trim(),
+        image_url: toNullableString(aboutData.image_url),
+        mission_statement: toNullableString(aboutData.mission_statement),
+        vision_statement: toNullableString(aboutData.vision_statement),
+        is_active: aboutData.is_active ?? true,
+      }
+
       const response = await fetch("/api/about", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(aboutData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {
         const updatedData = await response.json()
         setAboutData(updatedData)
+        setIsFallbackContent(Boolean(updatedData?.id?.startsWith("fallback-")))
         toast({
           title: "Success",
           description: "About content updated successfully",
         })
       } else {
-        throw new Error("Failed to update about content")
+        const errorData = await response.json().catch(() => null)
+        if (response.status === 503) {
+          toast({
+            title: "Supabase connection required",
+            description: "Connect Supabase to enable saving about content.",
+            variant: "destructive",
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: errorData?.error ?? "Failed to save about content",
+            variant: "destructive",
+          })
+        }
+        return
       }
     } catch (error) {
       console.error("Error saving about content:", error)
@@ -117,11 +168,19 @@ export default function AboutAdminPage() {
       description="Share your organization's mission, vision, and story with visitors."
     >
       <div className="space-y-6">
+
+        {isFallbackContent && (
+          <Alert variant="destructive">
+            <AlertTitle>No active about content found</AlertTitle>
+            <AlertDescription>
+              Saving will create a new about entry once Supabase is connected. Until then, fallback content is shown on the site.
+
         {!isSupabaseConfigured && (
           <Alert variant="destructive">
             <AlertTitle>Editing is temporarily disabled</AlertTitle>
             <AlertDescription>
               Supabase credentials are not configured. The content shown below is read-only fallback data.
+
             </AlertDescription>
           </Alert>
         )}
