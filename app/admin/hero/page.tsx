@@ -65,7 +65,6 @@ export default function HeroAdminPage() {
       toast({
         title: "Title is required",
         description: "Please provide a headline for the hero section before saving.",
-
     if (!isSupabaseConfigured) {
       toast({
         title: "Supabase configuration required",
@@ -160,19 +159,16 @@ export default function HeroAdminPage() {
       description="Control the main headline, supporting text, and call-to-action visitors see first."
     >
       <div className="space-y-6">
-
         {isFallbackContent && (
           <Alert variant="destructive">
             <AlertTitle>No active hero content found</AlertTitle>
             <AlertDescription>
               Saving will create a new hero entry once Supabase is connected. Until then, fallback content is shown on the site.
-
         {!isSupabaseConfigured && (
           <Alert variant="destructive">
             <AlertTitle>Editing is temporarily disabled</AlertTitle>
             <AlertDescription>
               Supabase credentials are not configured. The content shown below is read-only fallback data.
-
             </AlertDescription>
           </Alert>
         )}

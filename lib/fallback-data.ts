@@ -7,6 +7,11 @@ import type {
   MagazineArticle,
 } from "@/lib/types"
 
+export const FALLBACK_ID_PREFIX = "fallback-" as const
+
+export function isFallbackId(value: unknown): value is string {
+  return typeof value === "string" && value.startsWith(FALLBACK_ID_PREFIX)
+}
 const FALLBACK_TIMESTAMP = "2024-01-01T00:00:00.000Z"
 
 export const fallbackHeroContent: HeroContent = {

@@ -1,6 +1,23 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { ContentService } from "@/lib/content-service"
+import { isFallbackId } from "@/lib/fallback-data"
+import type { HeroContent } from "@/lib/types"
+
+export const dynamic = "force-dynamic"
+
+function toNullableString(value: unknown) {
+  if (typeof value === "string") {
+    const trimmed = value.trim()
+    return trimmed.length === 0 ? null : trimmed
+  }
+
+  if (value === null) {
+    return null
+  }
+
+  return undefined
+}
 import type { HeroContent } from "@/lib/types"
 
 export const dynamic = "force-dynamic"
