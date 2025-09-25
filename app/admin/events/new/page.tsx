@@ -14,14 +14,13 @@ import { Save, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
 export default function NewEventPage() {
   const { toast } = useToast()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const isSupabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
+  const isSupabaseConfigured = isSupabaseEnvConfigured()
   const [formData, setFormData] = useState({
     title: "",
     description: "",

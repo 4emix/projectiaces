@@ -1,8 +1,10 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
+import { getSupabaseConfig } from "./config"
+
 export function isSupabaseConfigured() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  return getSupabaseConfig() !== null
 }
 
 /**
@@ -11,13 +13,19 @@ export function isSupabaseConfigured() {
  * it.
  */
 export async function createClient() {
-  if (!isSupabaseConfigured()) {
-    throw new Error("Supabase environment variables are not configured")
+  const config = getSupabaseConfig()
+  if (!config) {
+    throw new Error(
+      [
+        "Supabase environment variables are not configured.",
+        "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or their SUPABASE_URL/SUPABASE_ANON_KEY equivalents).",
+      ].join(" "),
+    )
   }
 
   const cookieStore = await cookies()
 
-  return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+  return createServerClient(config.url, config.anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll()

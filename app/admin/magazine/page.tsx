@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Eye, FileText } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
+import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
 interface MagazineIssue {
   id: string
@@ -26,9 +27,7 @@ export default function AdminMagazinePage() {
   const { toast } = useToast()
   const [issues, setIssues] = useState<MagazineIssue[]>([])
   const [loading, setLoading] = useState(true)
-  const isSupabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
+  const isSupabaseConfigured = isSupabaseEnvConfigured()
 
   const showSupabaseToast = () => {
     toast({
