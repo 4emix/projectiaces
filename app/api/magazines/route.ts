@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
       issue_number: body.issue_number.trim(),
       publication_date: body.publication_date.trim(),
       publication_type: publicationType,
-
       is_featured: typeof body.is_featured === "boolean" ? body.is_featured : false,
       is_active: typeof body.is_active === "boolean" ? body.is_active : true,
     }

@@ -36,7 +36,6 @@ export default function NewMagazineIssuePage() {
     pdf_url: "",
     publication_date: new Date().toISOString().split("T")[0],
     publication_type: "magazine" as "magazine" | "newsletter",
-
     is_featured: false,
     is_active: true,
   })
@@ -63,7 +62,6 @@ export default function NewMagazineIssuePage() {
         issue_number: formData.issue_number.trim(),
         publication_date: formData.publication_date,
         publication_type: formData.publication_type,
-
         is_featured: formData.is_featured,
         is_active: formData.is_active,
       }
