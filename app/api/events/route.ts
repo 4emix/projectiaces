@@ -59,10 +59,9 @@ export async function POST(request: NextRequest) {
       return mutationContext.error
     }
 
-    const { client: mutationClient, userId } = mutationContext
+    const { client: mutationClient } = mutationContext
 
-    const basePayload = buildEventMutationPayload(body)
-    const payloadWithUser = userId ? { ...basePayload, user_id: userId } : basePayload
+    const payloadWithUser = buildEventMutationPayload(body)
 
     const { data, error } = await executeEventMutation(payloadWithUser, (payload) =>
       mutationClient.from("events").insert(payload).select().single(),

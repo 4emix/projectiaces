@@ -74,15 +74,10 @@ export function buildEventMutationPayload(body: Record<string, unknown>): Record
 }
 
 type MutationClientResult =
-  | { client: SupabaseClient; userId: string | null; error: null }
-  | { client: null; userId: null; error: NextResponse }
+  | { client: SupabaseClient; error: null }
+  | { client: null; error: NextResponse }
 
 export async function resolveEventMutationContext(): Promise<MutationClientResult> {
-  const serviceClient = createServiceRoleClient()
-  if (serviceClient) {
-    return { client: serviceClient, userId: null, error: null }
-  }
-
   const supabase = await createClient()
   const {
     data: { user },
@@ -92,12 +87,16 @@ export async function resolveEventMutationContext(): Promise<MutationClientResul
   if (error || !user) {
     return {
       client: null,
-      userId: null,
       error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
     }
   }
 
-  return { client: supabase, userId: user.id, error: null }
+  const serviceClient = createServiceRoleClient()
+  if (serviceClient) {
+    return { client: serviceClient, error: null }
+  }
+
+  return { client: supabase, error: null }
 }
 
 export function normalizeEventRecord(event: Record<string, any>) {
