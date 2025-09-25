@@ -26,6 +26,7 @@ export type SupabaseConfig = {
   anonKey: string
 }
 
+
 function readEnvValue(
   keys: readonly string[],
   { placeholderValues }: { placeholderValues?: ReadonlySet<string> } = {}
@@ -35,6 +36,7 @@ function readEnvValue(
     if (typeof value === "string") {
       const trimmed = value.trim()
       if (trimmed.length > 0 && !placeholderValues?.has(trimmed)) {
+
         return trimmed
       }
     }
@@ -44,6 +46,7 @@ function readEnvValue(
 }
 
 export function getSupabaseConfig(): SupabaseConfig | null {
+
   const url =
     readEnvValue(SUPABASE_URL_ENV_KEYS, {
       placeholderValues: PLACEHOLDER_URL_VALUES,
@@ -52,6 +55,7 @@ export function getSupabaseConfig(): SupabaseConfig | null {
     readEnvValue(SUPABASE_ANON_KEY_ENV_KEYS, {
       placeholderValues: PLACEHOLDER_ANON_KEY_VALUES,
     }) ?? DEFAULT_SUPABASE_ANON_KEY
+
 
   if (!url || !anonKey) {
     return null
@@ -78,4 +82,5 @@ export function getSupabaseAnonKey(): string | undefined {
       placeholderValues: PLACEHOLDER_ANON_KEY_VALUES,
     }) ?? DEFAULT_SUPABASE_ANON_KEY
   )
+
 }
