@@ -9,6 +9,7 @@ import { Plus, Edit, Trash2, Calendar, MapPin } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { AdminNavigation } from "@/components/admin/admin-navigation"
+import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
 interface Event {
   id: string
@@ -26,9 +27,7 @@ export default function AdminEventsPage() {
   const { toast } = useToast()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
-  const isSupabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
+  const isSupabaseConfigured = isSupabaseEnvConfigured()
 
   const showSupabaseToast = () => {
     toast({
