@@ -124,39 +124,45 @@ export function normalizeEventRecord(event: Record<string, any>) {
   }
 }
 
+function messageMentionsColumn(message: string, column: string) {
+  const normalized = column.toLowerCase()
+  const pattern = new RegExp(`(^|[^a-z0-9_])${normalized}([^a-z0-9_]|$)`)
+  return pattern.test(message)
+}
+
 function adjustPayloadForError(
   payload: Record<string, unknown>,
   error: PostgrestError,
 ): Record<string, unknown> | null {
   const message = error.message.toLowerCase()
 
-  if (message.includes("registration_url") && "registration_url" in payload) { 
+  if (messageMentionsColumn(message, "registration_url") && "registration_url" in payload) {
     const { registration_url: _unusedRegistrationUrl, ...rest } = payload
     return { ...rest }
   }
 
-  if (message.includes("updated_at") && "updated_at" in payload) {
+  if (messageMentionsColumn(message, "updated_at") && "updated_at" in payload) {
     const { updated_at: _unusedUpdatedAt, ...rest } = payload
     return { ...rest }
   }
 
-  if (message.includes("contact_email") && "contact_email" in payload) {
+  if (messageMentionsColumn(message, "contact_email") && "contact_email" in payload) {
     const nextPayload = { ...payload }
     delete nextPayload.contact_email
     return nextPayload
   }
 
-  if (message.includes("is_active") && "is_active" in payload) {
+  if (messageMentionsColumn(message, "is_active") && "is_active" in payload) {
     const { is_active: _unusedIsActive, ...rest } = payload
     return { ...rest }
   }
 
-  if ((message.includes('"event_date"') || message.includes(" event_date")) && "event_date" in payload) {
+  if (messageMentionsColumn(message, "event_date") && "event_date" in payload) {
     const { event_date, ...rest } = payload
     return { ...rest, date: event_date }
   }
 
-  if ((message.includes('"date"') || message.includes(" date")) && "date" in payload) {
+  if (messageMentionsColumn(message, "date") && "date" in payload) {
     const { date, ...rest } = payload
     return { ...rest, event_date: date }
   }
