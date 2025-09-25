@@ -74,6 +74,7 @@ function readEnvValue(
         if (!placeholderValues?.has(trimmed) && !placeholderValues?.has(normalized)) {
           return trimmed
         }
+
       }
     }
   }
@@ -116,4 +117,5 @@ export function getSupabaseAnonKey(): string | undefined {
       placeholderValues: PLACEHOLDER_ANON_KEY_VALUES,
     }) ?? DEFAULT_SUPABASE_ANON_KEY
   )
+
 }
