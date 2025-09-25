@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackEvents } from "@/lib/fallback-data"
 import { buildEventMutationPayload, executeEventMutation, normalizeEventRecord } from "./utils"
 
@@ -15,11 +15,12 @@ export async function GET() {
     }
 
     const supabase = await createClient()
+    const queryClient = createServiceRoleClient() ?? supabase
 
-    let { data, error } = await supabase.from("events").select("*").order("event_date", { ascending: true })
+    let { data, error } = await queryClient.from("events").select("*").order("event_date", { ascending: true })
 
     if (error?.message?.toLowerCase().includes("event_date")) {
-      ;({ data, error } = await supabase.from("events").select("*").order("date", { ascending: true }))
+      ;({ data, error } = await queryClient.from("events").select("*").order("date", { ascending: true }))
     }
 
     if (error) {
@@ -64,8 +65,10 @@ export async function POST(request: NextRequest) {
     }
 
 
+    const mutationClient = createServiceRoleClient() ?? supabase
+
     const { data, error } = await executeEventMutation(payloadWithUser, (payload) =>
-      supabase.from("events").insert(payload).select().single(),
+      mutationClient.from("events").insert(payload).select().single(),
     )
 
     if (error) {

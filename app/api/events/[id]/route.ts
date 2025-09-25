@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 import { buildEventMutationPayload, executeEventMutation } from "../utils"
 
@@ -23,6 +23,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const mutationClient = createServiceRoleClient() ?? supabase
+
     const body = await request.json()
     console.log("[v0] Events API - updating event:", { id, body })
 
@@ -32,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const { data, error } = await executeEventMutation(payload, (eventPayload) =>
-      supabase.from("events").update(eventPayload).eq("id", id).select().single(),
+      mutationClient.from("events").update(eventPayload).eq("id", id).select().single(),
     )
     if (error) {
       console.error("Error updating event:", error)
@@ -64,6 +66,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const mutationClient = createServiceRoleClient() ?? supabase
+
     const body = await request.json()
     console.log("[v0] Events API - patching event:", { id, body })
 
@@ -73,7 +77,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     const { data, error } = await executeEventMutation(payload, (eventPayload) =>
-      supabase.from("events").update(eventPayload).eq("id", id).select().single(),
+      mutationClient.from("events").update(eventPayload).eq("id", id).select().single(),
     )
 
     if (error) {
@@ -106,9 +110,11 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const mutationClient = createServiceRoleClient() ?? supabase
+
     console.log("[v0] Events API - deleting event:", id)
 
-    const { error } = await supabase.from("events").delete().eq("id", id)
+    const { error } = await mutationClient.from("events").delete().eq("id", id)
 
     if (error) {
       console.error("Error deleting event:", error)

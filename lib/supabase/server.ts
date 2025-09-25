@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr"
+import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js"
 import { cookies } from "next/headers"
 
-import { getSupabaseConfig } from "./config"
+import { getSupabaseConfig, getSupabaseServiceRoleConfig } from "./config"
 
 export function isSupabaseConfigured() {
   return getSupabaseConfig() !== null
@@ -39,6 +40,20 @@ export async function createClient() {
           // user sessions.
         }
       },
+    },
+  })
+}
+
+export function createServiceRoleClient(): SupabaseClient | null {
+  const config = getSupabaseServiceRoleConfig()
+  if (!config) {
+    return null
+  }
+
+  return createSupabaseClient(config.url, config.serviceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
     },
   })
 }
