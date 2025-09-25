@@ -6,7 +6,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { AboutContent } from "@/lib/types"
-import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
 function toNullableString(value: string | null | undefined) {
   if (typeof value !== "string") {
