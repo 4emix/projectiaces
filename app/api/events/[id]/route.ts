@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
-import { buildEventMutationPayload } from "../utils"
+
+import { buildEventMutationPayload, executeEventMutation } from "../utils"
+
 
 export const dynamic = "force-dynamic"
 
@@ -29,18 +31,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       updated_at: new Date().toISOString(),
     }
 
-    let { data, error } = await supabase.from("events").update(payload).eq("id", id).select().single()
-
-    if (error?.message?.includes("registration_url")) {
-      const { registration_url: _unused, ...fallbackPayload } = payload
-      ;({ data, error } = await supabase
-        .from("events")
-        .update(fallbackPayload)
-        .eq("id", id)
-        .select()
-        .single())
-    }
-
+    const { data, error } = await executeEventMutation(payload, (eventPayload) =>
+      supabase.from("events").update(eventPayload).eq("id", id).select().single(),
+    )
     if (error) {
       console.error("Error updating event:", error)
       return NextResponse.json({ error: "Failed to update event" }, { status: 500 })
@@ -79,17 +72,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       updated_at: new Date().toISOString(),
     }
 
-    let { data, error } = await supabase.from("events").update(payload).eq("id", id).select().single()
-
-    if (error?.message?.includes("registration_url")) {
-      const { registration_url: _unused, ...fallbackPayload } = payload
-      ;({ data, error } = await supabase
-        .from("events")
-        .update(fallbackPayload)
-        .eq("id", id)
-        .select()
-        .single())
-    }
+    const { data, error } = await executeEventMutation(payload, (eventPayload) =>
+      supabase.from("events").update(eventPayload).eq("id", id).select().single(),
+    )
 
     if (error) {
       console.error("Error patching event:", error)

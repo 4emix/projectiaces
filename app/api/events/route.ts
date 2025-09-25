@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackEvents } from "@/lib/fallback-data"
-import { buildEventMutationPayload, normalizeEventRecord } from "./utils"
+import { buildEventMutationPayload, executeEventMutation, normalizeEventRecord } from "./utils"
+
 
 export const dynamic = "force-dynamic"
 
@@ -15,7 +16,11 @@ export async function GET() {
 
     const supabase = await createClient()
 
-    const { data, error } = await supabase.from("events").select("*").order("date", { ascending: true })
+    let { data, error } = await supabase.from("events").select("*").order("event_date", { ascending: true })
+
+    if (error?.message?.toLowerCase().includes("event_date")) {
+      ;({ data, error } = await supabase.from("events").select("*").order("date", { ascending: true }))
+    }
 
     if (error) {
       console.error("[v0] Events API - Error fetching events:", error)
@@ -58,12 +63,10 @@ export async function POST(request: NextRequest) {
       user_id: user.id,
     }
 
-    let { data, error } = await supabase.from("events").insert(payloadWithUser).select().single()
 
-    if (error?.message?.includes("registration_url")) {
-      const { registration_url: _unused, ...fallbackPayload } = payloadWithUser
-      ;({ data, error } = await supabase.from("events").insert(fallbackPayload).select().single())
-    }
+    const { data, error } = await executeEventMutation(payloadWithUser, (payload) =>
+      supabase.from("events").insert(payload).select().single(),
+    )
 
     if (error) {
       console.error("Error creating event:", error)
