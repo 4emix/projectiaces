@@ -224,7 +224,13 @@ export class ContentService {
       console.error("Error fetching magazine articles:", error)
       return fallbackMagazineArticles.map((article) => ({ ...article }))
     }
-    return data && data.length > 0 ? data : fallbackMagazineArticles.map((article) => ({ ...article }))
+    const normalized =
+      data?.map((article) => ({
+        ...article,
+        publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
+      })) ?? []
+
+    return normalized.length > 0 ? normalized : fallbackMagazineArticles.map((article) => ({ ...article }))
   }
 
   // Contact Info

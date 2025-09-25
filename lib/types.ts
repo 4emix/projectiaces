@@ -48,6 +48,7 @@ export interface MagazineArticle {
   pdf_url: string | null
   issue_number: string | null
   publication_date: string | null
+  publication_type: "magazine" | "newsletter"
   is_featured: boolean
   is_active: boolean
   created_at: string

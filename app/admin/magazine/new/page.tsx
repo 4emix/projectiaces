@@ -10,6 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Save, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
@@ -28,6 +35,8 @@ export default function NewMagazineIssuePage() {
     cover_image_url: "",
     pdf_url: "",
     publication_date: new Date().toISOString().split("T")[0],
+    publication_type: "magazine" as "magazine" | "newsletter",
+
     is_featured: false,
     is_active: true,
   })
@@ -53,6 +62,8 @@ export default function NewMagazineIssuePage() {
         pdf_url: formData.pdf_url.trim() || null,
         issue_number: formData.issue_number.trim(),
         publication_date: formData.publication_date,
+        publication_type: formData.publication_type,
+
         is_featured: formData.is_featured,
         is_active: formData.is_active,
       }
@@ -140,7 +151,7 @@ export default function NewMagazineIssuePage() {
               />
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="issue_number">Issue Number *</Label>
                 <Input
@@ -160,6 +171,21 @@ export default function NewMagazineIssuePage() {
                   onChange={(e) => handleChange("publication_date", e.target.value)}
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="publication_type">Publication Type *</Label>
+                <Select
+                  value={formData.publication_type}
+                  onValueChange={(value) => handleChange("publication_type", value as "magazine" | "newsletter")}
+                >
+                  <SelectTrigger id="publication_type">
+                    <SelectValue placeholder="Select publication type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="magazine">Magazine</SelectItem>
+                    <SelectItem value="newsletter">Newsletter</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

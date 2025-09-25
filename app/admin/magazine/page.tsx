@@ -18,6 +18,7 @@ interface MagazineIssue {
   pdf_url: string | null
   issue_number: string | null
   publication_date: string | null
+  publication_type: "magazine" | "newsletter"
   is_featured: boolean
   is_active: boolean
   created_at: string
@@ -201,6 +202,10 @@ export default function AdminMagazinePage() {
                         <Badge variant={issue.is_active ? "default" : "secondary"}>
                           {issue.is_active ? "Active" : "Inactive"}
                         </Badge>
+                        <Badge variant="outline" className="capitalize">
+                          {issue.publication_type}
+                        </Badge>
+
                         {issue.is_featured && <Badge variant="outline">Featured</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">

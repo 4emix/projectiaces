@@ -27,7 +27,15 @@ export async function GET() {
       return NextResponse.json(fallbackMagazineIssuesForAdmin)
     }
 
-    return NextResponse.json(data && data.length > 0 ? data : fallbackMagazineIssuesForAdmin)
+    const normalized =
+      data?.map((article) => ({
+        ...article,
+        publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
+      })) ?? []
+
+    return NextResponse.json(
+      normalized.length > 0 ? normalized : fallbackMagazineIssuesForAdmin.map((article) => ({ ...article }))
+    )
   } catch (error) {
     console.error("Error in GET /api/magazines:", error)
     return NextResponse.json(fallbackMagazineIssuesForAdmin)
@@ -61,8 +69,18 @@ export async function POST(request: NextRequest) {
       return trimmed.length > 0 ? trimmed : null
     }
 
-    if (typeof body.title !== "string" || typeof body.issue_number !== "string" || typeof body.publication_date !== "string") {
+    if (
+      typeof body.title !== "string" ||
+      typeof body.issue_number !== "string" ||
+      typeof body.publication_date !== "string" ||
+      typeof body.publication_type !== "string"
+    ) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+    }
+
+    const publicationType = body.publication_type.trim().toLowerCase()
+    if (publicationType !== "magazine" && publicationType !== "newsletter") {
+      return NextResponse.json({ error: "Invalid publication type" }, { status: 400 })
     }
 
     const newArticle = {
@@ -72,6 +90,8 @@ export async function POST(request: NextRequest) {
       pdf_url: sanitizeOptionalString(body.pdf_url),
       issue_number: body.issue_number.trim(),
       publication_date: body.publication_date.trim(),
+      publication_type: publicationType,
+
       is_featured: typeof body.is_featured === "boolean" ? body.is_featured : false,
       is_active: typeof body.is_active === "boolean" ? body.is_active : true,
     }

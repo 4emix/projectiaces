@@ -197,11 +197,12 @@ INSERT INTO magazine_articles (
   publication_date,
   cover_image_url,
   pdf_url,
+  publication_type,
   is_featured,
   is_active,
   created_at,
   updated_at
-) VALUES 
+) VALUES
 (
   gen_random_uuid(),
   'Sustainable Infrastructure for the Future',
@@ -210,6 +211,7 @@ INSERT INTO magazine_articles (
   '2024-03-01',
   '/placeholder.svg?height=400&width=300',
   '/placeholder-pdf.pdf',
+  'magazine',
   true,
   true,
   NOW(),
@@ -223,6 +225,7 @@ INSERT INTO magazine_articles (
   '2023-12-01',
   '/placeholder.svg?height=400&width=300',
   '/placeholder-pdf.pdf',
+  'magazine',
   false,
   true,
   NOW(),
@@ -236,6 +239,21 @@ INSERT INTO magazine_articles (
   '2023-09-01',
   '/placeholder.svg?height=400&width=300',
   '/placeholder-pdf.pdf',
+  'magazine',
+  false,
+  true,
+  NOW(),
+  NOW()
+),
+(
+  gen_random_uuid(),
+  'Monthly Newsletter - September 2024',
+  'Conference highlights, new partnerships, and student achievement recognitions.',
+  'Newsletter #9',
+  '2024-09-01',
+  '/placeholder.svg?height=400&width=300',
+  '/placeholder-pdf.pdf',
+  'newsletter',
   false,
   true,
   NOW(),

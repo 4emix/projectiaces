@@ -25,7 +25,12 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: "Magazine article not found" }, { status: 404 })
     }
 
-    return NextResponse.json(data)
+    const normalized = {
+      ...data,
+      publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
+    }
+
+    return NextResponse.json(normalized)
   } catch (error) {
     console.error("Error in GET /api/magazines/[id]:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
@@ -48,11 +53,85 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const updates = await request.json()
+    const body = await request.json()
+
+    const sanitizeOptionalString = (value: unknown) => {
+      if (typeof value !== "string") {
+        return null
+      }
+      const trimmed = value.trim()
+      return trimmed.length > 0 ? trimmed : null
+    }
+
+    const updates: Record<string, unknown> = {}
+
+    if (Object.prototype.hasOwnProperty.call(body, "title")) {
+      if (typeof body.title !== "string") {
+        return NextResponse.json({ error: "Invalid title" }, { status: 400 })
+      }
+      updates.title = body.title.trim()
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "description")) {
+      updates.description = sanitizeOptionalString(body.description)
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
+      updates.cover_image_url = sanitizeOptionalString(body.cover_image_url)
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "pdf_url")) {
+      updates.pdf_url = sanitizeOptionalString(body.pdf_url)
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "issue_number")) {
+      if (typeof body.issue_number !== "string") {
+        return NextResponse.json({ error: "Invalid issue number" }, { status: 400 })
+      }
+      updates.issue_number = body.issue_number.trim()
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "publication_date")) {
+      if (typeof body.publication_date !== "string") {
+        return NextResponse.json({ error: "Invalid publication date" }, { status: 400 })
+      }
+      updates.publication_date = body.publication_date.trim()
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "publication_type")) {
+      if (typeof body.publication_type !== "string") {
+        return NextResponse.json({ error: "Invalid publication type" }, { status: 400 })
+      }
+      const publicationType = body.publication_type.trim().toLowerCase()
+      if (publicationType !== "magazine" && publicationType !== "newsletter") {
+        return NextResponse.json({ error: "Invalid publication type" }, { status: 400 })
+      }
+      updates.publication_type = publicationType
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "is_featured")) {
+      if (typeof body.is_featured !== "boolean") {
+        return NextResponse.json({ error: "Invalid featured flag" }, { status: 400 })
+      }
+      updates.is_featured = body.is_featured
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, "is_active")) {
+      if (typeof body.is_active !== "boolean") {
+        return NextResponse.json({ error: "Invalid active flag" }, { status: 400 })
+      }
+      updates.is_active = body.is_active
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: "No valid fields provided" }, { status: 400 })
+    }
+
+    updates.updated_at = new Date().toISOString()
 
     const { data, error } = await supabase
       .from("magazine_articles")
-      .update({ ...updates, updated_at: new Date().toISOString() })
+      .update(updates)
       .eq("id", params.id)
       .select()
       .single()
@@ -62,7 +141,12 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: "Failed to update magazine article" }, { status: 500 })
     }
 
-    return NextResponse.json(data)
+    const normalized = {
+      ...data,
+      publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
+    }
+
+    return NextResponse.json(normalized)
   } catch (error) {
     console.error("Error in PATCH /api/magazines/[id]:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
