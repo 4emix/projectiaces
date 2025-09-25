@@ -213,75 +213,83 @@ export default function AdminMagazinePage() {
                   key={issue.id}
                   className="border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <CardContent className="space-y-4 p-6">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="flex flex-1 space-x-4">
-                        {issue.cover_image_url && (
-                          <img
-                            src={issue.cover_image_url || "/placeholder.svg"}
-                            alt={`${issue.title} cover`}
-                            className="hidden h-24 w-20 rounded-xl object-cover sm:block"
-                          />
-                        )}
-                        <div className="flex-1 space-y-3">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-lg font-semibold text-foreground">{issue.title}</h3>
-                            <Badge variant={issue.is_active ? "default" : "secondary"} className="rounded-full">
-                              {issue.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                            <Badge variant="outline" className="capitalize">
-                              {issue.publication_type}
-                            </Badge>
-                            {issue.is_featured && <Badge variant="outline">Featured</Badge>}
-                          </div>
-                          <div className="grid gap-1 text-sm text-muted-foreground">
-                            {issue.description && <p>{issue.description}</p>}
-                            <p>
-                              Issue No. {issue.issue_number || "Not set"} · Published: {" "}
-                              {issue.publication_date ? new Date(issue.publication_date).toLocaleDateString() : "TBA"}
-                            </p>
-                          </div>
+                  <CardContent className="space-y-6 p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                      <div className="sm:w-28">
+                        <div className="relative h-40 overflow-hidden rounded-2xl border border-border/50 bg-muted/30 shadow-inner sm:h-36">
+                          {issue.cover_image_url ? (
+                            <img
+                              src={issue.cover_image_url}
+                              alt={`${issue.title} cover`}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                              No Cover
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {issue.pdf_url && (
-                          <Button variant="outline" size="sm" className="rounded-full" asChild>
-                            <Link href={issue.pdf_url} target="_blank" rel="noopener noreferrer">
-                              <Eye className="mr-2 h-4 w-4" />
-                              View PDF
-                            </Link>
-                          </Button>
-                        )}
-                        {isSupabaseConfigured ? (
-                          <Button variant="outline" size="sm" className="rounded-full" asChild>
-                            <Link href={`/admin/magazine/${issue.id}/edit`}>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </Link>
-                          </Button>
-                        ) : (
-                          <Button variant="outline" size="sm" className="rounded-full" onClick={showSupabaseToast}>
+                      <div className="flex-1 space-y-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="text-lg font-semibold text-foreground">{issue.title}</h3>
+                          <Badge variant={issue.is_active ? "default" : "secondary"} className="rounded-full">
+                            {issue.is_active ? "Active" : "Inactive"}
+                          </Badge>
+                          <Badge variant="outline" className="capitalize">
+                            {issue.publication_type}
+                          </Badge>
+                          {issue.is_featured && <Badge variant="outline">Featured</Badge>}
+                        </div>
+                        <div className="grid gap-1 text-sm text-muted-foreground">
+                          {issue.description && <p className="leading-relaxed">{issue.description}</p>}
+                          <p className="font-medium text-foreground">
+                            Issue No. {issue.issue_number || "Not set"}
+                          </p>
+                          <p>
+                            Published: {issue.publication_date ? new Date(issue.publication_date).toLocaleDateString() : "TBA"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                      {issue.pdf_url && (
+                        <Button variant="outline" size="sm" className="rounded-full" asChild>
+                          <Link href={issue.pdf_url} target="_blank" rel="noopener noreferrer">
+                            <Eye className="mr-2 h-4 w-4" />
+                            View PDF
+                          </Link>
+                        </Button>
+                      )}
+                      {isSupabaseConfigured ? (
+                        <Button variant="outline" size="sm" className="rounded-full" asChild>
+                          <Link href={`/admin/magazine/${issue.id}/edit`}>
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
-                          </Button>
-                        )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full"
-                          onClick={() => toggleActive(issue.id, issue.is_active)}
-                        >
-                          {issue.is_active ? "Deactivate" : "Activate"}
+                          </Link>
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full text-destructive"
-                          onClick={() => handleDelete(issue.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
+                      ) : (
+                        <Button variant="outline" size="sm" className="rounded-full" onClick={showSupabaseToast}>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit
                         </Button>
-                      </div>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full"
+                        onClick={() => toggleActive(issue.id, issue.is_active)}
+                      >
+                        {issue.is_active ? "Deactivate" : "Activate"}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-full text-destructive"
+                        onClick={() => handleDelete(issue.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
