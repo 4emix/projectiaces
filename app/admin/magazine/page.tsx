@@ -205,6 +205,7 @@ export default function AdminMagazinePage() {
                         <Badge variant="outline" className="capitalize">
                           {issue.publication_type}
                         </Badge>
+
                         {issue.is_featured && <Badge variant="outline">Featured</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">
