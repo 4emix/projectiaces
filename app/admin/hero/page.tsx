@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
+import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { HeroContent } from "@/lib/types"
 
 function toNullableString(value: string | null | undefined) {
@@ -16,9 +17,7 @@ function toNullableString(value: string | null | undefined) {
 }
 
 export default function HeroAdminPage() {
-  const isSupabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  )
+  const isSupabaseConfigured = isSupabaseEnvConfigured()
   const [heroData, setHeroData] = useState<Partial<HeroContent>>({
     title: "",
     subtitle: "",

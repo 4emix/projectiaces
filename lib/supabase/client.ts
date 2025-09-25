@@ -1,5 +1,7 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
+import { getSupabaseConfig } from "./config"
+
 type SupabaseClient = ReturnType<typeof createSupabaseClient>
 
 let cachedClient: SupabaseClient | null = null
@@ -41,10 +43,9 @@ function createStubClient(): SupabaseClient {
 }
 
 export function createClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const config = getSupabaseConfig()
 
-  if (!url || !anonKey) {
+  if (!config) {
     if (!cachedStubClient) {
       cachedStubClient = createStubClient()
     }
@@ -52,7 +53,7 @@ export function createClient() {
   }
 
   if (!cachedClient) {
-    cachedClient = createSupabaseClient(url, anonKey)
+    cachedClient = createSupabaseClient(config.url, config.anonKey)
   }
   return cachedClient
 }
