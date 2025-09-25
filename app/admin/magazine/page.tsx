@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { ArrowLeft, Edit, Eye, FileText, Plus, Trash2 } from "lucide-react"
+
+import { AdminNavigation } from "@/components/admin/admin-navigation"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Trash2, Eye, FileText } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
@@ -123,141 +125,171 @@ export default function AdminMagazinePage() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="text-center">Loading magazine issues...</div>
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/40 to-background">
+        <AdminNavigation />
+        <main className="flex min-h-[60vh] items-center justify-center pt-24">
+          <div className="text-center">
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-accent/40 border-t-accent"></div>
+            <p className="mt-4 text-sm text-muted-foreground">Loading magazine issues...</p>
+          </div>
+        </main>
       </div>
     )
   }
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Magazine Management</h1>
-          <p className="text-muted-foreground">Manage magazine issues and publications</p>
-        </div>
-        {isSupabaseConfigured ? (
-          <Button asChild>
-            <Link href="/admin/magazine/new">
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Issue
-            </Link>
-          </Button>
-        ) : (
-          <Button onClick={showSupabaseToast} variant="outline">
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Issue
-          </Button>
-        )}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/40 to-background">
+      <AdminNavigation />
+      <main className="pt-24 pb-12">
+        <div className="mx-auto max-w-6xl space-y-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-3">
+              <div>
+                <h1 className="text-3xl font-semibold text-foreground">Magazine Management</h1>
+                <p className="text-muted-foreground">Manage magazine issues and publications</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="w-full justify-start rounded-full text-muted-foreground transition hover:text-foreground md:w-auto"
+              >
+                <Link href="/admin">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to dashboard
+                </Link>
+              </Button>
+            </div>
+            {isSupabaseConfigured ? (
+              <Button asChild className="rounded-full px-5">
+                <Link href="/admin/magazine/new">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add New Issue
+                </Link>
+              </Button>
+            ) : (
+              <Button onClick={showSupabaseToast} variant="outline" className="rounded-full px-5">
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Issue
+              </Button>
+            )}
+          </div>
 
-      {!isSupabaseConfigured && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertTitle>Magazine management is read-only</AlertTitle>
-          <AlertDescription>
-            Supabase credentials are not configured. The issues listed below are static fallback data and cannot be changed until
-            Supabase is connected.
-          </AlertDescription>
-        </Alert>
-      )}
+          {!isSupabaseConfigured && (
+            <Alert variant="destructive" className="border border-border/60 bg-destructive/10 text-destructive">
+              <AlertTitle>Magazine management is read-only</AlertTitle>
+              <AlertDescription>
+                Supabase credentials are not configured. The issues listed below are static fallback data and cannot be changed
+                until Supabase is connected.
+              </AlertDescription>
+            </Alert>
+          )}
 
-      <div className="grid gap-6">
-        {issues.length === 0 ? (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-medium mb-2">No magazine issues found</h3>
-              <p className="text-muted-foreground mb-4">Get started by creating your first magazine issue.</p>
-              {isSupabaseConfigured ? (
-                <Button asChild>
-                  <Link href="/admin/magazine/new">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create First Issue
-                  </Link>
-                </Button>
-              ) : (
-                <Button onClick={showSupabaseToast} variant="outline">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create First Issue
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          issues.map((issue) => (
-            <Card key={issue.id}>
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex space-x-4">
-                    {issue.cover_image_url && (
-                      <img
-                        src={issue.cover_image_url || "/placeholder.svg"}
-                        alt={`${issue.title} cover`}
-                        className="w-16 h-20 object-cover rounded"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h3 className="text-lg font-semibold text-foreground">{issue.title}</h3>
-                        <Badge variant={issue.is_active ? "default" : "secondary"}>
-                          {issue.is_active ? "Active" : "Inactive"}
-                        </Badge>
-                        <Badge variant="outline" className="capitalize">
-                          {issue.publication_type}
-                        </Badge>
-                        {issue.is_featured && <Badge variant="outline">Featured</Badge>}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {issues.length === 0 ? (
+              <Card className="border-border/60 bg-card/80 shadow-sm">
+                <CardContent className="p-10 text-center">
+                  <FileText className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                  <h3 className="mb-2 text-lg font-medium">No magazine issues found</h3>
+                  <p className="mb-4 text-muted-foreground">Get started by creating your first magazine issue.</p>
+                  {isSupabaseConfigured ? (
+                    <Button asChild className="rounded-full px-5">
+                      <Link href="/admin/magazine/new">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create First Issue
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button onClick={showSupabaseToast} variant="outline" className="rounded-full px-5">
+                      <Plus className="mr-2 h-4 w-4" />
+                      Create First Issue
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              issues.map((issue) => (
+                <Card
+                  key={issue.id}
+                  className="border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <CardContent className="space-y-4 p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex flex-1 space-x-4">
+                        {issue.cover_image_url && (
+                          <img
+                            src={issue.cover_image_url || "/placeholder.svg"}
+                            alt={`${issue.title} cover`}
+                            className="hidden h-24 w-20 rounded-xl object-cover sm:block"
+                          />
+                        )}
+                        <div className="flex-1 space-y-3">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-lg font-semibold text-foreground">{issue.title}</h3>
+                            <Badge variant={issue.is_active ? "default" : "secondary"} className="rounded-full">
+                              {issue.is_active ? "Active" : "Inactive"}
+                            </Badge>
+                            <Badge variant="outline" className="capitalize">
+                              {issue.publication_type}
+                            </Badge>
+                            {issue.is_featured && <Badge variant="outline">Featured</Badge>}
+                          </div>
+                          <div className="grid gap-1 text-sm text-muted-foreground">
+                            {issue.description && <p>{issue.description}</p>}
+                            <p>
+                              Issue No. {issue.issue_number || "Not set"} · Published: {" "}
+                              {issue.publication_date ? new Date(issue.publication_date).toLocaleDateString() : "TBA"}
+                            </p>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {issue.issue_number ? issue.issue_number : "Issue number not set"}
-                      </p>
-                      {issue.description && (
-                        <p className="text-sm text-muted-foreground mb-2">{issue.description}</p>
-                      )}
-                      <p className="text-xs text-muted-foreground">
-                        Published: {issue.publication_date ? new Date(issue.publication_date).toLocaleDateString() : "Not scheduled"}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {issue.pdf_url && (
+                          <Button variant="outline" size="sm" className="rounded-full" asChild>
+                            <Link href={issue.pdf_url} target="_blank" rel="noopener noreferrer">
+                              <Eye className="mr-2 h-4 w-4" />
+                              View PDF
+                            </Link>
+                          </Button>
+                        )}
+                        {isSupabaseConfigured ? (
+                          <Button variant="outline" size="sm" className="rounded-full" asChild>
+                            <Link href={`/admin/magazine/${issue.id}/edit`}>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </Link>
+                          </Button>
+                        ) : (
+                          <Button variant="outline" size="sm" className="rounded-full" onClick={showSupabaseToast}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full"
+                          onClick={() => toggleActive(issue.id, issue.is_active)}
+                        >
+                          {issue.is_active ? "Deactivate" : "Activate"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-full text-destructive"
+                          onClick={() => handleDelete(issue.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {issue.pdf_url && (
-                      <Button variant="outline" size="sm" asChild>
-                        <a href={issue.pdf_url} target="_blank" rel="noopener noreferrer">
-                          <Eye className="w-4 h-4 mr-2" />
-                          View PDF
-                        </a>
-                      </Button>
-                    )}
-                    {isSupabaseConfigured ? (
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/admin/magazine/${issue.id}/edit`}>
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </Link>
-                      </Button>
-                    ) : (
-                      <Button variant="outline" size="sm" onClick={showSupabaseToast}>
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit
-                      </Button>
-                    )}
-                    <Button variant="outline" size="sm" onClick={() => toggleActive(issue.id, issue.is_active)}>
-                      {issue.is_active ? "Deactivate" : "Activate"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDelete(issue.id)}
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

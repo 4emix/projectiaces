@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Trash2, Calendar, MapPin } from "lucide-react"
+import { Plus, Edit, Trash2, Calendar, MapPin, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { AdminNavigation } from "@/components/admin/admin-navigation"
@@ -124,11 +124,12 @@ export default function AdminEventsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/40 to-background">
         <AdminNavigation />
-        <main className="pt-16">
-          <div className="p-8">
-            <div className="text-center">Loading events...</div>
+        <main className="flex min-h-[60vh] items-center justify-center pt-24">
+          <div className="text-center">
+            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-accent/40 border-t-accent"></div>
+            <p className="mt-4 text-sm text-muted-foreground">Loading events...</p>
           </div>
         </main>
       </div>
@@ -199,7 +200,10 @@ export default function AdminEventsPage() {
       : "Date to be announced"
 
     return (
-      <Card key={`${isUpcoming ? "upcoming" : "past"}-${event.id}`}>
+      <Card
+        key={`${isUpcoming ? "upcoming" : "past"}-${event.id}`}
+        className="border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+      >
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="flex flex-1 space-x-4">
@@ -235,7 +239,7 @@ export default function AdminEventsPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="border border-input bg-white text-black hover:bg-muted"
+                      className="rounded-full border border-input bg-background text-foreground hover:bg-muted"
                     >
                       <Link
                         href={event.registration_url || "#"}
@@ -246,10 +250,7 @@ export default function AdminEventsPage() {
                       </Link>
                     </Button>
                   ) : (
-                    <Button
-                      asChild
-                      className="bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-                    >
+                    <Button asChild className="rounded-full bg-neutral-900 text-neutral-100 hover:bg-neutral-700">
                       <Link
                         href={event.registration_url || "#"}
                         target="_blank"
@@ -264,26 +265,31 @@ export default function AdminEventsPage() {
             </div>
             <div className="flex items-center justify-end space-x-2">
               {isSupabaseConfigured ? (
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" className="rounded-full" asChild>
                   <Link href={`/admin/events/${event.id}/edit`}>
                     <Edit className="mr-2 h-4 w-4" />
                     Edit
                   </Link>
                 </Button>
               ) : (
-                <Button variant="outline" size="sm" onClick={showSupabaseToast}>
+                <Button variant="outline" size="sm" className="rounded-full" onClick={showSupabaseToast}>
                   <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
               )}
-              <Button variant="outline" size="sm" onClick={() => toggleActive(event.id, event.is_active)}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                onClick={() => toggleActive(event.id, event.is_active)}
+              >
                 {event.is_active ? "Deactivate" : "Activate"}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
+                className="rounded-full text-destructive"
                 onClick={() => handleDelete(event.id)}
-                className="text-destructive hover:text-destructive"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -295,32 +301,45 @@ export default function AdminEventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/40 to-background">
       <AdminNavigation />
-      <main className="pt-16">
-        <div className="p-8">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Events Management</h1>
-              <p className="text-muted-foreground">Manage upcoming events and activities</p>
+      <main className="pt-24 pb-12">
+        <div className="mx-auto max-w-6xl space-y-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-3">
+              <div>
+                <h1 className="text-3xl font-semibold text-foreground">Events Management</h1>
+                <p className="text-muted-foreground">Manage upcoming events and activities</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="w-full justify-start rounded-full text-muted-foreground transition hover:text-foreground md:w-auto"
+              >
+                <Link href="/admin">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to dashboard
+                </Link>
+              </Button>
             </div>
             {isSupabaseConfigured ? (
-              <Button asChild>
+              <Button asChild className="rounded-full px-5">
                 <Link href="/admin/events/new">
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="mr-2 h-4 w-4" />
                   Add New Event
                 </Link>
               </Button>
             ) : (
-              <Button onClick={showSupabaseToast} variant="outline">
-                <Plus className="w-4 h-4 mr-2" />
+              <Button onClick={showSupabaseToast} variant="outline" className="rounded-full px-5">
+                <Plus className="mr-2 h-4 w-4" />
                 Add New Event
               </Button>
             )}
           </div>
 
           {!isSupabaseConfigured && (
-            <Alert variant="destructive" className="mb-6">
+            <Alert variant="destructive" className="border border-border/60 bg-destructive/10 text-destructive">
               <AlertTitle>Event management is read-only</AlertTitle>
               <AlertDescription>
                 Supabase credentials are not configured. Existing entries shown here are static fallback data and cannot be
@@ -331,21 +350,21 @@ export default function AdminEventsPage() {
 
           <div className="grid gap-10">
             {events.length === 0 ? (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Calendar className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-medium mb-2">No events found</h3>
-                  <p className="text-muted-foreground mb-4">Get started by creating your first event.</p>
+              <Card className="border-border/60 bg-card/80 shadow-sm">
+                <CardContent className="p-10 text-center">
+                  <Calendar className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+                  <h3 className="mb-2 text-lg font-medium">No events found</h3>
+                  <p className="mb-4 text-muted-foreground">Get started by creating your first event.</p>
                   {isSupabaseConfigured ? (
-                    <Button asChild>
+                    <Button asChild className="rounded-full px-5">
                       <Link href="/admin/events/new">
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="mr-2 h-4 w-4" />
                         Create First Event
                       </Link>
                     </Button>
                   ) : (
-                    <Button onClick={showSupabaseToast} variant="outline">
-                      <Plus className="w-4 h-4 mr-2" />
+                    <Button onClick={showSupabaseToast} variant="outline" className="rounded-full px-5">
+                      <Plus className="mr-2 h-4 w-4" />
                       Create First Event
                     </Button>
                   )}
@@ -360,7 +379,7 @@ export default function AdminEventsPage() {
                   </div>
                   <div className="mt-4 grid gap-6">
                     {upcomingEvents.length === 0 ? (
-                      <Card>
+                      <Card className="border-border/60 bg-card/60">
                         <CardContent className="p-6 text-center text-sm text-muted-foreground">
                           No upcoming events.
                         </CardContent>
@@ -377,7 +396,7 @@ export default function AdminEventsPage() {
                   </div>
                   <div className="mt-4 grid gap-6">
                     {pastEvents.length === 0 ? (
-                      <Card>
+                      <Card className="border-border/60 bg-card/60">
                         <CardContent className="p-6 text-center text-sm text-muted-foreground">
                           No past events yet.
                         </CardContent>

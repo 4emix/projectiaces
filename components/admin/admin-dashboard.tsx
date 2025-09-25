@@ -91,37 +91,47 @@ export function AdminDashboard() {
   ]
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage your IACES website content</p>
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
+      <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur">
+        <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Dashboard</p>
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Welcome back to the Admin Hub</h1>
+            <p className="max-w-2xl text-sm text-muted-foreground">
+              Monitor high-level activity, jump into key management areas, and keep your IACES presence looking fresh.
+            </p>
+          </div>
+          <Button asChild className="rounded-full px-6 py-2 text-sm shadow">
+            <Link href="/">
+              <Eye className="mr-2 h-4 w-4" />
+              View live site
+            </Link>
+          </Button>
         </div>
-        <Button asChild>
-          <Link href="/">
-            <Eye className="w-4 h-4 mr-2" />
-            View Site
-          </Link>
-        </Button>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <Card key={index}>
+            <Card
+              key={index}
+              className="border-border/60 bg-gradient-to-br from-background via-card to-card/80 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium text-muted-foreground/80">{stat.title}</CardTitle>
+                <span className="rounded-full border border-border/60 bg-background/80 p-2">
+                  <Icon className="h-4 w-4 text-accent" />
+                </span>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                <div className="flex items-center space-x-1 text-xs">
+                <div className="text-3xl font-semibold text-foreground">{stat.value}</div>
+                <div className="mt-2 flex items-center space-x-2 text-xs">
                   <Badge variant={stat.changeType === "positive" ? "default" : "secondary"} className="text-xs">
                     {stat.change}
                   </Badge>
-                  <span className="text-muted-foreground">from last month</span>
+                  <span className="text-muted-foreground">vs. last month</span>
                 </div>
               </CardContent>
             </Card>
@@ -129,31 +139,36 @@ export function AdminDashboard() {
         })}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid gap-8 lg:grid-cols-2">
         {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Plus className="w-5 h-5" />
+        <Card className="border-border/60 bg-card/80 shadow-sm">
+          <CardHeader className="border-b border-border/40 pb-4">
+            <CardTitle className="flex items-center space-x-2 text-lg">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
+                <Plus className="h-5 w-5 text-accent" />
+              </span>
               <span>Quick Actions</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 pt-4">
             {quickActions.map((action, index) => {
               const Icon = action.icon
               return (
-                <div key={index} className="flex items-center justify-between p-4 border border-border rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/60 p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/60 hover:shadow-md"
+                >
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-accent/20 rounded-lg">
-                      <Icon className="w-4 h-4 text-accent-foreground" />
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10">
+                      <Icon className="h-5 w-5 text-accent" />
                     </div>
                     <div>
                       <h4 className="font-medium text-foreground">{action.title}</h4>
                       <p className="text-sm text-muted-foreground">{action.description}</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={action.href}>Go</Link>
+                  <Button variant="outline" size="sm" className="rounded-full" asChild>
+                    <Link href={action.href}>Open</Link>
                   </Button>
                 </div>
               )
@@ -162,23 +177,28 @@ export function AdminDashboard() {
         </Card>
 
         {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5" />
+        <Card className="border-border/60 bg-card/80 shadow-sm">
+          <CardHeader className="border-b border-border/40 pb-4">
+            <CardTitle className="flex items-center space-x-2 text-lg">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
+                <TrendingUp className="h-5 w-5 text-accent" />
+              </span>
               <span>Recent Activity</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-4">
             {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-start space-x-3 p-3 border border-border rounded-lg">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+              <div
+                key={index}
+                className="flex items-start space-x-3 rounded-2xl border border-border/50 bg-background/60 p-4 shadow-sm"
+              >
+                <div className="mt-2 h-2 w-2 rounded-full bg-accent"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{activity.action}</p>
                   <p className="text-sm text-muted-foreground">{activity.item}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{activity.time}</p>
                 </div>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="rounded-full text-xs capitalize">
                   {activity.type}
                 </Badge>
               </div>
@@ -188,96 +208,71 @@ export function AdminDashboard() {
       </div>
 
       {/* Content Management Overview */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Hero Section</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Manage the main homepage hero content and call-to-action.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/hero">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit Hero
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">About Section</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Update mission, vision, and organizational information.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/about">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit About
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Board Members</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Manage board member profiles and information.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/board">
-                <Users className="w-4 h-4 mr-2" />
-                Manage Board
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Local Committees</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Manage local committees and their information.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/committees">
-                <Globe className="w-4 h-4 mr-2" />
-                Manage Committees
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Publications</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Manage magazines and newsletters.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/magazine">
-                <FileText className="w-4 h-4 mr-2" />
-                Manage Publications
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Events</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">Manage upcoming and past events.</p>
-            <Button variant="outline" size="sm" asChild className="w-full bg-transparent">
-              <Link href="/admin/events">
-                <Calendar className="w-4 h-4 mr-2" />
-                Manage Events
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[
+          {
+            title: "Hero Section",
+            description: "Manage the main homepage hero content and call-to-action.",
+            href: "/admin/hero",
+            icon: <Edit className="h-4 w-4" />,
+            cta: "Edit Hero",
+          },
+          {
+            title: "About Section",
+            description: "Update mission, vision, and organizational information.",
+            href: "/admin/about",
+            icon: <Edit className="h-4 w-4" />,
+            cta: "Edit About",
+          },
+          {
+            title: "Board Members",
+            description: "Manage board member profiles and information.",
+            href: "/admin/board",
+            icon: <Users className="h-4 w-4" />,
+            cta: "Manage Board",
+          },
+          {
+            title: "Local Committees",
+            description: "Manage local committees and their information.",
+            href: "/admin/committees",
+            icon: <Globe className="h-4 w-4" />,
+            cta: "Manage Committees",
+          },
+          {
+            title: "Publications",
+            description: "Manage magazines and newsletters.",
+            href: "/admin/magazine",
+            icon: <FileText className="h-4 w-4" />,
+            cta: "Manage Publications",
+          },
+          {
+            title: "Events",
+            description: "Manage upcoming and past events.",
+            href: "/admin/events",
+            icon: <Calendar className="h-4 w-4" />,
+            cta: "Manage Events",
+          },
+        ].map((section) => (
+          <Card
+            key={section.title}
+            className="flex h-full flex-col justify-between border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+          >
+            <CardHeader className="border-b border-border/40 pb-4">
+              <CardTitle className="text-lg text-foreground">{section.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-1 flex-col justify-between space-y-4 pt-4">
+              <p className="text-sm text-muted-foreground">{section.description}</p>
+              <Button variant="outline" size="sm" asChild className="w-full rounded-full">
+                <Link href={section.href}>
+                  <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-accent">
+                    {section.icon}
+                  </span>
+                  {section.cta}
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   )
