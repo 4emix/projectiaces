@@ -5,6 +5,11 @@ const SUPABASE_ANON_KEY_ENV_KEYS = [
   "SUPABASE_KEY",
 ] as const
 
+const SUPABASE_SERVICE_ROLE_KEY_ENV_KEYS = [
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SUPABASE_SERVICE_KEY",
+] as const
+
 const DEFAULT_SUPABASE_URL = "https://fsakwsavwoaakljdrtig.supabase.co"
 const DEFAULT_SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzYWt3c2F2d29hYWtsamRydGlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MjA3MzUsImV4cCI6MjA3NDE5NjczNX0.Tzd4M1m2-BiZJYvFmHfUKM-Ce2WTI00y4eAiaTeoYIU"
@@ -13,6 +18,12 @@ const PLACEHOLDER_ANON_KEY_VALUES = new Set([
   "your-supabase-anon-key",
   "your_supabase_anon_key",
   "YOUR_SUPABASE_ANON_KEY",
+])
+
+const PLACEHOLDER_SERVICE_ROLE_KEY_VALUES = new Set([
+  "your-supabase-service-role-key",
+  "your_supabase_service_role_key",
+  "YOUR_SUPABASE_SERVICE_ROLE_KEY",
 ])
 
 const PLACEHOLDER_URL_VALUES = new Set([
@@ -24,6 +35,10 @@ const PLACEHOLDER_URL_VALUES = new Set([
 export type SupabaseConfig = {
   url: string
   anonKey: string
+}
+
+export type SupabaseServiceConfig = SupabaseConfig & {
+  serviceRoleKey: string
 }
 
 
@@ -64,6 +79,26 @@ export function getSupabaseConfig(): SupabaseConfig | null {
   return { url, anonKey }
 }
 
+export function getSupabaseServiceRoleConfig(): SupabaseServiceConfig | null {
+  const baseConfig = getSupabaseConfig()
+  if (!baseConfig) {
+    return null
+  }
+
+  const serviceRoleKey = readEnvValue(SUPABASE_SERVICE_ROLE_KEY_ENV_KEYS, {
+    placeholderValues: PLACEHOLDER_SERVICE_ROLE_KEY_VALUES,
+  })
+
+  if (!serviceRoleKey) {
+    return null
+  }
+
+  return {
+    ...baseConfig,
+    serviceRoleKey,
+  }
+}
+
 export function isSupabaseEnvConfigured(): boolean {
   return getSupabaseConfig() !== null
 }
@@ -82,5 +117,10 @@ export function getSupabaseAnonKey(): string | undefined {
       placeholderValues: PLACEHOLDER_ANON_KEY_VALUES,
     }) ?? DEFAULT_SUPABASE_ANON_KEY
   )
+}
 
+export function getSupabaseServiceRoleKey(): string | undefined {
+  return readEnvValue(SUPABASE_SERVICE_ROLE_KEY_ENV_KEYS, {
+    placeholderValues: PLACEHOLDER_SERVICE_ROLE_KEY_VALUES,
+  })
 }

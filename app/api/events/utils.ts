@@ -104,7 +104,6 @@ function adjustPayloadForError(
   if (message.includes("registration_url") && "registration_url" in payload) { 
     const { registration_url: _unusedRegistrationUrl, ...rest } = payload
     return { ...rest }
-
   }
 
   if (message.includes("updated_at") && "updated_at" in payload) {
