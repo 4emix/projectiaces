@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { AboutContent } from "@/lib/types"
+import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 
 export default function AboutAdminPage({ params }: { params: { id: string } }) {
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
