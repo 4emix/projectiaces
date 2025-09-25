@@ -28,10 +28,10 @@ INSERT INTO public.board_members (name, position, bio, display_order, user_id) V
 ON CONFLICT DO NOTHING;
 
 -- Insert sample magazine articles
-INSERT INTO public.magazine_articles (title, description, issue_number, publication_date, is_featured, user_id) VALUES
-('The Future of Quantum Computing', 'Exploring the latest developments in quantum computing and its implications for computer engineering.', 'Vol. 15, Issue 3', '2024-09-01', true, '00000000-0000-0000-0000-000000000000'),
-('AI Ethics in Engineering Education', 'Discussing the importance of ethical considerations in artificial intelligence curriculum.', 'Vol. 15, Issue 2', '2024-06-01', false, '00000000-0000-0000-0000-000000000000'),
-('Sustainable Computing Practices', 'How computer engineers can contribute to environmental sustainability through green computing.', 'Vol. 15, Issue 1', '2024-03-01', false, '00000000-0000-0000-0000-000000000000')
+INSERT INTO public.magazine_articles (title, description, issue_number, publication_date, publication_type, is_featured, user_id) VALUES
+('The Future of Quantum Computing', 'Exploring the latest developments in quantum computing and its implications for computer engineering.', 'Vol. 15, Issue 3', '2024-09-01', 'magazine', true, '00000000-0000-0000-0000-000000000000'),
+('AI Ethics in Engineering Education', 'Discussing the importance of ethical considerations in artificial intelligence curriculum.', 'Vol. 15, Issue 2', '2024-06-01', 'magazine', false, '00000000-0000-0000-0000-000000000000'),
+('Monthly Newsletter - March 2024', 'Highlights from the March 2024 activities, events, and member achievements.', 'Newsletter #3', '2024-03-15', 'newsletter', false, '00000000-0000-0000-0000-000000000000')
 ON CONFLICT DO NOTHING;
 
 -- Insert default contact information
