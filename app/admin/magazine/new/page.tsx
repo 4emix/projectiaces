@@ -10,6 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Save, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
@@ -23,12 +30,13 @@ export default function NewMagazineIssuePage() {
   const isSupabaseConfigured = isSupabaseEnvConfigured()
   const [formData, setFormData] = useState({
     title: "",
-    volume: 1,
-    issue: 1,
+    issue_number: "",
     description: "",
     cover_image_url: "",
     pdf_url: "",
-    published_date: new Date().toISOString().split("T")[0],
+    publication_date: new Date().toISOString().split("T")[0],
+    publication_type: "magazine" as "magazine" | "newsletter",
+    is_featured: false,
     is_active: true,
   })
 
@@ -46,12 +54,34 @@ export default function NewMagazineIssuePage() {
     setLoading(true)
 
     try {
+      const payload = {
+        title: formData.title.trim(),
+        description: formData.description.trim() || null,
+        cover_image_url: formData.cover_image_url.trim() || null,
+        pdf_url: formData.pdf_url.trim() || null,
+        issue_number: formData.issue_number.trim(),
+        publication_date: formData.publication_date,
+        publication_type: formData.publication_type,
+        is_featured: formData.is_featured,
+        is_active: formData.is_active,
+      }
+
+      if (!payload.title || !payload.issue_number || !payload.publication_date) {
+        toast({
+          title: "Missing required information",
+          description: "Title, issue number, and publication date are required to create a magazine issue.",
+          variant: "destructive",
+        })
+        setLoading(false)
+        return
+      }
+
       const response = await fetch("/api/magazines", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {
@@ -121,36 +151,39 @@ export default function NewMagazineIssuePage() {
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="volume">Volume *</Label>
+                <Label htmlFor="issue_number">Issue Number *</Label>
                 <Input
-                  id="volume"
-                  type="number"
-                  value={formData.volume}
-                  onChange={(e) => handleChange("volume", Number.parseInt(e.target.value) || 1)}
-                  min="1"
+                  id="issue_number"
+                  value={formData.issue_number}
+                  onChange={(e) => handleChange("issue_number", e.target.value)}
+                  placeholder="Vol. 15, Issue 3"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="issue">Issue Number *</Label>
+                <Label htmlFor="publication_date">Publication Date *</Label>
                 <Input
-                  id="issue"
-                  type="number"
-                  value={formData.issue}
-                  onChange={(e) => handleChange("issue", Number.parseInt(e.target.value) || 1)}
-                  min="1"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="published_date">Published Date *</Label>
-                <Input
-                  id="published_date"
+                  id="publication_date"
                   type="date"
-                  value={formData.published_date}
-                  onChange={(e) => handleChange("published_date", e.target.value)}
+                  value={formData.publication_date}
+                  onChange={(e) => handleChange("publication_date", e.target.value)}
                   required
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="publication_type">Publication Type *</Label>
+                <Select
+                  value={formData.publication_type}
+                  onValueChange={(value) => handleChange("publication_type", value as "magazine" | "newsletter")}
+                >
+                  <SelectTrigger id="publication_type">
+                    <SelectValue placeholder="Select publication type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="magazine">Magazine</SelectItem>
+                    <SelectItem value="newsletter">Newsletter</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -187,13 +220,23 @@ export default function NewMagazineIssuePage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="is_active"
-                checked={formData.is_active}
-                onCheckedChange={(checked) => handleChange("is_active", checked)}
-              />
-              <Label htmlFor="is_active">Publish immediately</Label>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onCheckedChange={(checked) => handleChange("is_featured", checked)}
+                />
+                <Label htmlFor="is_featured">Feature this issue on the magazine page</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => handleChange("is_active", checked)}
+                />
+                <Label htmlFor="is_active">Publish immediately</Label>
+              </div>
             </div>
 
             <Button type="submit" disabled={loading || !isSupabaseConfigured} className="w-full">

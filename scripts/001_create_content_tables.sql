@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS public.magazine_articles (
   pdf_url TEXT,
   issue_number TEXT,
   publication_date DATE,
+  publication_type TEXT NOT NULL DEFAULT 'magazine',
   is_featured BOOLEAN DEFAULT false,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

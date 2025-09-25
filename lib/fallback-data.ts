@@ -113,6 +113,7 @@ export const fallbackMagazineArticles: MagazineArticle[] = [
     pdf_url: null,
     issue_number: "Vol. 15, Issue 3",
     publication_date: FALLBACK_TIMESTAMP,
+    publication_type: "magazine",
     is_featured: true,
     is_active: true,
     created_at: FALLBACK_TIMESTAMP,
@@ -127,6 +128,37 @@ export const fallbackMagazineArticles: MagazineArticle[] = [
     pdf_url: null,
     issue_number: "Vol. 15, Issue 2",
     publication_date: "2023-11-01T00:00:00.000Z",
+    publication_type: "magazine",
+    is_featured: false,
+    is_active: true,
+    created_at: FALLBACK_TIMESTAMP,
+    updated_at: FALLBACK_TIMESTAMP,
+    user_id: "fallback",
+  },
+  {
+    id: "fallback-newsletter-1",
+    title: "Monthly Newsletter - September 2024",
+    description: "Conference highlights, new partnerships, and student achievement recognitions.",
+    cover_image_url: null,
+    pdf_url: null,
+    issue_number: "Newsletter #9",
+    publication_date: "2024-09-01T00:00:00.000Z",
+    publication_type: "newsletter",
+    is_featured: false,
+    is_active: true,
+    created_at: FALLBACK_TIMESTAMP,
+    updated_at: FALLBACK_TIMESTAMP,
+    user_id: "fallback",
+  },
+  {
+    id: "fallback-newsletter-2",
+    title: "Monthly Newsletter - August 2024",
+    description: "Summer program results, research collaborations, and upcoming fall events.",
+    cover_image_url: null,
+    pdf_url: null,
+    issue_number: "Newsletter #8",
+    publication_date: "2024-08-01T00:00:00.000Z",
+    publication_type: "newsletter",
     is_featured: false,
     is_active: true,
     created_at: FALLBACK_TIMESTAMP,
@@ -243,44 +275,52 @@ export const fallbackEvents: AdminEventFallback[] = [
   },
 ]
 
-export interface AdminMagazineIssueFallback {
-  id: string
-  title: string
-  volume: number
-  issue: number
-  description: string
-  cover_image_url: string
-  pdf_url: string
-  published_date: string
-  is_active: boolean
-  created_at: string
-}
-
-export const fallbackMagazineIssuesForAdmin: AdminMagazineIssueFallback[] = [
+export const fallbackMagazineIssuesForAdmin: MagazineArticle[] = [
   {
-    id: "fallback-issue-1",
+    id: "fallback-magazine-1",
     title: "The Future of Civil Engineering",
-    volume: 15,
-    issue: 3,
     description:
       "Exploring emerging technologies, sustainable practices, and the global impact of student-led research.",
-    cover_image_url: "",
-    pdf_url: "",
-    published_date: "2024-09-01T00:00:00.000Z",
+    cover_image_url: null,
+    pdf_url: null,
+    issue_number: "Vol. 15, Issue 3",
+    publication_date: "2024-09-01T00:00:00.000Z",
+    publication_type: "magazine",
+    is_featured: true,
     is_active: true,
     created_at: FALLBACK_TIMESTAMP,
+    updated_at: FALLBACK_TIMESTAMP,
+    user_id: "fallback",
   },
   {
-    id: "fallback-issue-2",
+    id: "fallback-magazine-2",
     title: "Infrastructure Innovation Digest",
-    volume: 15,
-    issue: 2,
     description:
       "Highlighting cross-border collaboration projects and new materials shaping resilient infrastructure.",
-    cover_image_url: "",
-    pdf_url: "",
-    published_date: "2024-06-01T00:00:00.000Z",
+    cover_image_url: null,
+    pdf_url: null,
+    issue_number: "Vol. 15, Issue 2",
+    publication_date: "2024-06-01T00:00:00.000Z",
+    publication_type: "magazine",
+    is_featured: false,
     is_active: true,
     created_at: FALLBACK_TIMESTAMP,
+    updated_at: FALLBACK_TIMESTAMP,
+    user_id: "fallback",
+  },
+  {
+    id: "fallback-newsletter-1",
+    title: "Monthly Newsletter - September 2024",
+    description: "Conference highlights, new partnerships, and student achievement recognitions.",
+    cover_image_url: null,
+    pdf_url: null,
+    issue_number: "Newsletter #9",
+    publication_date: "2024-09-01T00:00:00.000Z",
+    publication_type: "newsletter",
+    is_featured: false,
+    is_active: true,
+    created_at: FALLBACK_TIMESTAMP,
+    updated_at: FALLBACK_TIMESTAMP,
+    user_id: "fallback",
   },
 ]

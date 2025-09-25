@@ -27,7 +27,15 @@ export async function GET() {
       return NextResponse.json(fallbackMagazineIssuesForAdmin)
     }
 
-    return NextResponse.json(data && data.length > 0 ? data : fallbackMagazineIssuesForAdmin)
+    const normalized =
+      data?.map((article) => ({
+        ...article,
+        publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
+      })) ?? []
+
+    return NextResponse.json(
+      normalized.length > 0 ? normalized : fallbackMagazineIssuesForAdmin.map((article) => ({ ...article }))
+    )
   } catch (error) {
     console.error("Error in GET /api/magazines:", error)
     return NextResponse.json(fallbackMagazineIssuesForAdmin)
@@ -53,12 +61,49 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("[v0] Magazines API - creating article:", body)
 
+    const sanitizeOptionalString = (value: unknown) => {
+      if (typeof value !== "string") {
+        return null
+      }
+      const trimmed = value.trim()
+      return trimmed.length > 0 ? trimmed : null
+    }
+
+    if (
+      typeof body.title !== "string" ||
+      typeof body.issue_number !== "string" ||
+      typeof body.publication_date !== "string" ||
+      typeof body.publication_type !== "string"
+    ) {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+    }
+
+    const publicationType = body.publication_type.trim().toLowerCase()
+    if (publicationType !== "magazine" && publicationType !== "newsletter") {
+      return NextResponse.json({ error: "Invalid publication type" }, { status: 400 })
+    }
+
+    const newArticle = {
+      title: body.title.trim(),
+      description: sanitizeOptionalString(body.description),
+      cover_image_url: sanitizeOptionalString(body.cover_image_url),
+      pdf_url: sanitizeOptionalString(body.pdf_url),
+      issue_number: body.issue_number.trim(),
+      publication_date: body.publication_date.trim(),
+      publication_type: publicationType,
+      is_featured: typeof body.is_featured === "boolean" ? body.is_featured : false,
+      is_active: typeof body.is_active === "boolean" ? body.is_active : true,
+    }
+
+    if (!newArticle.title || !newArticle.issue_number || !newArticle.publication_date) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    }
+
     const { data, error } = await supabase
       .from("magazine_articles")
       .insert({
-        ...body,
+        ...newArticle,
         user_id: user.id,
-        is_active: true,
       })
       .select()
       .single()
