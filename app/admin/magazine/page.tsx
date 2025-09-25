@@ -13,14 +13,15 @@ import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 interface MagazineIssue {
   id: string
   title: string
-  volume: number
-  issue: number
-  description: string
-  cover_image_url: string
-  pdf_url: string
-  published_date: string
+  description: string | null
+  cover_image_url: string | null
+  pdf_url: string | null
+  issue_number: string | null
+  publication_date: string | null
+  is_featured: boolean
   is_active: boolean
   created_at: string
+  updated_at: string
 }
 
 export default function AdminMagazinePage() {
@@ -195,18 +196,21 @@ export default function AdminMagazinePage() {
                       />
                     )}
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="text-lg font-semibold text-foreground">{issue.title}</h3>
                         <Badge variant={issue.is_active ? "default" : "secondary"}>
                           {issue.is_active ? "Active" : "Inactive"}
                         </Badge>
+                        {issue.is_featured && <Badge variant="outline">Featured</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground mb-2">
-                        Volume {issue.volume}, Issue {issue.issue}
+                        {issue.issue_number ? issue.issue_number : "Issue number not set"}
                       </p>
-                      <p className="text-sm text-muted-foreground mb-2">{issue.description}</p>
+                      {issue.description && (
+                        <p className="text-sm text-muted-foreground mb-2">{issue.description}</p>
+                      )}
                       <p className="text-xs text-muted-foreground">
-                        Published: {new Date(issue.published_date).toLocaleDateString()}
+                        Published: {issue.publication_date ? new Date(issue.publication_date).toLocaleDateString() : "Not scheduled"}
                       </p>
                     </div>
                   </div>
