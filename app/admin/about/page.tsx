@@ -4,20 +4,10 @@ import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
-import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
+import { useRouter } from "next/navigation"
 import type { AboutContent } from "@/lib/types"
 
-function toNullableString(value: string | null | undefined) {
-  if (typeof value !== "string") {
-    return null
-  }
-
-  const trimmed = value.trim()
-  return trimmed.length === 0 ? null : trimmed
-}
-
-export default function AboutAdminPage() {
-  const isSupabaseConfigured = isSupabaseEnvConfigured()
+export default function AboutAdminPage({ params }: { params: { id: string } }) {
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
     title: "",
     content: "",
@@ -31,6 +21,7 @@ export default function AboutAdminPage() {
   const [saving, setSaving] = useState(false)
   const [isFallbackContent, setIsFallbackContent] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
   useEffect(() => {
     const fetchAboutContent = async () => {
@@ -38,9 +29,9 @@ export default function AboutAdminPage() {
         const response = await fetch("/api/about")
         if (response.ok) {
           const data = await response.json()
-          if (data) {
-            setAboutData(data)
-            setIsFallbackContent(Boolean(data?.id?.startsWith("fallback-")))
+          const datas = data.find((c: AboutContent) => c.id === params.id)
+          if (datas) {
+            setAboutData(datas)
           }
         }
       } catch (error) {
@@ -56,7 +47,7 @@ export default function AboutAdminPage() {
     }
 
     fetchAboutContent()
-  }, [toast])
+  }, [params.id, toast, router])
 
   const handleSave = async () => {
     if (!aboutData.title || !aboutData.title.trim()) {
@@ -88,22 +79,12 @@ export default function AboutAdminPage() {
 
     setSaving(true)
     try {
-      const payload = {
-        ...(aboutData.id ? { id: aboutData.id } : {}),
-        title: aboutData.title.trim(),
-        content: aboutData.content.trim(),
-        image_url: toNullableString(aboutData.image_url),
-        mission_statement: toNullableString(aboutData.mission_statement),
-        vision_statement: toNullableString(aboutData.vision_statement),
-        is_active: aboutData.is_active ?? true,
-      }
-
-      const response = await fetch("/api/about", {
+      const response = await fetch(`/api/about/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(aboutData),
       })
 
       if (response.ok) {
