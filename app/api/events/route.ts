@@ -3,6 +3,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackEvents } from "@/lib/fallback-data"
 import { buildEventMutationPayload, executeEventMutation, normalizeEventRecord } from "./utils"
 
+
 export const dynamic = "force-dynamic"
 
 export async function GET() {
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
       ...buildEventMutationPayload(body),
       user_id: user.id,
     }
+
 
     const { data, error } = await executeEventMutation(payloadWithUser, (payload) =>
       supabase.from("events").insert(payload).select().single(),

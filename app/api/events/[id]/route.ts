@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+
 import { buildEventMutationPayload, executeEventMutation } from "../utils"
+
 
 export const dynamic = "force-dynamic"
 
@@ -32,7 +34,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const { data, error } = await executeEventMutation(payload, (eventPayload) =>
       supabase.from("events").update(eventPayload).eq("id", id).select().single(),
     )
-
     if (error) {
       console.error("Error updating event:", error)
       return NextResponse.json({ error: "Failed to update event" }, { status: 500 })
