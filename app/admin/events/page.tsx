@@ -145,6 +145,121 @@ export default function AdminEventsPage() {
 
   console.log("[v0] Rendering events page with", events.length, "events")
 
+  const now = new Date()
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  const upcomingEvents = [...events]
+    .filter((event) => new Date(event.event_date) >= startOfToday)
+    .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime())
+
+  const pastEvents = [...events]
+    .filter((event) => new Date(event.event_date) < startOfToday)
+    .sort((a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime())
+
+  const renderEventCard = (event: Event, isUpcoming: boolean) => {
+    const eventDate = new Date(event.event_date)
+    const formattedDate = eventDate.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+
+    return (
+      <Card key={`${isUpcoming ? "upcoming" : "past"}-${event.id}`}>
+        <CardContent className="p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex flex-1 space-x-4">
+              {event.image_url && (
+                <img
+                  src={event.image_url || "/placeholder.svg"}
+                  alt={event.title}
+                  className="hidden h-16 w-20 rounded object-cover sm:block"
+                />
+              )}
+              <div className="flex-1">
+                <div className="mb-2 flex items-center space-x-2">
+                  <h3 className="text-lg font-semibold text-foreground">{event.title}</h3>
+                  <Badge variant={event.is_active ? "default" : "secondary"}>
+                    {event.is_active ? "Active" : "Inactive"}
+                  </Badge>
+                </div>
+                <p className="mb-2 text-sm text-muted-foreground">{event.description}</p>
+                <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                  <div className="flex items-center space-x-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{formattedDate}</span>
+                  </div>
+                  {event.location && (
+                    <div className="flex items-center space-x-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{event.location}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="mt-4">
+                  {isUpcoming ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="border border-input bg-white text-black hover:bg-muted"
+                    >
+                      <Link
+                        href={event.registration_url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Register Now
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      className="bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                    >
+                      <Link
+                        href={event.registration_url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-end space-x-2">
+              {isSupabaseConfigured ? (
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={`/admin/events/${event.id}/edit`}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" onClick={showSupabaseToast}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+              )}
+              <Button variant="outline" size="sm" onClick={() => toggleActive(event.id, event.is_active)}>
+                {event.is_active ? "Deactivate" : "Activate"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDelete(event.id)}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <AdminNavigation />
@@ -180,7 +295,7 @@ export default function AdminEventsPage() {
             </Alert>
           )}
 
-          <div className="grid gap-6">
+          <div className="grid gap-10">
             {events.length === 0 ? (
               <Card>
                 <CardContent className="p-8 text-center">
@@ -203,70 +318,42 @@ export default function AdminEventsPage() {
                 </CardContent>
               </Card>
             ) : (
-              events.map((event) => (
-                <Card key={event.id}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex space-x-4">
-                        {event.image_url && (
-                          <img
-                            src={event.image_url || "/placeholder.svg"}
-                            alt={event.title}
-                            className="w-20 h-16 object-cover rounded"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <h3 className="text-lg font-semibold text-foreground">{event.title}</h3>
-                            <Badge variant={event.is_active ? "default" : "secondary"}>
-                              {event.is_active ? "Active" : "Inactive"}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground mb-2">{event.description}</p>
-                          <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                            <div className="flex items-center space-x-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>{new Date(event.event_date).toLocaleDateString()}</span>
-                            </div>
-                            {event.location && (
-                              <div className="flex items-center space-x-1">
-                                <MapPin className="w-3 h-3" />
-                                <span>{event.location}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {isSupabaseConfigured ? (
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={`/admin/events/${event.id}/edit`}>
-                              <Edit className="w-4 h-4 mr-2" />
-                              Edit
-                            </Link>
-                          </Button>
-                        ) : (
-                          <Button variant="outline" size="sm" onClick={showSupabaseToast}>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit
-                          </Button>
-                        )}
-                        <Button variant="outline" size="sm" onClick={() => toggleActive(event.id, event.is_active)}>
-                          {event.is_active ? "Deactivate" : "Activate"}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(event.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+              <>
+                <section>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground">Upcoming Events</h2>
+                    <Badge variant="outline">{upcomingEvents.length}</Badge>
+                  </div>
+                  <div className="mt-4 grid gap-6">
+                    {upcomingEvents.length === 0 ? (
+                      <Card>
+                        <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                          No upcoming events.
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      upcomingEvents.map((event) => renderEventCard(event, true))
+                    )}
+                  </div>
+                </section>
+                <section>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground">Past Events</h2>
+                    <Badge variant="outline">{pastEvents.length}</Badge>
+                  </div>
+                  <div className="mt-4 grid gap-6">
+                    {pastEvents.length === 0 ? (
+                      <Card>
+                        <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                          No past events yet.
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      pastEvents.map((event) => renderEventCard(event, false))
+                    )}
+                  </div>
+                </section>
+              </>
             )}
           </div>
         </div>
