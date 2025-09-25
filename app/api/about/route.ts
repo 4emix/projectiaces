@@ -83,39 +83,56 @@ export async function PUT(request: NextRequest) {
 
     console.log("[v0] About API - received data:", { id, updates })
 
-    let result
-    if (id && !isFallbackId(id)) {
-      // Update existing record
-      result = await ContentService.updateAboutContent(id, updates)
-    } else {
-      // Create new record or update existing active one
-      const existingAbout = await ContentService.getActiveAboutContent()
-      if (existingAbout && !isFallbackId(existingAbout.id)) {
-        result = await ContentService.updateAboutContent(existingAbout.id, updates)
-      } else {
-        // Create new about content
-        const insertData = {
-          ...updates,
-          user_id: user.id,
-          is_active: updates.is_active ?? true,
-        }
+    const timestamp = new Date().toISOString()
+    let result: AboutContent | null = null
 
+    if (id && !isFallbackId(id)) {
+      const { data: existingRecord, error: existingError } = await supabase
+        .from("about_content")
+        .select("id, user_id")
+        .eq("id", id)
+        .maybeSingle()
+
+      if (existingError) {
+        console.error("Error checking existing about content:", existingError)
+      }
+
+      if (existingRecord && existingRecord.user_id === user.id) {
         const { data, error } = await supabase
           .from("about_content")
-          .insert(insertData)
+          .update({ ...updates, updated_at: timestamp })
+          .eq("id", id)
           .select()
           .single()
 
         if (error) {
-          console.error("Error creating about content:", error)
-          return NextResponse.json({ error: "Failed to create about content" }, { status: 500 })
+          console.error("Error updating about content:", error)
+        } else {
+          result = data
         }
-        result = data
       }
     }
 
     if (!result) {
-      return NextResponse.json({ error: "Failed to save about content" }, { status: 500 })
+      const insertData = {
+        ...updates,
+        user_id: user.id,
+        is_active: updates.is_active ?? true,
+        updated_at: timestamp,
+      }
+
+      const { data, error } = await supabase
+        .from("about_content")
+        .insert(insertData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error("Error creating about content:", error)
+        return NextResponse.json({ error: "Failed to save about content" }, { status: 500 })
+      }
+
+      result = data
     }
 
     console.log("[v0] About API - saved successfully:", result)
