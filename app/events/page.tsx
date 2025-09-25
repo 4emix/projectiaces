@@ -1,93 +1,52 @@
+import Link from "next/link"
+import { headers } from "next/headers"
+import { Calendar, Clock, MapPin } from "lucide-react"
+
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
-import Link from "next/link"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Users, Clock } from "lucide-react"
+import { fallbackEvents } from "@/lib/fallback-data"
+import type { EventItem } from "@/lib/types"
+import { formatEventDate, isExternalUrl, splitEventsByTime, toEventItem } from "@/lib/event-utils"
 
-type EventStatus = "upcoming" | "past"
+async function fetchEvents(): Promise<EventItem[]> {
+  const fallback = fallbackEvents.map(toEventItem)
 
-interface EventInfo {
-  title: string
-  date: string
-  location: string
-  description: string
-  attendees: string
-  status: EventStatus
-  featured?: boolean
-  url: string
+  try {
+    const headerList = headers()
+    const host = headerList.get("host")
+
+    if (!host) {
+      return fallback
+    }
+
+    const protocol = host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https"
+    const response = await fetch(`${protocol}://${host}/api/events`, { cache: "no-store" })
+
+    if (!response.ok) {
+      return fallback
+    }
+
+    const data = await response.json()
+    if (!Array.isArray(data)) {
+      return fallback
+    }
+
+    const events = data.map(toEventItem)
+    return events.length > 0 ? events : fallback
+  } catch (error) {
+    console.error("Error loading events page data:", error)
+    return fallback
+  }
 }
 
-const allEvents: EventInfo[] = [
-  {
-    title: "Global Computer Engineering Summit 2024",
-    date: "December 15-17, 2024",
-    location: "Singapore",
-    description:
-      "Join leading experts and students for three days of cutting-edge research presentations, workshops, and networking opportunities.",
-    attendees: "500+ Expected",
-    status: "upcoming",
-    featured: true,
-    url: "https://example.com/register-global-summit",
-  },
-  {
-    title: "AI & Machine Learning Workshop",
-    date: "November 8, 2024",
-    location: "Virtual Event",
-    description:
-      "Hands-on workshop covering the latest developments in artificial intelligence and machine learning applications.",
-    attendees: "200+ Registered",
-    status: "upcoming",
-    featured: false,
-    url: "https://example.com/register-ai-workshop",
-  },
-  {
-    title: "Student Innovation Competition",
-    date: "October 25, 2024",
-    location: "MIT, Boston",
-    description: "Annual competition showcasing innovative projects from computer engineering students worldwide.",
-    attendees: "150+ Participants",
-    status: "upcoming",
-    featured: false,
-    url: "https://example.com/register-innovation-competition",
-  },
-  {
-    title: "Cybersecurity in IoT Devices",
-    date: "September 20, 2024",
-    location: "London, UK",
-    description: "Workshop focusing on security challenges and solutions for Internet of Things devices.",
-    attendees: "120+ Attended",
-    status: "past",
-    featured: false,
-    url: "https://example.com/view-iot-workshop",
-  },
-  {
-    title: "Blockchain Technology Symposium",
-    date: "August 15, 2024",
-    location: "Berlin, Germany",
-    description: "Exploring the applications of blockchain technology in various engineering domains.",
-    attendees: "300+ Attended",
-    status: "past",
-    featured: false,
-    url: "https://example.com/view-blockchain-symposium",
-  },
-  {
-    title: "Green Computing Initiative",
-    date: "July 10, 2024",
-    location: "Copenhagen, Denmark",
-    description: "Discussing sustainable practices and energy-efficient computing solutions.",
-    attendees: "180+ Attended",
-    status: "past",
-    featured: false,
-    url: "https://example.com/view-green-computing",
-  },
-]
-
-export default function EventsPage() {
-  const upcomingEvents = allEvents.filter((event) => event.status === "upcoming")
-  const pastEvents = allEvents.filter((event) => event.status === "past")
+export default async function EventsPage() {
+  const events = await fetchEvents()
+  const { upcoming, past } = splitEventsByTime(events)
+  const hasEvents = upcoming.length > 0 || past.length > 0
+  const isFallbackData = events.length > 0 && events.every((event) => event.id.startsWith("fallback-"))
 
   return (
     <main className="min-h-screen">
@@ -95,106 +54,152 @@ export default function EventsPage() {
 
       <div className="pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">IACES Events</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Connect with fellow engineers, learn from industry experts, and showcase your innovations at our events
               worldwide.
             </p>
+            {!hasEvents && (
+              <p className="text-sm text-muted-foreground mt-4">
+                We&apos;re currently planning our next gathering. Check back soon for new opportunities to participate.
+              </p>
+            )}
+            {isFallbackData && (
+              <p className="text-xs text-muted-foreground mt-2">Displaying sample events until Supabase is connected.</p>
+            )}
           </div>
 
-          {/* Upcoming Events */}
           <section className="mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-8">Upcoming Events</h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-foreground">Upcoming Events</h2>
+              <Badge variant="outline">{upcoming.length}</Badge>
+            </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {upcomingEvents.map((event, index) => (
-                <Card key={index} className="relative">
-                  {event.featured && (
-                    <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground">Featured</Badge>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="text-lg">{event.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {event.date}
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <MapPin className="w-4 h-4 mr-2" />
-                        {event.location}
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Users className="w-4 h-4 mr-2" />
-                        {event.attendees}
-                      </div>
-                    </div>
-
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="w-full border border-input bg-white text-black hover:bg-muted"
-                    >
-                      <Link href={event.url} target="_blank" rel="noopener noreferrer">
-                        Register Now
-                      </Link>
-                    </Button>
+              {upcoming.length === 0 ? (
+                <Card className="md:col-span-2 lg:col-span-3">
+                  <CardContent className="p-8 text-center text-sm text-muted-foreground">
+                    No upcoming events are scheduled at the moment.
                   </CardContent>
                 </Card>
-              ))}
+              ) : (
+                upcoming.map((event) => {
+                  const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+                  const hasRegistration = Boolean(event.registration_url)
+
+                  return (
+                    <Card key={event.id} className="relative">
+                      <CardHeader>
+                        <CardTitle className="text-lg">{event.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {event.description && (
+                          <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
+                        )}
+
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            {formatEventDate(event.event_date)}
+                          </div>
+                          {event.location && (
+                            <div className="flex items-center">
+                              <MapPin className="w-4 h-4 mr-2" />
+                              {event.location}
+                            </div>
+                          )}
+                        </div>
+
+                        {hasRegistration ? (
+                          <Button
+                            asChild
+                            size="sm"
+                            variant="outline"
+                            className="w-full border border-input bg-white text-black hover:bg-muted"
+                          >
+                            <Link
+                              href={event.registration_url!}
+                              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            >
+                              {event.registration_url?.startsWith("mailto:") ? "Contact Organizer" : "Register Now"}
+                            </Link>
+                          </Button>
+                        ) : (
+                          <div className="text-xs text-center text-muted-foreground">
+                            Registration details coming soon.
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )
+                })
+              )}
             </div>
           </section>
 
-          {/* Past Events */}
           <section>
-            <h2 className="text-3xl font-bold text-foreground mb-8">Past Events</h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-foreground">Past Events</h2>
+              <Badge variant="outline">{past.length}</Badge>
+            </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {pastEvents.map((event, index) => (
-                <Card key={index} className="opacity-75">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{event.title}</CardTitle>
-                      <Badge variant="secondary" className="text-xs">
-                        <Clock className="w-3 h-3 mr-1" />
-                        Past
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {event.date}
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <MapPin className="w-4 h-4 mr-2" />
-                        {event.location}
-                      </div>
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Users className="w-4 h-4 mr-2" />
-                        {event.attendees}
-                      </div>
-                    </div>
-
-                    <Button
-                      asChild
-                      className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-                      size="sm"
-                    >
-                      <Link href={event.url} target="_blank" rel="noopener noreferrer">
-                        View
-                      </Link>
-                    </Button>
+              {past.length === 0 ? (
+                <Card className="md:col-span-2 lg:col-span-3">
+                  <CardContent className="p-8 text-center text-sm text-muted-foreground">
+                    Past event highlights will appear here after events conclude.
                   </CardContent>
                 </Card>
-              ))}
+              ) : (
+                past.map((event) => {
+                  const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+                  const hasLink = Boolean(event.registration_url)
+
+                  return (
+                    <Card key={event.id} className="opacity-90">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-lg">{event.title}</CardTitle>
+                          <Badge variant="secondary" className="text-xs">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Past
+                          </Badge>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {event.description && (
+                          <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
+                        )}
+
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            {formatEventDate(event.event_date, "Completed")}
+                          </div>
+                          {event.location && (
+                            <div className="flex items-center">
+                              <MapPin className="w-4 h-4 mr-2" />
+                              {event.location}
+                            </div>
+                          )}
+                        </div>
+
+                        {hasLink ? (
+                          <Button asChild className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700" size="sm">
+                            <Link
+                              href={event.registration_url!}
+                              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            >
+                              {event.registration_url?.startsWith("mailto:") ? "Request Details" : "View Details"}
+                            </Link>
+                          </Button>
+                        ) : (
+                          <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  )
+                })
+              )}
             </div>
           </section>
         </div>
