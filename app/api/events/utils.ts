@@ -101,8 +101,14 @@ function adjustPayloadForError(
 ): Record<string, unknown> | null {
   const message = error.message.toLowerCase()
 
-  if (message.includes("registration_url") && "registration_url" in payload) {
+  if (message.includes("registration_url") && "registration_url" in payload) { 
     const { registration_url: _unusedRegistrationUrl, ...rest } = payload
+    return { ...rest }
+
+  }
+
+  if (message.includes("updated_at") && "updated_at" in payload) {
+    const { updated_at: _unusedUpdatedAt, ...rest } = payload
     return { ...rest }
   }
 
