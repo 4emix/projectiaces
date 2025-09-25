@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackEvents } from "@/lib/fallback-data"
+import { buildEventMutationPayload, executeEventMutation, normalizeEventRecord } from "./utils"
 
 export const dynamic = "force-dynamic"
 
@@ -14,7 +15,11 @@ export async function GET() {
 
     const supabase = await createClient()
 
-    const { data, error } = await supabase.from("events").select("*").order("date", { ascending: true })
+    let { data, error } = await supabase.from("events").select("*").order("event_date", { ascending: true })
+
+    if (error?.message?.toLowerCase().includes("event_date")) {
+      ;({ data, error } = await supabase.from("events").select("*").order("date", { ascending: true }))
+    }
 
     if (error) {
       console.error("[v0] Events API - Error fetching events:", error)
@@ -23,13 +28,7 @@ export async function GET() {
 
     console.log("[v0] Events API - Raw data from database:", data)
 
-    const transformedData =
-      data?.map((event) => ({
-        ...event,
-        event_date: event.date,
-        registration_url: event.contact_email ? `mailto:${event.contact_email}` : "",
-        is_active: event.is_active ?? true,
-      })) || []
+    const transformedData = data?.map((event) => normalizeEventRecord(event)) || []
 
     console.log("[v0] Events API - Transformed data:", transformedData)
     return NextResponse.json(transformedData.length > 0 ? transformedData : fallbackEvents)
@@ -58,14 +57,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("[v0] Events API - creating event:", body)
 
-    const { data, error } = await supabase
-      .from("events")
-      .insert({
-        ...body,
-        user_id: user.id,
-      })
-      .select()
-      .single()
+    const payloadWithUser = {
+      ...buildEventMutationPayload(body),
+      user_id: user.id,
+    }
+
+    const { data, error } = await executeEventMutation(payloadWithUser, (payload) =>
+      supabase.from("events").insert(payload).select().single(),
+    )
 
     if (error) {
       console.error("Error creating event:", error)
