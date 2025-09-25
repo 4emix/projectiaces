@@ -1,44 +1,21 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
+
+import { Button } from "@/components/ui/button"
+import { ContentService } from "@/lib/content-service"
 import type { HeroContent } from "@/lib/types"
 
-export function DynamicHeroSection() {
-  const [heroContent, setHeroContent] = useState<HeroContent | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchHeroContent = async () => {
-      try {
-        const response = await fetch("/api/hero")
-        if (response.ok) {
-          const data = await response.json()
-          setHeroContent(data)
-        }
-      } catch (error) {
-        console.error("Error fetching hero content:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchHeroContent()
-  }, [])
-
-  if (loading) {
-    return (
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto"></div>
-          <p className="text-muted-foreground mt-4">Loading...</p>
-        </div>
-      </section>
-    )
+async function getHeroContent(): Promise<HeroContent | null> {
+  try {
+    return await ContentService.getActiveHeroContent()
+  } catch (error) {
+    console.error("Error loading hero content:", error)
+    return null
   }
+}
 
-  const content = heroContent || {
+export async function DynamicHeroSection() {
+  const heroContent = await getHeroContent()
+  const content = heroContent ?? {
     title: "International Association of Civil Engineering Students",
     subtitle: "Connecting Future Engineers Worldwide",
     description:
