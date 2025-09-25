@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import clsx from "clsx"
 import { Button } from "@/components/ui/button"
 import { UserMenu } from "@/components/auth/user-menu"
-import { Menu, X, Home, Settings, Users, FileText, Calendar, Mail, BarChart3 } from "lucide-react"
+import { Menu, X, Home, Settings, Users, FileText, Calendar, BarChart3 } from "lucide-react"
 
 export function AdminNavigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -15,12 +15,11 @@ export function AdminNavigation() {
 
   const navItems = [
     { href: "/admin", icon: BarChart3, label: "Dashboard" },
-    { href: "/admin/hero", icon: Home, label: "Hero Section" },
+    { href: "/admin/hero", icon: Home, label: "Hero" },
     { href: "/admin/about", icon: FileText, label: "About" },
-    { href: "/admin/board", icon: Users, label: "Board Members" },
+    { href: "/admin/board", icon: Users, label: "Board" },
     { href: "/admin/magazine", icon: FileText, label: "Magazine" },
     { href: "/admin/events", icon: Calendar, label: "Events" },
-    { href: "/admin/contact", icon: Mail, label: "Contact Info" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },
   ]
 
@@ -29,9 +28,14 @@ export function AdminNavigation() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <Link href="/admin" className="group flex items-center space-x-3">
-            <span className="relative block h-11 w-11 overflow-hidden rounded-full border border-border/60 bg-background/60 p-2 shadow-sm transition-transform duration-200 group-hover:scale-105">
-              <Image src="/iaces-logo.png" alt="IACES" fill className="object-contain" priority />
-            </span>
+            <Image
+              src="/iaces-logo.png"
+              alt="IACES - International Association of Civil Engineering Students"
+              width={120}
+              height={40}
+              className="h-10 w-auto transition-transform duration-200 group-hover:scale-105"
+              priority
+            />
             <span className="hidden flex-col text-sm font-semibold leading-tight text-muted-foreground sm:flex">
               <span className="text-xs font-medium uppercase tracking-widest text-accent">IACES</span>
               <span className="text-base text-foreground">Admin Hub</span>
