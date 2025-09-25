@@ -1,20 +1,12 @@
-"use client"
-
-import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { Calendar, Clock, MapPin } from "lucide-react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getEvents } from "@/lib/data/events"
 import { fallbackEvents } from "@/lib/fallback-data"
+import { formatEventDate, isExternalUrl, isMailtoLink, splitEventsByTime, toEventItem } from "@/lib/event-utils"
 import type { EventItem } from "@/lib/types"
-import {
-  formatEventDate,
-  isExternalUrl,
-  isMailtoLink,
-  splitEventsByTime,
-  toEventItem,
-} from "@/lib/event-utils"
 
 const FALLBACK_EVENTS = fallbackEvents.map(toEventItem)
 
@@ -30,35 +22,9 @@ function getActionLabel(event: EventItem, isUpcoming: boolean): string {
   return isUpcoming ? "Register Now" : "View Details"
 }
 
-export function EventsSection() {
-  const [events, setEvents] = useState<EventItem[]>(FALLBACK_EVENTS)
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch("/api/events")
-        if (!response.ok) {
-          return
-        }
-
-        const data = await response.json()
-        if (!Array.isArray(data)) {
-          return
-        }
-
-        const parsed = data.map(toEventItem)
-        if (parsed.length > 0) {
-          setEvents(parsed)
-        }
-      } catch (error) {
-        console.error("Error fetching events:", error)
-      }
-    }
-
-    fetchEvents()
-  }, [])
-
-  const { upcoming, past } = useMemo(() => splitEventsByTime(events), [events])
+export async function EventsSection() {
+  const events = (await getEvents()) ?? FALLBACK_EVENTS
+  const { upcoming, past } = splitEventsByTime(events.length > 0 ? events : FALLBACK_EVENTS)
 
   return (
     <section id="events" className="py-20">
@@ -177,11 +143,7 @@ export function EventsSection() {
                     {isDisabled ? (
                       <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
                     ) : (
-                      <Button
-                        asChild
-                        size="sm"
-                        className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-                      >
+                      <Button asChild size="sm" className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700">
                         <Link
                           href={event.registration_url!}
                           {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -198,11 +160,9 @@ export function EventsSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Link href="/events">
-            <Button variant="outline" size="lg">
-              View All Events
-            </Button>
-          </Link>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/events">Explore All Events</Link>
+          </Button>
         </div>
       </div>
     </section>

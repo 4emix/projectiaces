@@ -1,49 +1,16 @@
 import Link from "next/link"
-import { headers } from "next/headers"
 import { Calendar, Clock, MapPin } from "lucide-react"
 
-import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Navigation } from "@/components/navigation"
 import { Badge } from "@/components/ui/badge"
-import { fallbackEvents } from "@/lib/fallback-data"
-import type { EventItem } from "@/lib/types"
-import { formatEventDate, isExternalUrl, splitEventsByTime, toEventItem } from "@/lib/event-utils"
-
-async function fetchEvents(): Promise<EventItem[]> {
-  const fallback = fallbackEvents.map(toEventItem)
-
-  try {
-    const headerList = headers()
-    const host = headerList.get("host")
-
-    if (!host) {
-      return fallback
-    }
-
-    const protocol = host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https"
-    const response = await fetch(`${protocol}://${host}/api/events`, { cache: "no-store" })
-
-    if (!response.ok) {
-      return fallback
-    }
-
-    const data = await response.json()
-    if (!Array.isArray(data)) {
-      return fallback
-    }
-
-    const events = data.map(toEventItem)
-    return events.length > 0 ? events : fallback
-  } catch (error) {
-    console.error("Error loading events page data:", error)
-    return fallback
-  }
-}
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getEvents } from "@/lib/data/events"
+import { formatEventDate, isExternalUrl, splitEventsByTime } from "@/lib/event-utils"
 
 export default async function EventsPage() {
-  const events = await fetchEvents()
+  const events = await getEvents()
   const { upcoming, past } = splitEventsByTime(events)
   const hasEvents = upcoming.length > 0 || past.length > 0
   const isFallbackData = events.length > 0 && events.every((event) => event.id.startsWith("fallback-"))
