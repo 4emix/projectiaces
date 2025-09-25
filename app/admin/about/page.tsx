@@ -2,23 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
-import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { AboutContent } from "@/lib/types"
-import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
-
-function toNullableString(value: string | null | undefined) {
-  if (typeof value !== "string") {
-    return null
-  }
-
-  const trimmed = value.trim()
-  return trimmed.length === 0 ? null : trimmed
-}
 
 export default function AboutAdminPage() {
-  const isSupabaseConfigured = isSupabaseEnvConfigured()
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
     title: "",
     content: "",
@@ -30,7 +17,6 @@ export default function AboutAdminPage() {
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [isFallbackContent, setIsFallbackContent] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -41,7 +27,6 @@ export default function AboutAdminPage() {
           const data = await response.json()
           if (data) {
             setAboutData(data)
-            setIsFallbackContent(Boolean(data?.id?.startsWith("fallback-")))
           }
         }
       } catch (error) {
@@ -60,77 +45,25 @@ export default function AboutAdminPage() {
   }, [toast])
 
   const handleSave = async () => {
-    if (!aboutData.title || !aboutData.title.trim()) {
-      toast({
-        title: "Title is required",
-        description: "Please provide a title for the about section before saving.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    if (!aboutData.content || !aboutData.content.trim()) {
-      toast({
-        title: "Content is required",
-        description: "Add a description to tell visitors about your organization.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    if (!isSupabaseConfigured) {
-      toast({
-        title: "Supabase configuration required",
-        description: "Connect Supabase to enable saving changes to the about section.",
-        variant: "destructive",
-      })
-      return
-    }
-
     setSaving(true)
     try {
-      const payload = {
-        ...(aboutData.id ? { id: aboutData.id } : {}),
-        title: aboutData.title.trim(),
-        content: aboutData.content.trim(),
-        image_url: toNullableString(aboutData.image_url),
-        mission_statement: toNullableString(aboutData.mission_statement),
-        vision_statement: toNullableString(aboutData.vision_statement),
-        is_active: aboutData.is_active ?? true,
-      }
-
       const response = await fetch("/api/about", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(aboutData),
       })
 
       if (response.ok) {
         const updatedData = await response.json()
         setAboutData(updatedData)
-        setIsFallbackContent(Boolean(updatedData?.id?.startsWith("fallback-")))
         toast({
           title: "Success",
           description: "About content updated successfully",
         })
       } else {
-        const errorData = await response.json().catch(() => null)
-        if (response.status === 503) {
-          toast({
-            title: "Supabase connection required",
-            description: "Connect Supabase to enable saving about content.",
-            variant: "destructive",
-          })
-        } else {
-          toast({
-            title: "Error",
-            description: errorData?.error ?? "Failed to save about content",
-            variant: "destructive",
-          })
-        }
-        return
+        throw new Error("Failed to update about content")
       }
     } catch (error) {
       console.error("Error saving about content:", error)
@@ -166,28 +99,10 @@ export default function AboutAdminPage() {
       onSave={handleSave}
       onPreview={handlePreview}
       isSaving={saving}
-      saveDisabled={!isSupabaseConfigured}
       saveLabel="Save About Content"
       description="Share your organization's mission, vision, and story with visitors."
     >
       <div className="space-y-6">
-        
-        {isFallbackContent && (
-          <Alert variant="destructive">
-            <AlertTitle>No active about content found</AlertTitle>
-            <AlertDescription>
-              Saving will create a new about entry once Supabase is connected. Until then, fallback content is shown on the site.
-            </AlertDescription>
-          </Alert>
-        )}
-        {!isSupabaseConfigured && (
-          <Alert variant="destructive">
-            <AlertTitle>Editing is temporarily disabled</AlertTitle>
-            <AlertDescription>
-              Supabase credentials are not configured. The content shown below is read-only fallback data.
-            </AlertDescription>
-          </Alert>
-        )}
         <TextField
           label="Section Title"
           value={aboutData.title || ""}
