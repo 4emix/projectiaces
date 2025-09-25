@@ -10,13 +10,10 @@ export default function SettingsAdminPage() {
     siteTitle: "IACES - International Association of Computer Engineering Students",
     siteDescription: "Connecting computer engineering students worldwide",
     contactEmail: "info@iaces.network",
-    contactPhone: "+1 (555) 123-4567",
     address: "123 Technology Drive, Innovation City, IC 12345",
-    officeHours: "Monday - Friday: 9:00 AM - 5:00 PM EST",
     socialFacebook: "https://facebook.com/iaces",
     socialTwitter: "https://twitter.com/iaces",
     socialLinkedin: "https://linkedin.com/company/iaces",
-    socialGithub: "https://github.com/iaces",
     maintenanceMode: false,
     allowRegistrations: true,
     enableAnalytics: true,
@@ -94,14 +91,6 @@ export default function SettingsAdminPage() {
               description="Primary contact email address"
             />
 
-            <TextField
-              label="Contact Phone"
-              value={siteSettings.contactPhone}
-              onChange={(value) => setSiteSettings((prev) => ({ ...prev, contactPhone: value }))}
-              placeholder="+1 (555) 123-4567"
-              description="Primary contact phone number"
-            />
-
             <div className="md:col-span-2">
               <TextAreaField
                 label="Address"
@@ -110,16 +99,6 @@ export default function SettingsAdminPage() {
                 placeholder="Enter full address"
                 description="Physical address of the organization"
                 rows={2}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <TextField
-                label="Office Hours"
-                value={siteSettings.officeHours}
-                onChange={(value) => setSiteSettings((prev) => ({ ...prev, officeHours: value }))}
-                placeholder="Monday - Friday: 9:00 AM - 5:00 PM EST"
-                description="Business hours for contact"
               />
             </div>
           </div>
@@ -153,14 +132,6 @@ export default function SettingsAdminPage() {
               onChange={(value) => setSiteSettings((prev) => ({ ...prev, socialLinkedin: value }))}
               placeholder="https://linkedin.com/company/yourcompany"
               description="Link to LinkedIn company page"
-            />
-
-            <TextField
-              label="GitHub URL"
-              value={siteSettings.socialGithub}
-              onChange={(value) => setSiteSettings((prev) => ({ ...prev, socialGithub: value }))}
-              placeholder="https://github.com/yourorg"
-              description="Link to GitHub organization"
             />
           </div>
         </div>

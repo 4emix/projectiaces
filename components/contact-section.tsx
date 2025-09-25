@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Mail, MapPin } from "lucide-react"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -61,26 +61,10 @@ export function ContactSection() {
                 </div>
 
                 <div className="flex items-start space-x-3">
-                  <Phone className="w-5 h-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="font-medium text-foreground">Phone</p>
-                    <p className="text-muted-foreground text-sm">+1 (555) 123-4567</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
                   <Mail className="w-5 h-5 text-accent mt-0.5" />
                   <div>
                     <p className="font-medium text-foreground">Email</p>
                     <p className="text-muted-foreground text-sm">info@iaces.network</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <Clock className="w-5 h-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="font-medium text-foreground">Office Hours</p>
-                    <p className="text-muted-foreground text-sm">Monday - Friday: 9:00 AM - 5:00 PM EST</p>
                   </div>
                 </div>
               </CardContent>
