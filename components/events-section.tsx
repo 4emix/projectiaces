@@ -1,82 +1,64 @@
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
+import { Calendar, Clock, MapPin } from "lucide-react"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Users } from "lucide-react"
-import Link from "next/link"
+import { fallbackEvents } from "@/lib/fallback-data"
+import type { EventItem } from "@/lib/types"
+import {
+  formatEventDate,
+  isExternalUrl,
+  isMailtoLink,
+  splitEventsByTime,
+  toEventItem,
+} from "@/lib/event-utils"
 
-type EventStatus = "upcoming" | "past"
+const FALLBACK_EVENTS = fallbackEvents.map(toEventItem)
 
-interface EventSummary {
-  title: string
-  date: string
-  location: string
-  description: string
-  attendees: string
-  status: EventStatus
-  url: string
+function getActionLabel(event: EventItem, isUpcoming: boolean): string {
+  if (!event.registration_url) {
+    return isUpcoming ? "Details Coming Soon" : "No Resources Available"
+  }
+
+  if (isMailtoLink(event.registration_url)) {
+    return isUpcoming ? "Contact Organizer" : "Request Details"
+  }
+
+  return isUpcoming ? "Register Now" : "View Details"
 }
 
-const events: EventSummary[] = [
-  {
-    title: "Global Civil Engineering Summit 2024",
-    date: "December 15-17, 2024",
-    location: "Singapore",
-    description:
-      "Join leading experts and students for three days of cutting-edge research presentations, workshops, and networking opportunities in infrastructure and construction.",
-    attendees: "500+ Expected",
-    status: "upcoming",
-    url: "https://example.com/register-global-summit",
-  },
-  {
-    title: "Sustainable Construction Workshop",
-    date: "November 8, 2024",
-    location: "Virtual Event",
-    description:
-      "Hands-on workshop covering the latest developments in sustainable construction practices and green building technologies.",
-    attendees: "200+ Registered",
-    status: "upcoming",
-    url: "https://example.com/register-construction-workshop",
-  },
-  {
-    title: "Student Innovation Competition",
-    date: "October 25, 2024",
-    location: "MIT, Boston",
-    description: "Annual competition showcasing innovative projects from civil engineering students worldwide.",
-    attendees: "150+ Participants",
-    status: "upcoming",
-    url: "https://example.com/register-innovation-competition",
-  },
-  {
-    title: "Coastal Resilience Seminar",
-    date: "September 12, 2024",
-    location: "Lisbon, Portugal",
-    description: "Insights from international experts on resilient coastal infrastructure projects.",
-    attendees: "180 Attended",
-    status: "past",
-    url: "https://example.com/view-coastal-resilience",
-  },
-  {
-    title: "Smart Cities Forum",
-    date: "August 4, 2024",
-    location: "Berlin, Germany",
-    description: "Case studies and lessons learned from smart infrastructure initiatives across Europe.",
-    attendees: "240 Attended",
-    status: "past",
-    url: "https://example.com/view-smart-cities",
-  },
-  {
-    title: "Bridge Engineering Hackathon",
-    date: "July 19, 2024",
-    location: "Chicago, USA",
-    description: "Student teams collaborated with industry mentors to prototype sustainable bridge designs.",
-    attendees: "120 Attended",
-    status: "past",
-    url: "https://example.com/view-bridge-hackathon",
-  },
-]
-
 export function EventsSection() {
-  const upcomingEvents = events.filter((event) => event.status === "upcoming")
-  const pastEvents = events.filter((event) => event.status === "past")
+  const [events, setEvents] = useState<EventItem[]>(FALLBACK_EVENTS)
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch("/api/events")
+        if (!response.ok) {
+          return
+        }
+
+        const data = await response.json()
+        if (!Array.isArray(data)) {
+          return
+        }
+
+        const parsed = data.map(toEventItem)
+        if (parsed.length > 0) {
+          setEvents(parsed)
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error)
+      }
+    }
+
+    fetchEvents()
+  }, [])
+
+  const { upcoming, past } = useMemo(() => splitEventsByTime(events), [events])
 
   return (
     <section id="events" className="py-20">
@@ -84,48 +66,69 @@ export function EventsSection() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Upcoming Events</h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Join us at our upcoming events to connect with fellow engineers, learn from industry experts, and showcase
-            your innovations.
+            Join us at our upcoming events to connect with fellow engineers, learn from industry experts, and showcase your
+            innovations.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {upcomingEvents.map((event, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="text-lg">{event.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
-
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {event.date}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {event.location}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="w-4 h-4 mr-2" />
-                    {event.attendees}
-                  </div>
-                </div>
-
-                <Button
-                  asChild
-                  size="sm"
-                  variant="outline"
-                  className="w-full border border-input bg-white text-black hover:bg-muted"
-                >
-                  <Link href={event.url} target="_blank" rel="noopener noreferrer">
-                    Register Now
-                  </Link>
-                </Button>
+          {upcoming.length === 0 ? (
+            <Card className="md:col-span-2 lg:col-span-3">
+              <CardContent className="p-8 text-center text-sm text-muted-foreground">
+                No upcoming events are scheduled right now. Please check back soon.
               </CardContent>
             </Card>
-          ))}
+          ) : (
+            upcoming.map((event) => {
+              const actionLabel = getActionLabel(event, true)
+              const isDisabled = !event.registration_url
+              const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+
+              return (
+                <Card key={event.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{event.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {event.description && (
+                      <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
+                    )}
+
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {formatEventDate(event.event_date)}
+                      </div>
+                      {event.location && (
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          {event.location}
+                        </div>
+                      )}
+                    </div>
+
+                    {isDisabled ? (
+                      <div className="text-xs text-center text-muted-foreground">Registration details coming soon.</div>
+                    ) : (
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="w-full border border-input bg-white text-black hover:bg-muted"
+                      >
+                        <Link
+                          href={event.registration_url!}
+                          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        >
+                          {actionLabel}
+                        </Link>
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )
+            })
+          )}
         </div>
 
         <div className="text-center my-16">
@@ -136,41 +139,62 @@ export function EventsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {pastEvents.map((event, index) => (
-            <Card key={index} className="opacity-90">
-              <CardHeader>
-                <CardTitle className="text-lg">{event.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
-
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {event.date}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {event.location}
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Users className="w-4 h-4 mr-2" />
-                    {event.attendees}
-                  </div>
-                </div>
-
-                <Button
-                  asChild
-                  size="sm"
-                  className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-                >
-                  <Link href={event.url} target="_blank" rel="noopener noreferrer">
-                    View
-                  </Link>
-                </Button>
+          {past.length === 0 ? (
+            <Card className="md:col-span-2 lg:col-span-3">
+              <CardContent className="p-8 text-center text-sm text-muted-foreground">
+                No past events to display yet. New highlights will appear here after events conclude.
               </CardContent>
             </Card>
-          ))}
+          ) : (
+            past.map((event) => {
+              const actionLabel = getActionLabel(event, false)
+              const isDisabled = !event.registration_url
+              const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+
+              return (
+                <Card key={event.id} className="opacity-90">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{event.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {event.description && (
+                      <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
+                    )}
+
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {formatEventDate(event.event_date, "Completed")}
+                      </div>
+                      {event.location && (
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          {event.location}
+                        </div>
+                      )}
+                    </div>
+
+                    {isDisabled ? (
+                      <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
+                    ) : (
+                      <Button
+                        asChild
+                        size="sm"
+                        className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                      >
+                        <Link
+                          href={event.registration_url!}
+                          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        >
+                          {actionLabel}
+                        </Link>
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )
+            })
+          )}
         </div>
 
         <div className="text-center mt-12">
