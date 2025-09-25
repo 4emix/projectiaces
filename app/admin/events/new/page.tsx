@@ -135,7 +135,7 @@ export default function NewEventPage() {
                 <Label htmlFor="event_date">Event Date *</Label>
                 <Input
                   id="event_date"
-                  type="datetime-local"
+                  type="date"
                   value={formData.event_date}
                   onChange={(e) => handleChange("event_date", e.target.value)}
                   required

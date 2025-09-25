@@ -1,11 +1,26 @@
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import Link from "next/link"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, MapPin, Users, Clock } from "lucide-react"
 
-const allEvents = [
+type EventStatus = "upcoming" | "past"
+
+interface EventInfo {
+  title: string
+  date: string
+  location: string
+  description: string
+  attendees: string
+  status: EventStatus
+  featured?: boolean
+  url: string
+}
+
+const allEvents: EventInfo[] = [
   {
     title: "Global Computer Engineering Summit 2024",
     date: "December 15-17, 2024",
@@ -15,6 +30,7 @@ const allEvents = [
     attendees: "500+ Expected",
     status: "upcoming",
     featured: true,
+    url: "https://example.com/register-global-summit",
   },
   {
     title: "AI & Machine Learning Workshop",
@@ -25,6 +41,7 @@ const allEvents = [
     attendees: "200+ Registered",
     status: "upcoming",
     featured: false,
+    url: "https://example.com/register-ai-workshop",
   },
   {
     title: "Student Innovation Competition",
@@ -34,6 +51,7 @@ const allEvents = [
     attendees: "150+ Participants",
     status: "upcoming",
     featured: false,
+    url: "https://example.com/register-innovation-competition",
   },
   {
     title: "Cybersecurity in IoT Devices",
@@ -43,6 +61,7 @@ const allEvents = [
     attendees: "120+ Attended",
     status: "past",
     featured: false,
+    url: "https://example.com/view-iot-workshop",
   },
   {
     title: "Blockchain Technology Symposium",
@@ -52,6 +71,7 @@ const allEvents = [
     attendees: "300+ Attended",
     status: "past",
     featured: false,
+    url: "https://example.com/view-blockchain-symposium",
   },
   {
     title: "Green Computing Initiative",
@@ -61,6 +81,7 @@ const allEvents = [
     attendees: "180+ Attended",
     status: "past",
     featured: false,
+    url: "https://example.com/view-green-computing",
   },
 ]
 
@@ -113,8 +134,15 @@ export default function EventsPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full" size="sm">
-                      Register Now
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="outline"
+                      className="w-full border border-input bg-white text-black hover:bg-muted"
+                    >
+                      <Link href={event.url} target="_blank" rel="noopener noreferrer">
+                        Register Now
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>
@@ -155,8 +183,14 @@ export default function EventsPage() {
                       </div>
                     </div>
 
-                    <Button variant="outline" className="w-full bg-transparent" size="sm">
-                      View Summary
+                    <Button
+                      asChild
+                      className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                      size="sm"
+                    >
+                      <Link href={event.url} target="_blank" rel="noopener noreferrer">
+                        View
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>

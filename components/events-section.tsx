@@ -3,7 +3,19 @@ import { Button } from "@/components/ui/button"
 import { Calendar, MapPin, Users } from "lucide-react"
 import Link from "next/link"
 
-const latestEvents = [
+type EventStatus = "upcoming" | "past"
+
+interface EventSummary {
+  title: string
+  date: string
+  location: string
+  description: string
+  attendees: string
+  status: EventStatus
+  url: string
+}
+
+const events: EventSummary[] = [
   {
     title: "Global Civil Engineering Summit 2024",
     date: "December 15-17, 2024",
@@ -11,6 +23,8 @@ const latestEvents = [
     description:
       "Join leading experts and students for three days of cutting-edge research presentations, workshops, and networking opportunities in infrastructure and construction.",
     attendees: "500+ Expected",
+    status: "upcoming",
+    url: "https://example.com/register-global-summit",
   },
   {
     title: "Sustainable Construction Workshop",
@@ -19,6 +33,8 @@ const latestEvents = [
     description:
       "Hands-on workshop covering the latest developments in sustainable construction practices and green building technologies.",
     attendees: "200+ Registered",
+    status: "upcoming",
+    url: "https://example.com/register-construction-workshop",
   },
   {
     title: "Student Innovation Competition",
@@ -26,10 +42,42 @@ const latestEvents = [
     location: "MIT, Boston",
     description: "Annual competition showcasing innovative projects from civil engineering students worldwide.",
     attendees: "150+ Participants",
+    status: "upcoming",
+    url: "https://example.com/register-innovation-competition",
+  },
+  {
+    title: "Coastal Resilience Seminar",
+    date: "September 12, 2024",
+    location: "Lisbon, Portugal",
+    description: "Insights from international experts on resilient coastal infrastructure projects.",
+    attendees: "180 Attended",
+    status: "past",
+    url: "https://example.com/view-coastal-resilience",
+  },
+  {
+    title: "Smart Cities Forum",
+    date: "August 4, 2024",
+    location: "Berlin, Germany",
+    description: "Case studies and lessons learned from smart infrastructure initiatives across Europe.",
+    attendees: "240 Attended",
+    status: "past",
+    url: "https://example.com/view-smart-cities",
+  },
+  {
+    title: "Bridge Engineering Hackathon",
+    date: "July 19, 2024",
+    location: "Chicago, USA",
+    description: "Student teams collaborated with industry mentors to prototype sustainable bridge designs.",
+    attendees: "120 Attended",
+    status: "past",
+    url: "https://example.com/view-bridge-hackathon",
   },
 ]
 
 export function EventsSection() {
+  const upcomingEvents = events.filter((event) => event.status === "upcoming")
+  const pastEvents = events.filter((event) => event.status === "past")
+
   return (
     <section id="events" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,7 +90,7 @@ export function EventsSection() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {latestEvents.map((event, index) => (
+          {upcomingEvents.map((event, index) => (
             <Card key={index}>
               <CardHeader>
                 <CardTitle className="text-lg">{event.title}</CardTitle>
@@ -65,8 +113,60 @@ export function EventsSection() {
                   </div>
                 </div>
 
-                <Button className="w-full" size="sm">
-                  Register Now
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="w-full border border-input bg-white text-black hover:bg-muted"
+                >
+                  <Link href={event.url} target="_blank" rel="noopener noreferrer">
+                    Register Now
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center my-16">
+          <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Past Highlights</h3>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Explore summaries and resources from recent gatherings hosted by our global network.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {pastEvents.map((event, index) => (
+            <Card key={index} className="opacity-90">
+              <CardHeader>
+                <CardTitle className="text-lg">{event.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
+
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {event.date}
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {event.location}
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Users className="w-4 h-4 mr-2" />
+                    {event.attendees}
+                  </div>
+                </div>
+
+                <Button
+                  asChild
+                  size="sm"
+                  className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                >
+                  <Link href={event.url} target="_blank" rel="noopener noreferrer">
+                    View
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
