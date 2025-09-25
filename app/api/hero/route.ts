@@ -86,34 +86,79 @@ export async function PUT(request: NextRequest) {
 
     console.log("[v0] Hero API - received data:", { id, updates })
 
-    let result
-    if (id && !isFallbackId(id)) {
-      // Update existing record
-      result = await ContentService.updateHeroContent(id, updates)
+    const normalizedId = typeof id === "string" && !isFallbackId(id) ? id : null
+
+    let existingHero: HeroContent | null = null
+
+    if (normalizedId) {
+      const { data, error } = await supabase
+        .from("hero_content")
+        .select("*")
+        .eq("id", normalizedId)
+        .maybeSingle()
+
+      if (error) {
+        console.error("Error fetching hero content by id:", error)
+      } else if (data) {
+        existingHero = data as HeroContent
+      }
+    }
+
+    if (!existingHero) {
+      const { data, error } = await supabase
+        .from("hero_content")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (error) {
+        console.error("Error fetching active hero content for update:", error)
+      } else if (data && !isFallbackId(data.id)) {
+        existingHero = data as HeroContent
+      }
+    }
+
+    let result: HeroContent | null = null
+
+    const canUpdateExisting = Boolean(existingHero && existingHero.user_id === user.id)
+
+    if (canUpdateExisting && existingHero) {
+      result = await ContentService.updateHeroContent(existingHero.id, {
+        ...updates,
+        user_id: user.id,
+      })
     } else {
-      // Create new record or update existing active one
-      const existingHero = await ContentService.getActiveHeroContent()
-      if (existingHero && !isFallbackId(existingHero.id)) {
-        result = await ContentService.updateHeroContent(existingHero.id, updates)
-      } else {
-        // Create new hero content
-        const insertData = {
-          ...updates,
-          user_id: user.id,
-          is_active: updates.is_active ?? true,
-        }
+      const insertData = {
+        ...updates,
+        user_id: user.id,
+        is_active: updates.is_active ?? true,
+      }
 
-        const { data, error } = await supabase
+      const { data, error } = await supabase
+        .from("hero_content")
+        .insert(insertData)
+        .select()
+        .single()
+
+      if (error) {
+        console.error("Error creating hero content:", error)
+        return NextResponse.json({ error: "Failed to create hero content" }, { status: 500 })
+      }
+
+      result = data as HeroContent
+
+      if (result.is_active) {
+        const { error: deactivateError } = await supabase
           .from("hero_content")
-          .insert(insertData)
-          .select()
-          .single()
+          .update({ is_active: false, updated_at: new Date().toISOString() })
+          .neq("id", result.id)
+          .eq("user_id", user.id)
 
-        if (error) {
-          console.error("Error creating hero content:", error)
-          return NextResponse.json({ error: "Failed to create hero content" }, { status: 500 })
+        if (deactivateError) {
+          console.error("Error deactivating previous hero content:", deactivateError)
         }
-        result = data
       }
     }
 
