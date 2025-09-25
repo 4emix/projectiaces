@@ -10,22 +10,12 @@ import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { AdminNavigation } from "@/components/admin/admin-navigation"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
-
-interface Event {
-  id: string
-  title: string
-  description: string
-  event_date: string
-  location: string
-  registration_url: string
-  image_url: string
-  is_active: boolean
-  created_at: string
-}
+import type { EventItem } from "@/lib/types"
+import { parseEventDate, toEventItem } from "@/lib/event-utils"
 
 export default function AdminEventsPage() {
   const { toast } = useToast()
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<EventItem[]>([])
   const [loading, setLoading] = useState(true)
   const isSupabaseConfigured = isSupabaseEnvConfigured()
 
@@ -53,7 +43,9 @@ export default function AdminEventsPage() {
         const data = await response.json()
         console.log("[v0] Events data received:", data)
         console.log("[v0] Number of events:", data.length)
-        setEvents(data)
+        if (Array.isArray(data)) {
+          setEvents(data.map(toEventItem))
+        }
       } else {
         const errorText = await response.text()
         console.error("[v0] API response not ok:", response.status, errorText)
@@ -149,20 +141,62 @@ export default function AdminEventsPage() {
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
   const upcomingEvents = [...events]
-    .filter((event) => new Date(event.event_date) >= startOfToday)
-    .sort((a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime())
+    .filter((event) => {
+      const eventDate = parseEventDate(event.event_date)
+      if (!eventDate) {
+        return true
+      }
+
+      return eventDate >= startOfToday
+    })
+    .sort((a, b) => {
+      const dateA = parseEventDate(a.event_date)
+      const dateB = parseEventDate(b.event_date)
+
+      if (!dateA && !dateB) {
+        return a.title.localeCompare(b.title)
+      }
+      if (!dateA) {
+        return 1
+      }
+      if (!dateB) {
+        return -1
+      }
+
+      return dateA.getTime() - dateB.getTime()
+    })
 
   const pastEvents = [...events]
-    .filter((event) => new Date(event.event_date) < startOfToday)
-    .sort((a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime())
-
-  const renderEventCard = (event: Event, isUpcoming: boolean) => {
-    const eventDate = new Date(event.event_date)
-    const formattedDate = eventDate.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    .filter((event) => {
+      const eventDate = parseEventDate(event.event_date)
+      return Boolean(eventDate) && eventDate! < startOfToday
     })
+    .sort((a, b) => {
+      const dateA = parseEventDate(a.event_date)
+      const dateB = parseEventDate(b.event_date)
+
+      if (!dateA && !dateB) {
+        return a.title.localeCompare(b.title)
+      }
+      if (!dateA) {
+        return 1
+      }
+      if (!dateB) {
+        return -1
+      }
+
+      return dateB.getTime() - dateA.getTime()
+    })
+
+  const renderEventCard = (event: EventItem, isUpcoming: boolean) => {
+    const eventDate = parseEventDate(event.event_date)
+    const formattedDate = eventDate
+      ? eventDate.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "Date to be announced"
 
     return (
       <Card key={`${isUpcoming ? "upcoming" : "past"}-${event.id}`}>
@@ -171,7 +205,7 @@ export default function AdminEventsPage() {
             <div className="flex flex-1 space-x-4">
               {event.image_url && (
                 <img
-                  src={event.image_url || "/placeholder.svg"}
+                  src={event.image_url ?? "/placeholder.svg"}
                   alt={event.title}
                   className="hidden h-16 w-20 rounded object-cover sm:block"
                 />

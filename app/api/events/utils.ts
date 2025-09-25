@@ -1,4 +1,7 @@
-import type { PostgrestError } from "@supabase/supabase-js"
+import { NextResponse } from "next/server"
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
+
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server"
 
 const REGISTRATION_MAILTO_PREFIX = "mailto:"
 
@@ -68,6 +71,33 @@ export function buildEventMutationPayload(body: Record<string, unknown>): Record
   }
 
   return payload
+}
+
+type MutationClientResult =
+  | { client: SupabaseClient; userId: string | null; error: null }
+  | { client: null; userId: null; error: NextResponse }
+
+export async function resolveEventMutationContext(): Promise<MutationClientResult> {
+  const serviceClient = createServiceRoleClient()
+  if (serviceClient) {
+    return { client: serviceClient, userId: null, error: null }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
+  if (error || !user) {
+    return {
+      client: null,
+      userId: null,
+      error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    }
+  }
+
+  return { client: supabase, userId: user.id, error: null }
 }
 
 export function normalizeEventRecord(event: Record<string, any>) {

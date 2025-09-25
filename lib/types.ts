@@ -91,3 +91,17 @@ export interface LocalCommittee {
   created_at: string
   updated_at: string
 }
+
+export interface EventItem {
+  id: string
+  title: string
+  description: string
+  event_date: string | null
+  location: string | null
+  registration_url: string | null
+  image_url: string | null
+  is_active: boolean
+  created_at: string | null
+  updated_at: string | null
+  contact_email: string | null
+}
