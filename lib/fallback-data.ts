@@ -1,3 +1,4 @@
+import { GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE } from "@/lib/constants"
 import type {
   AboutContent,
   BoardMember,
@@ -281,7 +282,7 @@ export const fallbackMagazineIssuesForAdmin: MagazineArticle[] = [
     title: "The Future of Civil Engineering",
     description:
       "Exploring emerging technologies, sustainable practices, and the global impact of student-led research.",
-    cover_image_url: null,
+    cover_image_url: GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE,
     pdf_url: null,
     issue_number: "Vol. 15, Issue 3",
     publication_date: "2024-09-01T00:00:00.000Z",
@@ -297,7 +298,7 @@ export const fallbackMagazineIssuesForAdmin: MagazineArticle[] = [
     title: "Infrastructure Innovation Digest",
     description:
       "Highlighting cross-border collaboration projects and new materials shaping resilient infrastructure.",
-    cover_image_url: null,
+    cover_image_url: GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE,
     pdf_url: null,
     issue_number: "Vol. 15, Issue 2",
     publication_date: "2024-06-01T00:00:00.000Z",
@@ -312,7 +313,7 @@ export const fallbackMagazineIssuesForAdmin: MagazineArticle[] = [
     id: "fallback-newsletter-1",
     title: "Monthly Newsletter - September 2024",
     description: "Conference highlights, new partnerships, and student achievement recognitions.",
-    cover_image_url: null,
+    cover_image_url: GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE,
     pdf_url: null,
     issue_number: "Newsletter #9",
     publication_date: "2024-09-01T00:00:00.000Z",
