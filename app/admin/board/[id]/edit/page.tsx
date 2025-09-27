@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { BoardMember } from "@/lib/types"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function EditBoardMemberPage({ params }: { params: { id: string } }) {
   const [boardMemberData, setBoardMemberData] = useState<Partial<BoardMember>>({
@@ -200,7 +201,7 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
               value={boardMemberData.image_url || ""}
               onChange={(value) => setBoardMemberData((prev) => ({ ...prev, image_url: value }))}
               placeholder="https://example.com/image.jpg"
-              description="URL to the board member's profile photo"
+              description={`URL to the board member's profile photo. ${GOOGLE_DRIVE_IMAGE_HINT}`}
             />
 
             <TextField

@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { LocalCommittee } from "@/lib/types"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewCommitteePage() {
   const [committeeData, setCommitteeData] = useState<Partial<LocalCommittee>>({
@@ -110,7 +111,7 @@ export default function NewCommitteePage() {
           value={committeeData.logo_url || ""}
           onChange={(value) => setCommitteeData((prev) => ({ ...prev, logo_url: value }))}
           placeholder="https://example.com/logo.png"
-          description="URL to the committee's logo image"
+          description={`URL to the committee's logo image. ${GOOGLE_DRIVE_IMAGE_HINT}`}
         />
 
         <TextAreaField
