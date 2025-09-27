@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { HeroContent } from "@/lib/types"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 function toNullableString(value: string | null | undefined) {
@@ -89,7 +89,7 @@ export default function HeroAdminPage() {
         description: toNullableString(heroData.description),
         cta_text: toNullableString(heroData.cta_text),
         cta_link: toNullableString(heroData.cta_link),
-        background_image_url: toGoogleDriveDirectUrl(heroData.background_image_url),
+        background_image_url: toGoogleDriveImageUrl(heroData.background_image_url),
         is_active: heroData.is_active ?? true,
       }
 

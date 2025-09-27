@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 
 const REGISTRATION_MAILTO_PREFIX = "mailto:"
 
@@ -122,7 +122,7 @@ export function normalizeEventRecord(event: Record<string, any>) {
     event_date: eventDate,
     registration_url: registrationUrl,
     is_active: typeof event.is_active === "boolean" ? event.is_active : true,
-    image_url: toGoogleDriveDirectUrl(event.image_url),
+    image_url: toGoogleDriveImageUrl(event.image_url),
   }
 }
 

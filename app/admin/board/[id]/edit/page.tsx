@@ -5,7 +5,7 @@ import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/componen
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { BoardMember } from "@/lib/types"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function EditBoardMemberPage({ params }: { params: { id: string } }) {
@@ -100,7 +100,7 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
       console.log("[v0] Board Edit: Making PUT request to /api/board/" + memberId)
       const payload = {
         ...boardMemberData,
-        image_url: toGoogleDriveDirectUrl(boardMemberData.image_url),
+        image_url: toGoogleDriveImageUrl(boardMemberData.image_url),
       }
 
       const response = await fetch(`/api/board/${memberId}`, {

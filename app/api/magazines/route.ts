@@ -1,14 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackMagazineIssuesForAdmin } from "@/lib/fallback-data"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
 const mapFallbackIssues = () =>
   fallbackMagazineIssuesForAdmin.map((article) => ({
     ...article,
-    cover_image_url: toGoogleDriveDirectUrl(article.cover_image_url),
+    cover_image_url: toGoogleDriveImageUrl(article.cover_image_url),
   }))
 
 export async function GET() {
@@ -36,7 +36,7 @@ export async function GET() {
 
     const normalized = (data ?? []).map((article) => ({
       ...article,
-      cover_image_url: toGoogleDriveDirectUrl(article.cover_image_url),
+      cover_image_url: toGoogleDriveImageUrl(article.cover_image_url),
       publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
     }))
 
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
     const sanitizeOptionalUrl = (value: unknown) => {
       const sanitized = sanitizeOptionalString(value)
-      return sanitized ? toGoogleDriveDirectUrl(sanitized) : null
+      return sanitized ? toGoogleDriveImageUrl(sanitized) : null
     }
 
     if (

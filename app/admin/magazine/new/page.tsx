@@ -22,7 +22,7 @@ import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewMagazineIssuePage() {
@@ -59,7 +59,7 @@ export default function NewMagazineIssuePage() {
       const payload = {
         title: formData.title.trim(),
         description: formData.description.trim() || null,
-        cover_image_url: toGoogleDriveDirectUrl(formData.cover_image_url),
+        cover_image_url: toGoogleDriveImageUrl(formData.cover_image_url),
         pdf_url: formData.pdf_url.trim() || null,
         issue_number: formData.issue_number.trim(),
         publication_date: formData.publication_date,
