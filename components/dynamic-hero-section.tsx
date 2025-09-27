@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ContentService } from "@/lib/content-service"
 import type { HeroContent } from "@/lib/types"
-import { ArrowRight, Globe2, Lightbulb, Users2 } from "lucide-react"
+import { ArrowRight, Compass, Globe2, Lightbulb, Users2 } from "lucide-react"
 
 async function getHeroContent(): Promise<HeroContent | null> {
   try {
@@ -25,68 +25,68 @@ export async function DynamicHeroSection() {
     cta_text: "Learn More",
     cta_link: "#about",
   }
+
   const heroImage = content.background_image_url ?? "/placeholder.jpg"
-  const stats = [
+
+  const metrics = [
     { label: "Member Chapters", value: "120+" },
-    { label: "Countries", value: "35" },
+    { label: "Countries Represented", value: "35" },
     { label: "Annual Events", value: "80+" },
   ]
+
   const highlights = [
     {
       icon: Globe2,
-      title: "Global Collaboration",
-      description: "International exchanges and joint design challenges",
+      title: "Global Exchange",
+      description: "Study trips, cultural exchanges, and collaborative design studios across continents.",
     },
     {
       icon: Users2,
-      title: "Career Mentorship",
-      description: "Direct access to mentors from leading engineering firms",
+      title: "Mentorship Network",
+      description: "Direct access to alumni and industry mentors guiding the next generation of engineers.",
     },
     {
       icon: Lightbulb,
       title: "Innovation Labs",
-      description: "Hands-on projects building resilient infrastructure",
+      description: "Hands-on challenges focusing on resilient cities, green mobility, and smart infrastructure.",
     },
-  ]
-
-  const highlights = [
-    "Global Network of 120+ universities",
-    "Leadership & professional training",
-    "Hands-on research collaborations",
-  ]
-
-  const stats = [
-    { label: "Member Chapters", value: "65" },
-    { label: "Annual Events", value: "40+" },
-    { label: "Countries", value: "32" },
+    {
+      icon: Compass,
+      title: "Career Pathways",
+      description: "Internships, conferences, and leadership roles that build real-world experience.",
+    },
   ]
 
   return (
     <section className="relative overflow-hidden bg-background">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-secondary/10 to-background" />
-      <div className="absolute left-1/2 top-1/2 -z-10 h-[720px] w-[720px] -translate-y-1/2 rounded-full bg-accent/10 blur-3xl" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid lg:grid-cols-[1.15fr,0.85fr] gap-16 items-center">
+      <div className="absolute -top-32 left-1/2 -z-10 h-[720px] w-[720px] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+        <div className="grid items-center gap-16 lg:grid-cols-[1.1fr,0.9fr]">
           <div className="space-y-12">
             <div className="space-y-6">
               {content.subtitle && (
-                <span className="inline-flex items-center rounded-full border border-accent/40 bg-background/80 px-4 py-1 text-sm font-medium text-accent shadow-sm backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-background/80 px-4 py-1 text-sm font-medium text-accent shadow-sm backdrop-blur">
+                  <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
                   {content.subtitle}
                 </span>
               )}
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight text-foreground">
+
+              <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl">
                 <span className="bg-gradient-to-r from-foreground via-accent to-foreground bg-clip-text text-transparent">
                   {content.title}
                 </span>
               </h1>
+
               {content.description && (
-                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+                <p className="max-w-2xl text-lg text-muted-foreground md:text-xl">
                   {content.description}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
               {content.cta_text && content.cta_link && (
                 <Button size="lg" asChild className="group">
                   <Link href={content.cta_link}>
@@ -100,33 +100,34 @@ export async function DynamicHeroSection() {
               </Button>
             </div>
 
-            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-              {stats.map((stat) => (
-                <div key={stat.label} className="flex items-center gap-3 rounded-2xl border border-secondary/40 bg-background/70 px-5 py-3 shadow-sm backdrop-blur">
-                  <div className="h-2 w-2 rounded-full bg-accent" />
-                  <div>
-                    <p className="text-lg font-semibold text-foreground">{stat.value}</p>
-                    <p>{stat.label}</p>
-                  </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="rounded-2xl border border-secondary/40 bg-background/70 px-6 py-4 shadow-sm backdrop-blur transition hover:border-accent/50 hover:shadow-lg"
+                >
+                  <p className="text-2xl font-semibold text-foreground">{metric.value}</p>
+                  <p className="text-sm text-muted-foreground">{metric.label}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-8 -z-10 rounded-[3rem] bg-gradient-to-br from-secondary/20 via-background/60 to-background blur-2xl" />
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-secondary/40 shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/10 to-background/60" />
+            <div className="absolute -inset-10 -z-10 rounded-[3.5rem] bg-gradient-to-br from-secondary/30 via-background/60 to-background blur-2xl" />
+            <div className="relative overflow-hidden rounded-[2.75rem] border border-secondary/30 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/0 to-background/60" />
               <Image
                 src={heroImage}
                 alt={content.title}
                 priority
                 fill
                 className="object-cover"
-                sizes="(min-width: 1024px) 45vw, (min-width: 768px) 60vw, 100vw"
+                sizes="(min-width: 1024px) 40vw, (min-width: 768px) 60vw, 100vw"
               />
-              <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-background/80 p-6 shadow-lg backdrop-blur">
-                <p className="text-sm uppercase tracking-wide text-accent">What you'll experience</p>
+
+              <div className="absolute inset-x-6 bottom-6 rounded-2xl border border-white/20 bg-background/85 p-6 shadow-lg backdrop-blur">
+                <p className="text-sm font-medium uppercase tracking-wide text-accent">Why students choose IACES</p>
                 <div className="mt-4 grid gap-3">
                   {highlights.map(({ icon: Icon, title, description }) => (
                     <div key={title} className="flex items-start gap-3">
@@ -143,7 +144,7 @@ export async function DynamicHeroSection() {
               </div>
             </div>
 
-            <div className="absolute -bottom-12 -right-8 hidden h-24 w-24 -rotate-6 rounded-full border border-secondary/20 bg-secondary/20 blur-xl md:block" />
+            <div className="absolute -right-6 -top-6 hidden h-28 w-28 rotate-12 rounded-full border border-secondary/20 bg-secondary/20 blur-xl md:block" />
           </div>
         </div>
       </div>
