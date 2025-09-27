@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Calendar, Download, FileText } from "lucide-react"
 
@@ -63,21 +64,47 @@ export async function MagazineSection() {
             {spotlight.map((publication) => {
               const isNewsletter = publication.publication_type === "newsletter"
 
+              const coverTypeLabel = isNewsletter ? "IACES Newsletter" : "IACES Magazine"
+              const issueLabel = publication.issue_number ?? (isNewsletter ? "Newsletter" : "Issue pending")
+
               return (
                 <Card key={publication.id} className="relative group hover:shadow-lg transition-shadow">
                   {publication.is_featured && (
                     <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground">Featured</Badge>
                   )}
                   <CardHeader>
-                    <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg mb-4 flex items-center justify-center group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
-                      <div className="text-center p-4">
-                        <div className="text-2xl font-bold text-foreground mb-2">
-                          {publication.issue_number ?? (isNewsletter ? "Newsletter" : "Issue pending")}
+                    <div
+                      className={`relative overflow-hidden rounded-lg mb-4 ${
+                        isNewsletter ? "aspect-[4/3]" : "aspect-[3/4]"
+                      }`}
+                    >
+                      {publication.cover_image_url ? (
+                        <>
+                          <Image
+                            src={publication.cover_image_url}
+                            alt={`${publication.title} cover art`}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 1024px) 320px, (min-width: 768px) 45vw, 90vw"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                          <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                            <div className="text-xs uppercase tracking-wide text-white/80">{coverTypeLabel}</div>
+                            <div className="text-xl font-semibold">{issueLabel}</div>
+                          </div>
+                        </>
+                      ) : (
+                        <div
+                          className={`flex h-full w-full flex-col items-center justify-center text-center transition-colors ${
+                            isNewsletter
+                              ? "bg-gradient-to-br from-secondary/20 to-muted/20 group-hover:from-secondary/30 group-hover:to-muted/30"
+                              : "bg-gradient-to-br from-primary/20 to-accent/20 group-hover:from-primary/30 group-hover:to-accent/30"
+                          }`}
+                        >
+                          <div className="text-2xl font-bold text-foreground mb-2">{issueLabel}</div>
+                          <div className="text-sm text-muted-foreground">{coverTypeLabel}</div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {isNewsletter ? "IACES Newsletter" : "IACES Magazine"}
-                        </div>
-                      </div>
+                      )}
                     </div>
                     <CardTitle className="text-lg">{publication.title}</CardTitle>
                   </CardHeader>
