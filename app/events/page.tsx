@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Calendar, Clock, MapPin } from "lucide-react"
 
@@ -8,6 +9,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getEvents } from "@/lib/data/events"
 import { formatEventDate, isExternalUrl, splitEventsByTime } from "@/lib/event-utils"
+import type { EventItem } from "@/lib/types"
+
+function getEventImageSrc(event: EventItem): string {
+  if (event.image_url && event.image_url.trim().length > 0) {
+    return event.image_url
+  }
+
+  const encodedTitle = encodeURIComponent(event.title)
+  return `/placeholder.svg?height=240&width=384&text=${encodedTitle}`
+}
 
 export default async function EventsPage() {
   const events = await getEvents()
@@ -53,13 +64,23 @@ export default async function EventsPage() {
                 upcoming.map((event) => {
                   const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
                   const hasRegistration = Boolean(event.registration_url)
+                  const imageSrc = getEventImageSrc(event)
 
                   return (
-                    <Card key={event.id} className="relative">
+                    <Card key={event.id} className="relative flex h-full flex-col overflow-hidden">
+                      <div className="relative aspect-[16/9] w-full">
+                        <Image
+                          src={imageSrc}
+                          alt={`${event.title} visual`}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        />
+                      </div>
                       <CardHeader>
                         <CardTitle className="text-lg">{event.title}</CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
+                      <CardContent className="flex flex-1 flex-col space-y-4">
                         {event.description && (
                           <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
                         )}
@@ -77,25 +98,27 @@ export default async function EventsPage() {
                           )}
                         </div>
 
-                        {hasRegistration ? (
-                          <Button
-                            asChild
-                            size="sm"
-                            variant="outline"
-                            className="w-full border border-input bg-white text-black hover:bg-muted"
-                          >
-                            <Link
-                              href={event.registration_url!}
-                              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        <div className="mt-auto">
+                          {hasRegistration ? (
+                            <Button
+                              asChild
+                              size="sm"
+                              variant="outline"
+                              className="w-full border border-input bg-white text-black hover:bg-muted"
                             >
-                              {event.registration_url?.startsWith("mailto:") ? "Contact Organizer" : "Register Now"}
-                            </Link>
-                          </Button>
-                        ) : (
-                          <div className="text-xs text-center text-muted-foreground">
-                            Registration details coming soon.
-                          </div>
-                        )}
+                              <Link
+                                href={event.registration_url!}
+                                {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                              >
+                                {event.registration_url?.startsWith("mailto:") ? "Contact Organizer" : "Register Now"}
+                              </Link>
+                            </Button>
+                          ) : (
+                            <div className="text-xs text-center text-muted-foreground">
+                              Registration details coming soon.
+                            </div>
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   )
@@ -120,9 +143,19 @@ export default async function EventsPage() {
                 past.map((event) => {
                   const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
                   const hasLink = Boolean(event.registration_url)
+                  const imageSrc = getEventImageSrc(event)
 
                   return (
-                    <Card key={event.id} className="opacity-90">
+                    <Card key={event.id} className="flex h-full flex-col overflow-hidden opacity-90">
+                      <div className="relative aspect-[16/9] w-full">
+                        <Image
+                          src={imageSrc}
+                          alt={`${event.title} visual`}
+                          fill
+                          className="object-cover"
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                        />
+                      </div>
                       <CardHeader>
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-lg">{event.title}</CardTitle>
@@ -132,7 +165,7 @@ export default async function EventsPage() {
                           </Badge>
                         </div>
                       </CardHeader>
-                      <CardContent className="space-y-4">
+                      <CardContent className="flex flex-1 flex-col space-y-4">
                         {event.description && (
                           <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
                         )}
@@ -150,18 +183,20 @@ export default async function EventsPage() {
                           )}
                         </div>
 
-                        {hasLink ? (
-                          <Button asChild className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700" size="sm">
-                            <Link
-                              href={event.registration_url!}
-                              {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                            >
-                              {event.registration_url?.startsWith("mailto:") ? "Request Details" : "View Details"}
-                            </Link>
-                          </Button>
-                        ) : (
-                          <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
-                        )}
+                        <div className="mt-auto">
+                          {hasLink ? (
+                            <Button asChild className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700" size="sm">
+                              <Link
+                                href={event.registration_url!}
+                                {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                              >
+                                {event.registration_url?.startsWith("mailto:") ? "Request Details" : "View Details"}
+                              </Link>
+                            </Button>
+                          ) : (
+                            <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   )

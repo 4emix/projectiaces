@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Calendar, Clock, MapPin } from "lucide-react"
 
@@ -20,6 +21,15 @@ function getActionLabel(event: EventItem, isUpcoming: boolean): string {
   }
 
   return isUpcoming ? "Register Now" : "View Details"
+}
+
+function getEventImageSrc(event: EventItem): string {
+  if (event.image_url && event.image_url.trim().length > 0) {
+    return event.image_url
+  }
+
+  const encodedTitle = encodeURIComponent(event.title)
+  return `/placeholder.svg?height=240&width=384&text=${encodedTitle}`
 }
 
 export async function EventsSection() {
@@ -49,13 +59,23 @@ export async function EventsSection() {
               const actionLabel = getActionLabel(event, true)
               const isDisabled = !event.registration_url
               const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+              const imageSrc = getEventImageSrc(event)
 
               return (
-                <Card key={event.id}>
+                <Card key={event.id} className="flex h-full flex-col overflow-hidden">
+                  <div className="relative aspect-[16/9] w-full">
+                    <Image
+                      src={imageSrc}
+                      alt={`${event.title} visual`}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
                   <CardHeader>
                     <CardTitle className="text-lg">{event.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="flex flex-1 flex-col space-y-4">
                     {event.description && (
                       <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
                     )}
@@ -73,23 +93,25 @@ export async function EventsSection() {
                       )}
                     </div>
 
-                    {isDisabled ? (
-                      <div className="text-xs text-center text-muted-foreground">Registration details coming soon.</div>
-                    ) : (
-                      <Button
-                        asChild
-                        size="sm"
-                        variant="outline"
-                        className="w-full border border-input bg-primary text-primary-foreground hover:bg-primary/90"
-                      >
-                        <Link
-                          href={event.registration_url!}
-                          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    <div className="mt-auto">
+                      {isDisabled ? (
+                        <div className="text-xs text-center text-muted-foreground">Registration details coming soon.</div>
+                      ) : (
+                        <Button
+                          asChild
+                          size="sm"
+                          variant="outline"
+                          className="w-full border border-input bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                          {actionLabel}
-                        </Link>
-                      </Button>
-                    )}
+                          <Link
+                            href={event.registration_url!}
+                            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          >
+                            {actionLabel}
+                          </Link>
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               )
@@ -116,13 +138,23 @@ export async function EventsSection() {
               const actionLabel = getActionLabel(event, false)
               const isDisabled = !event.registration_url
               const isExternal = event.registration_url ? isExternalUrl(event.registration_url) : false
+              const imageSrc = getEventImageSrc(event)
 
               return (
-                <Card key={event.id} className="opacity-90">
+                <Card key={event.id} className="flex h-full flex-col overflow-hidden opacity-90">
+                  <div className="relative aspect-[16/9] w-full">
+                    <Image
+                      src={imageSrc}
+                      alt={`${event.title} visual`}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
                   <CardHeader>
                     <CardTitle className="text-lg">{event.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="flex flex-1 flex-col space-y-4">
                     {event.description && (
                       <p className="text-muted-foreground text-sm leading-relaxed">{event.description}</p>
                     )}
@@ -140,18 +172,20 @@ export async function EventsSection() {
                       )}
                     </div>
 
-                    {isDisabled ? (
-                      <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
-                    ) : (
-                      <Button asChild size="sm" className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700">
-                        <Link
-                          href={event.registration_url!}
-                          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                        >
-                          {actionLabel}
-                        </Link>
-                      </Button>
-                    )}
+                    <div className="mt-auto">
+                      {isDisabled ? (
+                        <div className="text-xs text-center text-muted-foreground">No additional resources available.</div>
+                      ) : (
+                        <Button asChild size="sm" className="w-full bg-neutral-800 text-neutral-200 hover:bg-neutral-700">
+                          <Link
+                            href={event.registration_url!}
+                            {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          >
+                            {actionLabel}
+                          </Link>
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               )
