@@ -72,7 +72,7 @@ export default function EditMagazineIssuePage() {
           title: data.title ?? "",
           issue_number: data.issue_number ?? "",
           description: data.description ?? "",
-          cover_image_url: data.cover_image_url ?? "",
+          cover_image_url: toGoogleDriveDirectUrl(data.cover_image_url) ?? "",
           pdf_url: data.pdf_url ?? "",
           publication_date: data.publication_date
             ? new Date(data.publication_date).toISOString().split("T")[0]

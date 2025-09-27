@@ -1,13 +1,20 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import { fallbackMagazineIssuesForAdmin } from "@/lib/fallback-data"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
+
+const mapFallbackIssues = () =>
+  fallbackMagazineIssuesForAdmin.map((article) => ({
+    ...article,
+    cover_image_url: toGoogleDriveDirectUrl(article.cover_image_url),
+  }))
 
 export async function GET() {
   try {
     if (!isSupabaseConfigured()) {
-      return NextResponse.json(fallbackMagazineIssuesForAdmin)
+      return NextResponse.json(mapFallbackIssues())
     }
 
     const supabase = await createClient()
@@ -27,18 +34,20 @@ export async function GET() {
       return NextResponse.json(fallbackMagazineIssuesForAdmin)
     }
 
-    const normalized =
-      data?.map((article) => ({
-        ...article,
-        publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
-      })) ?? []
+    const normalized = (data ?? []).map((article) => ({
+      ...article,
+      cover_image_url: toGoogleDriveDirectUrl(article.cover_image_url),
+      publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
+    }))
 
-    return NextResponse.json(
-      normalized.length > 0 ? normalized : fallbackMagazineIssuesForAdmin.map((article) => ({ ...article }))
-    )
+    if (normalized.length > 0) {
+      return NextResponse.json(normalized)
+    }
+
+    return NextResponse.json(mapFallbackIssues())
   } catch (error) {
     console.error("Error in GET /api/magazines:", error)
-    return NextResponse.json(fallbackMagazineIssuesForAdmin)
+    return NextResponse.json(mapFallbackIssues())
   }
 }
 
@@ -69,6 +78,11 @@ export async function POST(request: NextRequest) {
       return trimmed.length > 0 ? trimmed : null
     }
 
+    const sanitizeOptionalUrl = (value: unknown) => {
+      const sanitized = sanitizeOptionalString(value)
+      return sanitized ? toGoogleDriveDirectUrl(sanitized) : null
+    }
+
     if (
       typeof body.title !== "string" ||
       typeof body.issue_number !== "string" ||
@@ -86,7 +100,7 @@ export async function POST(request: NextRequest) {
     const newArticle = {
       title: body.title.trim(),
       description: sanitizeOptionalString(body.description),
-      cover_image_url: sanitizeOptionalString(body.cover_image_url),
+      cover_image_url: sanitizeOptionalUrl(body.cover_image_url),
       pdf_url: sanitizeOptionalString(body.pdf_url),
       issue_number: body.issue_number.trim(),
       publication_date: body.publication_date.trim(),

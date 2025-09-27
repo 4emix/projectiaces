@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 interface MagazineIssue {
   id: string
@@ -50,7 +51,14 @@ export default function AdminMagazinePage() {
       const response = await fetch("/api/magazines")
       if (response.ok) {
         const data = await response.json()
-        setIssues(data)
+        const normalized: MagazineIssue[] = Array.isArray(data)
+          ? data.map((issue) => ({
+              ...issue,
+              cover_image_url: toGoogleDriveDirectUrl(issue.cover_image_url),
+            }))
+          : []
+
+        setIssues(normalized)
       }
     } catch (error) {
       console.error("Error fetching magazine issues:", error)
