@@ -6,8 +6,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { HeroContent } from "@/lib/types"
-import { toGoogleDriveImageUrl } from "@/lib/utils"
-import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 function toNullableString(value: string | null | undefined) {
   if (typeof value !== "string") {
@@ -26,7 +24,6 @@ export default function HeroAdminPage() {
     description: "",
     cta_text: "",
     cta_link: "",
-    background_image_url: "",
     is_active: true,
     id: null, // Initialize id field
   })
@@ -89,7 +86,6 @@ export default function HeroAdminPage() {
         description: toNullableString(heroData.description),
         cta_text: toNullableString(heroData.cta_text),
         cta_link: toNullableString(heroData.cta_link),
-        background_image_url: toGoogleDriveImageUrl(heroData.background_image_url),
         is_active: heroData.is_active ?? true,
       }
 
@@ -224,14 +220,6 @@ export default function HeroAdminPage() {
             description="URL or anchor link for the button"
           />
         </div>
-
-        <TextField
-          label="Background Image URL"
-          value={heroData.background_image_url || ""}
-          onChange={(value) => setHeroData((prev) => ({ ...prev, background_image_url: value }))}
-          placeholder="https://example.com/image.jpg"
-          description={`Optional background image for the hero section. ${GOOGLE_DRIVE_IMAGE_HINT}`}
-        />
 
         <SwitchField
           label="Active"
