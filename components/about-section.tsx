@@ -8,20 +8,16 @@ import { fallbackAboutContent } from "@/lib/fallback-data"
 
 const highlights = [
   {
-    label: "Countries",
-    value: "50+",
+    emphasis: "15+ Countries",
   },
   {
-    label: "Members",
-    value: "10K+",
+    emphasis: "3000+ Members",
   },
   {
-    label: "Universities",
-    value: "200+",
+    emphasis: "20+ Universities",
   },
   {
-    label: "Years",
-    value: "25",
+    emphasis: "Since 1989",
   },
 ]
 
@@ -107,12 +103,13 @@ export function AboutSection() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4 sm:max-w-xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {highlights.map((highlight) => (
-              <Card key={highlight.label} className="border-none bg-secondary/40 backdrop-blur">
+              <Card key={highlight.emphasis} className="border-none bg-secondary/40 backdrop-blur">
                 <CardContent className="p-6">
-                  <div className="text-3xl font-bold text-foreground">{highlight.value}</div>
-                  <div className="text-sm text-muted-foreground">{highlight.label}</div>
+                  <div className="text-2xl font-semibold text-foreground md:text-3xl">
+                    {highlight.emphasis}
+                  </div>
                 </CardContent>
               </Card>
             ))}
