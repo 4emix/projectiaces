@@ -4,7 +4,6 @@ import { AboutSection } from "@/components/about-section"
 import { BoardSection } from "@/components/board-section"
 import { MagazineSection } from "@/components/magazine-section"
 import { EventsSection } from "@/components/events-section"
-import { CommitteesSection } from "@/components/committees-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
 
@@ -17,7 +16,6 @@ export default function HomePage() {
       <BoardSection />
       <MagazineSection />
       <EventsSection />
-      <CommitteesSection />
       <ContactSection />
       <Footer />
     </main>
