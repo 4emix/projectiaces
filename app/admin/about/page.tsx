@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { useToast } from "@/hooks/use-toast"
 import type { AboutContent } from "@/lib/types"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function AboutAdminPage() {
@@ -51,7 +51,7 @@ export default function AboutAdminPage() {
     try {
       const payload = {
         ...aboutData,
-        image_url: toGoogleDriveDirectUrl(aboutData.image_url),
+        image_url: toGoogleDriveImageUrl(aboutData.image_url),
       }
 
       const response = await fetch("/api/about", {

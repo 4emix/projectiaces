@@ -1,4 +1,5 @@
 export const GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE =
-  "https://drive.google.com/uc?export=download&id=1JydVFz0V6GXpmD94GfHdRz0_XQFzOwOT"
+  "https://drive.google.com/thumbnail?id=1JydVFz0V6GXpmD94GfHdRz0_XQFzOwOT&sz=w2048"
 
-export const GOOGLE_DRIVE_IMAGE_HINT = `Supports Google Drive links (e.g. ${GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE}).`
+export const GOOGLE_DRIVE_IMAGE_HINT =
+  `Supports Google Drive share links and converts them to direct image URLs (e.g. ${GOOGLE_DRIVE_DIRECT_LINK_EXAMPLE}).`

@@ -15,7 +15,7 @@ import { ArrowLeft, Save } from "lucide-react"
 
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 interface EventFormData {
@@ -127,7 +127,7 @@ export default function EditEventPage() {
     try {
       const payload = {
         ...formData,
-        image_url: toGoogleDriveDirectUrl(formData.image_url),
+        image_url: toGoogleDriveImageUrl(formData.image_url),
       }
 
       const response = await fetch(`/api/events/${eventId}`, {

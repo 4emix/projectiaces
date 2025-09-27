@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -28,7 +28,7 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 
     return NextResponse.json({
       ...data,
-      cover_image_url: toGoogleDriveDirectUrl(data.cover_image_url),
+      cover_image_url: toGoogleDriveImageUrl(data.cover_image_url),
       publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
     })
   } catch (error) {
@@ -65,7 +65,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const sanitizeOptionalUrl = (value: unknown) => {
       const sanitized = sanitizeOptionalString(value)
-      return sanitized ? toGoogleDriveDirectUrl(sanitized) : null
+      return sanitized ? toGoogleDriveImageUrl(sanitized) : null
     }
 
     const updates: Record<string, unknown> = {}
@@ -148,7 +148,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     return NextResponse.json({
       ...data,
-      cover_image_url: toGoogleDriveDirectUrl(data.cover_image_url),
+      cover_image_url: toGoogleDriveImageUrl(data.cover_image_url),
       publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
     })
   } catch (error) {
