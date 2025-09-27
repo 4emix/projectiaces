@@ -5,6 +5,7 @@ import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/componen
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { LocalCommittee } from "@/lib/types"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export default function EditCommitteePage({ params }: { params: { id: string } }) {
   const [committeeData, setCommitteeData] = useState<Partial<LocalCommittee>>({
@@ -66,12 +67,17 @@ export default function EditCommitteePage({ params }: { params: { id: string } }
 
     setSaving(true)
     try {
+      const payload = {
+        ...committeeData,
+        logo_url: toGoogleDriveDirectUrl(committeeData.logo_url),
+      }
+
       const response = await fetch(`/api/committees/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(committeeData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {

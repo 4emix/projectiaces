@@ -15,6 +15,7 @@ import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export default function NewEventPage() {
   const { toast } = useToast()
@@ -45,12 +46,17 @@ export default function NewEventPage() {
     setLoading(true)
 
     try {
+      const payload = {
+        ...formData,
+        image_url: toGoogleDriveDirectUrl(formData.image_url),
+      }
+
       const response = await fetch("/api/events", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {

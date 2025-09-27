@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 interface MagazineIssueForm {
   title: string
@@ -130,7 +131,7 @@ export default function EditMagazineIssuePage() {
       const payload = {
         title: formData.title.trim(),
         description: formData.description.trim() || null,
-        cover_image_url: formData.cover_image_url.trim() || null,
+        cover_image_url: toGoogleDriveDirectUrl(formData.cover_image_url),
         pdf_url: formData.pdf_url.trim() || null,
         issue_number: formData.issue_number.trim(),
         publication_date: formData.publication_date,
