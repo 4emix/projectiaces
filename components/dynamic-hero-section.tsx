@@ -49,6 +49,18 @@ export async function DynamicHeroSection() {
     },
   ]
 
+  const highlights = [
+    "Global Network of 120+ universities",
+    "Leadership & professional training",
+    "Hands-on research collaborations",
+  ]
+
+  const stats = [
+    { label: "Member Chapters", value: "65" },
+    { label: "Annual Events", value: "40+" },
+    { label: "Countries", value: "32" },
+  ]
+
   return (
     <section className="relative overflow-hidden bg-background">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/5 via-secondary/10 to-background" />
@@ -74,7 +86,7 @@ export async function DynamicHeroSection() {
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               {content.cta_text && content.cta_link && (
                 <Button size="lg" asChild className="group">
                   <Link href={content.cta_link}>
@@ -130,6 +142,8 @@ export async function DynamicHeroSection() {
                 </div>
               </div>
             </div>
+
+            <div className="absolute -bottom-12 -right-8 hidden h-24 w-24 -rotate-6 rounded-full border border-secondary/20 bg-secondary/20 blur-xl md:block" />
           </div>
         </div>
       </div>
