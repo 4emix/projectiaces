@@ -93,8 +93,11 @@ export function BoardSection() {
           {boardMembers.map((member) => (
             <Card key={member.id} className="text-center">
               <CardContent className="p-6">
-                <Avatar className="w-20 h-20 mx-auto mb-4">
-                  <AvatarImage src={member.image_url || `/placeholder.svg?height=80&width=80&query=${member.name}`} />
+                <Avatar className="mx-auto mb-4 h-24 w-24 md:h-28 md:w-28">
+                  <AvatarImage
+                    className="object-cover"
+                    src={member.image_url || `/placeholder.svg?height=120&width=120&query=${member.name}`}
+                  />
                   <AvatarFallback className="text-lg bg-accent text-accent-foreground">
                     {getInitials(member.name)}
                   </AvatarFallback>

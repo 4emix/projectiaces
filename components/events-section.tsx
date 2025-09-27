@@ -80,7 +80,7 @@ export async function EventsSection() {
                         asChild
                         size="sm"
                         variant="outline"
-                        className="w-full border border-input bg-white text-black hover:bg-muted"
+                        className="w-full border border-input bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         <Link
                           href={event.registration_url!}
