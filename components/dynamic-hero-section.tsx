@@ -29,7 +29,7 @@ export async function DynamicHeroSection() {
   return (
     <section className="bg-gradient-to-br from-background via-background to-secondary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid lg:grid-cols-[1fr,0.9fr] gap-12 items-center">
+        <div className="grid md:grid-cols-[1fr,0.9fr] gap-12 items-center">
           <div className="space-y-10">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight">{content.title}</h1>
@@ -64,15 +64,15 @@ export async function DynamicHeroSection() {
             </div>
           </div>
 
-          <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-secondary/40 shadow-xl">
+          <div className="relative h-full w-full">
+            <div className="relative aspect-[4/5] md:aspect-auto md:h-full overflow-hidden rounded-3xl border border-secondary/40 shadow-xl">
               <Image
                 src={heroImage}
                 alt={content.title}
                 fill
                 priority
-                className="object-cover"
-                sizes="(min-width: 1024px) 32rem, 100vw"
+                className="object-cover md:object-contain"
+                sizes="(min-width: 768px) 50vw, 100vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-background/10 to-transparent" />
             </div>
