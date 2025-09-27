@@ -45,11 +45,8 @@ export function BoardSection() {
       <section id="board" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Board of Directors</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Meet the distinguished leaders guiding IACES towards excellence in civil engineering education and global
-              collaboration.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">General Board</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Meet with our General Board.</p>
           </div>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
@@ -64,11 +61,8 @@ export function BoardSection() {
       <section id="board" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Board of Directors</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Meet the distinguished leaders guiding IACES towards excellence in civil engineering education and global
-              collaboration.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">General Board</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Meet with our General Board.</p>
           </div>
           <div className="text-center">
             <p className="text-muted-foreground">Board member information will be available soon.</p>
@@ -82,14 +76,11 @@ export function BoardSection() {
     <section id="board" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Board of Directors</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Meet the distinguished leaders guiding IACES towards excellence in civil engineering education and global
-            collaboration.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">General Board</h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">Meet with our General Board.</p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
           {boardMembers.map((member) => (
             <Card key={member.id} className="text-center">
               <CardContent className="p-6">
