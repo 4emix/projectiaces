@@ -78,6 +78,7 @@ export function toGoogleDriveDirectUrl(
 
   const fileIdMatch = trimmed.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)/)
   if (fileIdMatch?.[1]) {
+
     if (options?.preferThumbnail) {
       return createGoogleDriveThumbnailUrl(fileIdMatch[1], options?.thumbnailSize)
     }
