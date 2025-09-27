@@ -69,9 +69,6 @@ export async function MagazineSection() {
 
               return (
                 <Card key={publication.id} className="relative group hover:shadow-lg transition-shadow">
-                  {publication.is_featured && (
-                    <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground">Featured</Badge>
-                  )}
                   <CardHeader>
                     <div
                       className={`relative overflow-hidden rounded-lg mb-4 ${
