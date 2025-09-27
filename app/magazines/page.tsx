@@ -77,8 +77,10 @@ export default async function MagazinesPage() {
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Publications</h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Stay updated with the latest research, trends, and innovations in computer engineering through our
-              quarterly magazine and monthly newsletters.
+              Dive into the vibrant world of IACES through our latest magazine edition! Explore captivating articles that
+              showcase our organization's essence, providing insights into who we are and highlighting the exciting
+              events that shape our community. Read more about our journey, projects, and the passion that fuels our
+              commitment to excellence.
             </p>
           </div>
 
