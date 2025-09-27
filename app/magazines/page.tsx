@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -98,13 +100,30 @@ export default async function MagazinesPage() {
                       <Badge className="absolute top-4 right-4 bg-accent text-accent-foreground z-10">Featured</Badge>
                     )}
                     <CardHeader>
-                      <div className="aspect-[3/4] bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg mb-4 flex items-center justify-center group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
-                        <div className="text-center p-4">
-                          <div className="text-2xl font-bold text-foreground mb-2">
-                            {issue.issue_number ?? "Issue pending"}
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-lg mb-4">
+                        {issue.cover_image_url ? (
+                          <>
+                            <Image
+                              src={issue.cover_image_url}
+                              alt={`${issue.title} cover art`}
+                              fill
+                              className="object-cover"
+                              sizes="(min-width: 1024px) 320px, (min-width: 768px) 45vw, 90vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                            <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                              <div className="text-xs uppercase tracking-wide text-white/80">IACES Magazine</div>
+                              <div className="text-xl font-semibold">{issue.issue_number ?? "Issue pending"}</div>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20 p-6 text-center transition-colors group-hover:from-primary/30 group-hover:to-accent/30">
+                            <div className="text-2xl font-bold text-foreground mb-2">
+                              {issue.issue_number ?? "Issue pending"}
+                            </div>
+                            <div className="text-sm text-muted-foreground">IACES Magazine</div>
                           </div>
-                          <div className="text-sm text-muted-foreground">IACES Magazine</div>
-                        </div>
+                        )}
                       </div>
                       <CardTitle className="text-lg">{issue.title}</CardTitle>
                     </CardHeader>
@@ -147,13 +166,30 @@ export default async function MagazinesPage() {
                 {newsletters.map((newsletter) => (
                   <Card key={newsletter.id} className="group hover:shadow-lg transition-shadow">
                     <CardHeader>
-                      <div className="aspect-[4/3] bg-gradient-to-br from-secondary/20 to-muted/20 rounded-lg mb-4 flex items-center justify-center group-hover:from-secondary/30 group-hover:to-muted/30 transition-colors">
-                        <div className="text-center p-4">
-                          <div className="text-xl font-bold text-foreground mb-2">
-                            {newsletter.issue_number ?? "Newsletter"}
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-lg mb-4">
+                        {newsletter.cover_image_url ? (
+                          <>
+                            <Image
+                              src={newsletter.cover_image_url}
+                              alt={`${newsletter.title} cover art`}
+                              fill
+                              className="object-cover"
+                              sizes="(min-width: 1024px) 320px, (min-width: 768px) 45vw, 90vw"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                            <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                              <div className="text-xs uppercase tracking-wide text-white/80">IACES Newsletter</div>
+                              <div className="text-lg font-semibold">{newsletter.issue_number ?? "Newsletter"}</div>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-secondary/20 to-muted/20 p-6 text-center transition-colors group-hover:from-secondary/30 group-hover:to-muted/30">
+                            <div className="text-xl font-bold text-foreground mb-2">
+                              {newsletter.issue_number ?? "Newsletter"}
+                            </div>
+                            <div className="text-sm text-muted-foreground">IACES Newsletter</div>
                           </div>
-                          <div className="text-sm text-muted-foreground">IACES Newsletter</div>
-                        </div>
+                        )}
                       </div>
                       <CardTitle className="text-lg">{newsletter.title}</CardTitle>
                     </CardHeader>

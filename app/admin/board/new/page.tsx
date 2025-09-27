@@ -13,6 +13,7 @@ import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewBoardMemberPage() {
   const { toast } = useToast()
@@ -135,6 +136,7 @@ export default function NewBoardMemberPage() {
                   onChange={(e) => handleChange("image_url", e.target.value)}
                   placeholder="https://example.com/image.jpg"
                 />
+                <p className="text-xs text-muted-foreground">{GOOGLE_DRIVE_IMAGE_HINT}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="display_order">Display Order</Label>
