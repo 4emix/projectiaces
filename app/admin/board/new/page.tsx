@@ -12,6 +12,7 @@ import { Save, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export default function NewBoardMemberPage() {
   const { toast } = useToast()
@@ -32,12 +33,17 @@ export default function NewBoardMemberPage() {
     setLoading(true)
 
     try {
+      const payload = {
+        ...formData,
+        image_url: toGoogleDriveDirectUrl(formData.image_url),
+      }
+
       const response = await fetch("/api/board", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {

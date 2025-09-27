@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -25,12 +26,11 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: "Magazine article not found" }, { status: 404 })
     }
 
-    const normalized = {
+    return NextResponse.json({
       ...data,
+      cover_image_url: toGoogleDriveDirectUrl(data.cover_image_url),
       publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
-    }
-
-    return NextResponse.json(normalized)
+    })
   } catch (error) {
     console.error("Error in GET /api/magazines/[id]:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
@@ -63,6 +63,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return trimmed.length > 0 ? trimmed : null
     }
 
+    const sanitizeOptionalUrl = (value: unknown) => {
+      const sanitized = sanitizeOptionalString(value)
+      return sanitized ? toGoogleDriveDirectUrl(sanitized) : null
+    }
+
     const updates: Record<string, unknown> = {}
 
     if (Object.prototype.hasOwnProperty.call(body, "title")) {
@@ -77,7 +82,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     if (Object.prototype.hasOwnProperty.call(body, "cover_image_url")) {
-      updates.cover_image_url = sanitizeOptionalString(body.cover_image_url)
+      updates.cover_image_url = sanitizeOptionalUrl(body.cover_image_url)
     }
 
     if (Object.prototype.hasOwnProperty.call(body, "pdf_url")) {
@@ -141,12 +146,11 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: "Failed to update magazine article" }, { status: 500 })
     }
 
-    const normalized = {
+    return NextResponse.json({
       ...data,
+      cover_image_url: toGoogleDriveDirectUrl(data.cover_image_url),
       publication_type: data.publication_type === "newsletter" ? "newsletter" : "magazine",
-    }
-
-    return NextResponse.json(normalized)
+    })
   } catch (error) {
     console.error("Error in PATCH /api/magazines/[id]:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
