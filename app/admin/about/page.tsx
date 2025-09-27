@@ -5,6 +5,7 @@ import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/componen
 import { useToast } from "@/hooks/use-toast"
 import type { AboutContent } from "@/lib/types"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function AboutAdminPage() {
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
@@ -132,7 +133,7 @@ export default function AboutAdminPage() {
           value={aboutData.image_url || ""}
           onChange={(value) => setAboutData((prev) => ({ ...prev, image_url: value }))}
           placeholder="https://example.com/about-image.jpg"
-          description="Optional image for the about section"
+          description={`Optional image for the about section. ${GOOGLE_DRIVE_IMAGE_HINT}`}
         />
 
         <TextAreaField

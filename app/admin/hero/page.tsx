@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import type { HeroContent } from "@/lib/types"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 function toNullableString(value: string | null | undefined) {
   if (typeof value !== "string") {
@@ -229,7 +230,7 @@ export default function HeroAdminPage() {
           value={heroData.background_image_url || ""}
           onChange={(value) => setHeroData((prev) => ({ ...prev, background_image_url: value }))}
           placeholder="https://example.com/image.jpg"
-          description="Optional background image for the hero section"
+          description={`Optional background image for the hero section. ${GOOGLE_DRIVE_IMAGE_HINT}`}
         />
 
         <SwitchField
