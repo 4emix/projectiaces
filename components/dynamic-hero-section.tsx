@@ -24,23 +24,11 @@ export async function DynamicHeroSection() {
     cta_text: "Learn More",
     cta_link: "#about",
   }
+  const heroImage = content.background_image_url ?? "/placeholder.jpg"
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-secondary/20">
-      <div className="absolute inset-0 opacity-20">
-        {content.background_image_url && (
-          <Image
-            src={content.background_image_url}
-            alt={content.title}
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-        )}
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-secondary/30" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <section className="bg-gradient-to-br from-background via-background to-secondary/20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid lg:grid-cols-[1fr,0.9fr] gap-12 items-center">
           <div className="space-y-10">
             <div className="space-y-4">
@@ -78,24 +66,15 @@ export async function DynamicHeroSection() {
 
           <div className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-secondary/40 shadow-xl">
-              {content.background_image_url ? (
-                <Image
-                  src={content.background_image_url}
-                  alt={content.title}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 32rem, 100vw"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/10 via-primary/10 to-secondary/20">
-                  <div className="text-center space-y-3 px-8">
-                    <h3 className="text-2xl font-semibold text-foreground">Building Tomorrow's Infrastructure</h3>
-                    <p className="text-muted-foreground">Empowering the next generation of civil engineers</p>
-                  </div>
-                </div>
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-background/10 to-transparent" />
+              <Image
+                src={heroImage}
+                alt={content.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="(min-width: 1024px) 32rem, 100vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-background/10 to-transparent" />
             </div>
 
             <div className="mt-6 grid grid-cols-3 gap-4 text-sm text-muted-foreground">
