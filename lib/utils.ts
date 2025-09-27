@@ -42,6 +42,10 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
     return null
   }
 
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return trimmed
+  }
+
   try {
     const parsedUrl = new URL(trimmed)
     const fileId = extractGoogleDriveFileId(parsedUrl)
@@ -51,6 +55,7 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
     }
   } catch (error) {
     console.warn("Failed to parse URL while normalizing Google Drive link", error)
+    return trimmed
   }
 
   const fileIdMatch = trimmed.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)/)
