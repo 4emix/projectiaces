@@ -10,6 +10,12 @@ const GOOGLE_DRIVE_HOSTNAMES = new Set([
   "docs.google.com",
 ])
 
+const createGoogleDriveDownloadUrl = (fileId: string) =>
+  `https://drive.google.com/uc?export=download&id=${fileId}`
+
+const createGoogleDriveThumbnailUrl = (fileId: string) =>
+  `https://drive.google.com/thumbnail?id=${fileId}&sz=w2048`
+
 function extractGoogleDriveFileId(url: URL): string | null {
   const host = url.hostname.toLowerCase()
   if (!GOOGLE_DRIVE_HOSTNAMES.has(host)) {
@@ -51,7 +57,11 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
     const fileId = extractGoogleDriveFileId(parsedUrl)
 
     if (fileId) {
-      return `https://drive.google.com/uc?export=download&id=${fileId}`
+      if (parsedUrl.pathname.startsWith("/thumbnail")) {
+        return createGoogleDriveThumbnailUrl(fileId)
+      }
+
+      return createGoogleDriveDownloadUrl(fileId)
     }
   } catch (error) {
     console.warn("Failed to parse URL while normalizing Google Drive link", error)
@@ -60,7 +70,7 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
 
   const fileIdMatch = trimmed.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)/)
   if (fileIdMatch?.[1]) {
-    return `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
+    return createGoogleDriveDownloadUrl(fileIdMatch[1])
   }
 
   return trimmed
