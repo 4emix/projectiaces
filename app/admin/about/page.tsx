@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/components/admin/content-editor"
 import { useToast } from "@/hooks/use-toast"
 import type { AboutContent } from "@/lib/types"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export default function AboutAdminPage() {
   const [aboutData, setAboutData] = useState<Partial<AboutContent>>({
@@ -47,12 +48,17 @@ export default function AboutAdminPage() {
   const handleSave = async () => {
     setSaving(true)
     try {
+      const payload = {
+        ...aboutData,
+        image_url: toGoogleDriveDirectUrl(aboutData.image_url),
+      }
+
       const response = await fetch("/api/about", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(aboutData),
+        body: JSON.stringify(payload),
       })
 
       if (response.ok) {

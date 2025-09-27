@@ -5,6 +5,7 @@ import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/componen
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { BoardMember } from "@/lib/types"
+import { toGoogleDriveDirectUrl } from "@/lib/utils"
 
 export default function EditBoardMemberPage({ params }: { params: { id: string } }) {
   const [boardMemberData, setBoardMemberData] = useState<Partial<BoardMember>>({
@@ -96,12 +97,17 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
     try {
       const memberId = boardMemberData.id || params.id
       console.log("[v0] Board Edit: Making PUT request to /api/board/" + memberId)
+      const payload = {
+        ...boardMemberData,
+        image_url: toGoogleDriveDirectUrl(boardMemberData.image_url),
+      }
+
       const response = await fetch(`/api/board/${memberId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(boardMemberData),
+        body: JSON.stringify(payload),
       })
 
       console.log("[v0] Board Edit: Response status:", response.status)
