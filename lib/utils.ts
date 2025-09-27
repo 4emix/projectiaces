@@ -16,6 +16,7 @@ const createGoogleDriveDownloadUrl = (fileId: string) =>
 const createGoogleDriveThumbnailUrl = (fileId: string, size: number = 2048) =>
   `https://drive.google.com/thumbnail?id=${fileId}&sz=w${Math.max(32, size)}`
 
+
 function extractGoogleDriveFileId(url: URL): string | null {
   const host = url.hostname.toLowerCase()
   if (!GOOGLE_DRIVE_HOSTNAMES.has(host)) {
@@ -78,6 +79,7 @@ export function toGoogleDriveDirectUrl(
 
   const fileIdMatch = trimmed.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)/)
   if (fileIdMatch?.[1]) {
+
     if (options?.preferThumbnail) {
       return createGoogleDriveThumbnailUrl(fileIdMatch[1], options?.thumbnailSize)
     }
