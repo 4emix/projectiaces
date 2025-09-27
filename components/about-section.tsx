@@ -6,21 +6,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import type { AboutContent } from "@/lib/types"
 import { fallbackAboutContent } from "@/lib/fallback-data"
 
-const highlights = [
-  {
-    emphasis: "15+ Countries",
-  },
-  {
-    emphasis: "3000+ Members",
-  },
-  {
-    emphasis: "20+ Universities",
-  },
-  {
-    emphasis: "Since 1989",
-  },
-]
-
 const pillars = [
   {
     title: "Education Excellence",
@@ -103,17 +88,6 @@ export function AboutSection() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {highlights.map((highlight) => (
-              <Card key={highlight.emphasis} className="border-none bg-secondary/40 backdrop-blur">
-                <CardContent className="p-6">
-                  <div className="text-2xl font-semibold text-foreground md:text-3xl">
-                    {highlight.emphasis}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
