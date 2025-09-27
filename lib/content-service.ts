@@ -9,17 +9,25 @@ import {
   fallbackSiteSettings,
 } from "@/lib/fallback-data"
 import type { HeroContent, AboutContent, BoardMember, MagazineArticle, ContactInfo, LocalCommittee } from "@/lib/types"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveDirectUrl, toGoogleDriveImageUrl } from "@/lib/utils"
 
 export class ContentService {
   private static supabaseUnavailableLogged = false
 
-  private static normalizeRecord<T extends Record<string, any>>(record: T, fields: (keyof T)[]): T {
+  private static normalizeRecord<T extends Record<string, any>>(
+    record: T,
+    fields: (keyof T)[],
+    imageFields: (keyof T)[] = [],
+  ): T {
     const normalized = { ...record }
+    const imageFieldSet = new Set(imageFields)
 
     for (const field of fields) {
       const value = normalized[field]
-      normalized[field] = toGoogleDriveDirectUrl(value as string | null | undefined) as T[typeof field]
+      const normalizedValue = imageFieldSet.has(field)
+        ? toGoogleDriveImageUrl(value as string | null | undefined)
+        : toGoogleDriveDirectUrl(value as string | null | undefined)
+      normalized[field] = normalizedValue as T[typeof field]
     }
 
     return normalized
@@ -28,23 +36,25 @@ export class ContentService {
   private static normalizeOptionalRecord<T extends Record<string, any>>(
     record: T | null | undefined,
     fields: (keyof T)[],
+    imageFields: (keyof T)[] = [],
   ): T | null {
     if (!record) {
       return null
     }
 
-    return this.normalizeRecord(record, fields)
+    return this.normalizeRecord(record, fields, imageFields)
   }
 
   private static normalizeRecordArray<T extends Record<string, any>>(
     records: T[] | null | undefined,
     fields: (keyof T)[],
+    imageFields: (keyof T)[] = [],
   ): T[] {
     if (!records) {
       return []
     }
 
-    return records.map((record) => this.normalizeRecord(record, fields))
+    return records.map((record) => this.normalizeRecord(record, fields, imageFields))
   }
 
   private static async getSupabase(): Promise<Awaited<ReturnType<typeof createClient>> | null> {
@@ -71,7 +81,7 @@ export class ContentService {
   static async getActiveHeroContent(): Promise<HeroContent | null> {
     const supabase = await this.getSupabase()
     if (!supabase) {
-      return this.normalizeRecord(fallbackHeroContent, ["background_image_url"])
+      return this.normalizeRecord(fallbackHeroContent, ["background_image_url"], ["background_image_url"])
     }
     const { data, error } = await supabase
       .from("hero_content")
@@ -82,14 +92,14 @@ export class ContentService {
 
     if (error) {
       console.error("Error fetching hero content:", error)
-      return this.normalizeRecord(fallbackHeroContent, ["background_image_url"])
+      return this.normalizeRecord(fallbackHeroContent, ["background_image_url"], ["background_image_url"])
     }
 
     if (data && data.length > 0) {
-      return this.normalizeRecord(data[0], ["background_image_url"])
+      return this.normalizeRecord(data[0], ["background_image_url"], ["background_image_url"])
     }
 
-    return this.normalizeRecord(fallbackHeroContent, ["background_image_url"])
+    return this.normalizeRecord(fallbackHeroContent, ["background_image_url"], ["background_image_url"])
   }
 
   static async updateHeroContent(id: string, updates: Partial<HeroContent>): Promise<HeroContent | null> {
@@ -109,14 +119,18 @@ export class ContentService {
       console.error("Error updating hero content:", error)
       return null
     }
-    return this.normalizeOptionalRecord(data, ["background_image_url"])
+    return this.normalizeOptionalRecord(
+      data,
+      ["background_image_url"],
+      ["background_image_url"],
+    )
   }
 
   // About Content
   static async getActiveAboutContent(): Promise<AboutContent | null> {
     const supabase = await this.getSupabase()
     if (!supabase) {
-      return this.normalizeRecord(fallbackAboutContent, ["image_url"])
+      return this.normalizeRecord(fallbackAboutContent, ["image_url"], ["image_url"])
     }
     const { data, error } = await supabase
       .from("about_content")
@@ -127,14 +141,14 @@ export class ContentService {
 
     if (error) {
       console.error("Error fetching about content:", error)
-      return this.normalizeRecord(fallbackAboutContent, ["image_url"])
+      return this.normalizeRecord(fallbackAboutContent, ["image_url"], ["image_url"])
     }
 
     if (data && data.length > 0) {
-      return this.normalizeRecord(data[0], ["image_url"])
+      return this.normalizeRecord(data[0], ["image_url"], ["image_url"])
     }
 
-    return this.normalizeRecord(fallbackAboutContent, ["image_url"])
+    return this.normalizeRecord(fallbackAboutContent, ["image_url"], ["image_url"])
   }
 
   static async updateAboutContent(id: string, updates: Partial<AboutContent>): Promise<AboutContent | null> {
@@ -154,7 +168,7 @@ export class ContentService {
       console.error("Error updating about content:", error)
       return null
     }
-    return this.normalizeOptionalRecord(data, ["image_url"])
+    return this.normalizeOptionalRecord(data, ["image_url"], ["image_url"])
   }
 
   // Board Members
@@ -163,6 +177,7 @@ export class ContentService {
     if (!supabase) {
       return this.normalizeRecordArray(
         fallbackBoardMembers.filter((member) => member.is_active),
+        ["image_url"],
         ["image_url"],
       )
     }
@@ -177,14 +192,16 @@ export class ContentService {
       return this.normalizeRecordArray(
         fallbackBoardMembers.filter((member) => member.is_active),
         ["image_url"],
+        ["image_url"],
       )
     }
     if (data && data.length > 0) {
-      return this.normalizeRecordArray(data, ["image_url"])
+      return this.normalizeRecordArray(data, ["image_url"], ["image_url"])
     }
 
     return this.normalizeRecordArray(
       fallbackBoardMembers.filter((member) => member.is_active),
+      ["image_url"],
       ["image_url"],
     )
   }
@@ -192,19 +209,19 @@ export class ContentService {
   static async getAllBoardMembers(): Promise<BoardMember[]> {
     const supabase = await this.getSupabase()
     if (!supabase) {
-      return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"])
+      return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"], ["image_url"])
     }
     const { data, error } = await supabase.from("board_members").select("*").order("display_order", { ascending: true })
 
     if (error) {
       console.error("Error fetching all board members:", error)
-      return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"])
+      return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"], ["image_url"])
     }
     if (data && data.length > 0) {
-      return this.normalizeRecordArray(data, ["image_url"])
+      return this.normalizeRecordArray(data, ["image_url"], ["image_url"])
     }
 
-    return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"])
+    return this.normalizeRecordArray(fallbackBoardMembers, ["image_url"], ["image_url"])
   }
 
   static async createBoardMember(
@@ -221,7 +238,7 @@ export class ContentService {
       console.error("Error creating board member:", error)
       return null
     }
-    return this.normalizeOptionalRecord(data, ["image_url"])
+    return this.normalizeOptionalRecord(data, ["image_url"], ["image_url"])
   }
 
   static async updateBoardMember(id: string, updates: Partial<BoardMember>): Promise<BoardMember | null> {
@@ -249,7 +266,7 @@ export class ContentService {
     }
 
     console.log("[v0] ContentService: Returning data:", data)
-    return this.normalizeOptionalRecord(data, ["image_url"])
+    return this.normalizeOptionalRecord(data, ["image_url"], ["image_url"])
   }
 
   static async deleteBoardMember(id: string): Promise<boolean> {
@@ -271,7 +288,11 @@ export class ContentService {
   static async getActiveMagazineArticles(): Promise<MagazineArticle[]> {
     const supabase = await this.getSupabase()
     if (!supabase) {
-      const normalized = this.normalizeRecordArray(fallbackMagazineArticles, ["cover_image_url", "pdf_url"])
+      const normalized = this.normalizeRecordArray(
+        fallbackMagazineArticles,
+        ["cover_image_url", "pdf_url"],
+        ["cover_image_url"],
+      )
       return normalized.map((article) => ({
         ...article,
         publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
@@ -285,13 +306,21 @@ export class ContentService {
 
     if (error) {
       console.error("Error fetching magazine articles:", error)
-      const normalized = this.normalizeRecordArray(fallbackMagazineArticles, ["cover_image_url", "pdf_url"])
+      const normalized = this.normalizeRecordArray(
+        fallbackMagazineArticles,
+        ["cover_image_url", "pdf_url"],
+        ["cover_image_url"],
+      )
       return normalized.map((article) => ({
         ...article,
         publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
       }))
     }
-    const normalizedData = this.normalizeRecordArray(data, ["cover_image_url", "pdf_url"])
+    const normalizedData = this.normalizeRecordArray(
+      data,
+      ["cover_image_url", "pdf_url"],
+      ["cover_image_url"],
+    )
     const normalized = normalizedData.map((article) => ({
       ...article,
       publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
@@ -301,7 +330,11 @@ export class ContentService {
       return normalized
     }
 
-    const normalizedFallback = this.normalizeRecordArray(fallbackMagazineArticles, ["cover_image_url", "pdf_url"])
+    const normalizedFallback = this.normalizeRecordArray(
+      fallbackMagazineArticles,
+      ["cover_image_url", "pdf_url"],
+      ["cover_image_url"],
+    )
     return normalizedFallback.map((article) => ({
       ...article,
       publication_type: article.publication_type === "newsletter" ? "newsletter" : "magazine",
@@ -381,6 +414,7 @@ export class ContentService {
       return this.normalizeRecordArray(
         fallbackLocalCommittees.filter((committee) => committee.is_active),
         ["logo_url"],
+        ["logo_url"],
       )
     }
     const { data, error } = await supabase
@@ -394,14 +428,16 @@ export class ContentService {
       return this.normalizeRecordArray(
         fallbackLocalCommittees.filter((committee) => committee.is_active),
         ["logo_url"],
+        ["logo_url"],
       )
     }
     if (data && data.length > 0) {
-      return this.normalizeRecordArray(data, ["logo_url"])
+      return this.normalizeRecordArray(data, ["logo_url"], ["logo_url"])
     }
 
     return this.normalizeRecordArray(
       fallbackLocalCommittees.filter((committee) => committee.is_active),
+      ["logo_url"],
       ["logo_url"],
     )
   }
@@ -409,7 +445,7 @@ export class ContentService {
   static async getAllLocalCommittees(): Promise<LocalCommittee[]> {
     const supabase = await this.getSupabase()
     if (!supabase) {
-      return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"])
+      return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"], ["logo_url"])
     }
     const { data, error } = await supabase
       .from("local_committees")
@@ -418,13 +454,13 @@ export class ContentService {
 
     if (error) {
       console.error("Error fetching all local committees:", error)
-      return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"])
+      return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"], ["logo_url"])
     }
     if (data && data.length > 0) {
-      return this.normalizeRecordArray(data, ["logo_url"])
+      return this.normalizeRecordArray(data, ["logo_url"], ["logo_url"])
     }
 
-    return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"])
+    return this.normalizeRecordArray(fallbackLocalCommittees, ["logo_url"], ["logo_url"])
   }
 
   static async createLocalCommittee(
@@ -441,7 +477,7 @@ export class ContentService {
       console.error("Error creating local committee:", error)
       return null
     }
-    return this.normalizeOptionalRecord(data, ["logo_url"])
+    return this.normalizeOptionalRecord(data, ["logo_url"], ["logo_url"])
   }
 
   static async updateLocalCommittee(id: string, updates: Partial<LocalCommittee>): Promise<LocalCommittee | null> {
@@ -461,7 +497,7 @@ export class ContentService {
       console.error("Error updating local committee:", error)
       return null
     }
-    return this.normalizeOptionalRecord(data, ["logo_url"])
+    return this.normalizeOptionalRecord(data, ["logo_url"], ["logo_url"])
   }
 
   static async deleteLocalCommittee(id: string): Promise<boolean> {

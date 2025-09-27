@@ -5,7 +5,7 @@ import { ContentEditor, TextField, TextAreaField, SwitchField } from "@/componen
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import type { LocalCommittee } from "@/lib/types"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewCommitteePage() {
@@ -36,7 +36,7 @@ export default function NewCommitteePage() {
     try {
       const payload = {
         ...committeeData,
-        logo_url: toGoogleDriveDirectUrl(committeeData.logo_url),
+        logo_url: toGoogleDriveImageUrl(committeeData.logo_url),
       }
 
       const response = await fetch("/api/committees", {

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
-import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { toGoogleDriveImageUrl } from "@/lib/utils"
 
 interface MagazineIssue {
   id: string
@@ -54,7 +54,7 @@ export default function AdminMagazinePage() {
         const normalized: MagazineIssue[] = Array.isArray(data)
           ? data.map((issue) => ({
               ...issue,
-              cover_image_url: toGoogleDriveDirectUrl(issue.cover_image_url),
+              cover_image_url: toGoogleDriveImageUrl(issue.cover_image_url),
             }))
           : []
 
