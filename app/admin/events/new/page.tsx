@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewEventPage() {
   const { toast } = useToast()
@@ -176,6 +177,7 @@ export default function NewEventPage() {
                   onChange={(e) => handleChange("image_url", e.target.value)}
                   placeholder="https://example.com/event-image.jpg"
                 />
+                <p className="text-xs text-muted-foreground">{GOOGLE_DRIVE_IMAGE_HINT}</p>
               </div>
             </div>
 

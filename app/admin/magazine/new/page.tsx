@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { isSupabaseEnvConfigured } from "@/lib/supabase/config"
 import { toGoogleDriveDirectUrl } from "@/lib/utils"
+import { GOOGLE_DRIVE_IMAGE_HINT } from "@/lib/constants"
 
 export default function NewMagazineIssuePage() {
   const { toast } = useToast()
@@ -209,6 +210,7 @@ export default function NewMagazineIssuePage() {
                   onChange={(e) => handleChange("cover_image_url", e.target.value)}
                   placeholder="https://example.com/cover.jpg"
                 />
+                <p className="text-xs text-muted-foreground">{GOOGLE_DRIVE_IMAGE_HINT}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pdf_url">PDF URL</Label>
