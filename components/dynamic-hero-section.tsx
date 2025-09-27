@@ -19,7 +19,6 @@ export async function DynamicHeroSection() {
   const heroContent = await getHeroContent()
   const content = heroContent ?? {
     title: "International Association of Civil Engineering Students",
-    subtitle: "Connecting Future Engineers Worldwide",
     description:
       "Join a global community of civil engineering students and professionals dedicated to innovation, collaboration, and excellence in sustainable infrastructure development.",
     cta_text: "Learn More",
@@ -29,9 +28,9 @@ export async function DynamicHeroSection() {
   const heroImage = content.background_image_url ?? "/placeholder.jpg"
 
   const metrics = [
-    { label: "Member Chapters", value: "120+" },
-    { label: "Countries Represented", value: "35" },
-    { label: "Annual Events", value: "80+" },
+    { label: "Members", value: "3000+" },
+    { label: "Countries", value: "20+" },
+    { label: "Years", value: "35+" },
   ]
 
   const highlights = [
@@ -66,13 +65,6 @@ export async function DynamicHeroSection() {
         <div className="grid items-center gap-16 lg:grid-cols-[1.1fr,0.9fr]">
           <div className="space-y-12">
             <div className="space-y-6">
-              {content.subtitle && (
-                <span className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-background/80 px-4 py-1 text-sm font-medium text-accent shadow-sm backdrop-blur">
-                  <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
-                  {content.subtitle}
-                </span>
-              )}
-
               <h1 className="text-4xl font-bold leading-tight text-foreground md:text-6xl">
                 <span className="bg-gradient-to-r from-foreground via-accent to-foreground bg-clip-text text-transparent">
                   {content.title}
