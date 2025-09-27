@@ -51,7 +51,7 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
     const fileId = extractGoogleDriveFileId(parsedUrl)
 
     if (fileId) {
-      return `https://drive.google.com/uc?export=view&id=${fileId}`
+      return `https://drive.google.com/uc?export=download&id=${fileId}`
     }
   } catch (error) {
     console.warn("Failed to parse URL while normalizing Google Drive link", error)
@@ -60,7 +60,7 @@ export function toGoogleDriveDirectUrl(value: string | null | undefined): string
 
   const fileIdMatch = trimmed.match(/https?:\/\/drive\.google\.com\/file\/d\/([\w-]+)/)
   if (fileIdMatch?.[1]) {
-    return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`
+    return `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
   }
 
   return trimmed
