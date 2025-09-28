@@ -95,7 +95,7 @@ export function AdminDashboard() {
       <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur">
         <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Dashboard</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-foreground">Dashboard</p>
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Welcome back to the Admin Hub</h1>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Monitor high-level activity, jump into key management areas, and keep your IACES presence looking fresh.
@@ -122,7 +122,7 @@ export function AdminDashboard() {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground/80">{stat.title}</CardTitle>
                 <span className="rounded-full border border-border/60 bg-background/80 p-2">
-                  <Icon className="h-4 w-4 text-accent" />
+                  <Icon className="h-4 w-4 text-accent-foreground" />
                 </span>
               </CardHeader>
               <CardContent>
@@ -145,7 +145,7 @@ export function AdminDashboard() {
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="flex items-center space-x-2 text-lg">
               <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
-                <Plus className="h-5 w-5 text-accent" />
+                <Plus className="h-5 w-5 text-accent-foreground" />
               </span>
               <span>Quick Actions</span>
             </CardTitle>
@@ -160,7 +160,7 @@ export function AdminDashboard() {
                 >
                   <div className="flex items-center space-x-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10">
-                      <Icon className="h-5 w-5 text-accent" />
+                      <Icon className="h-5 w-5 text-accent-foreground" />
                     </div>
                     <div>
                       <h4 className="font-medium text-foreground">{action.title}</h4>
@@ -181,7 +181,7 @@ export function AdminDashboard() {
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="flex items-center space-x-2 text-lg">
               <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
-                <TrendingUp className="h-5 w-5 text-accent" />
+                <TrendingUp className="h-5 w-5 text-accent-foreground" />
               </span>
               <span>Recent Activity</span>
             </CardTitle>
@@ -264,7 +264,7 @@ export function AdminDashboard() {
               <p className="text-sm text-muted-foreground">{section.description}</p>
               <Button variant="outline" size="sm" asChild className="w-full rounded-full">
                 <Link href={section.href}>
-                  <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-accent">
+                  <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-accent-foreground">
                     {section.icon}
                   </span>
                   {section.cta}

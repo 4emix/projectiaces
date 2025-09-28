@@ -37,7 +37,7 @@ export function AdminNavigation() {
               priority
             />
             <span className="hidden flex-col text-sm font-semibold leading-tight text-muted-foreground sm:flex">
-              <span className="text-xs font-medium uppercase tracking-widest text-accent">IACES</span>
+              <span className="text-xs font-medium uppercase tracking-widest text-accent-foreground">IACES</span>
               <span className="text-base text-foreground">Admin Hub</span>
             </span>
             <span className="sr-only">IACES Admin</span>
