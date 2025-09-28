@@ -380,14 +380,21 @@ export class ContentService {
 
     const settings: Record<string, string> = { ...fallbackSiteSettings }
     data?.forEach((setting) => {
-      if (setting.key && setting.value) {
-        settings[setting.key] = setting.value
+      if (!setting?.key) {
+        return
       }
+
+      if (setting.value === null || setting.value === undefined) {
+        settings[setting.key] = ""
+        return
+      }
+
+      settings[setting.key] = setting.value
     })
     return settings
   }
 
-  static async updateSiteSetting(key: string, value: string, userId: string): Promise<boolean> {
+  static async updateSiteSetting(key: string, value: string | null, userId: string): Promise<boolean> {
     const supabase = await this.getSupabase()
     if (!supabase) {
       console.warn("Supabase unavailable - unable to update site settings.")

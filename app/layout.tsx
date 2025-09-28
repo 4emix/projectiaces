@@ -6,14 +6,22 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 
 import { SupabaseListener } from "@/components/auth/supabase-listener"
+import { ContentService } from "@/lib/content-service"
 
 import "./globals.css"
 
-export const metadata: Metadata = {
-  title: "IACES - International Association of Civil Engineering Students",
-  description:
-    "Connecting civil engineering students worldwide through education, collaboration, and professional development opportunities.",
-  generator: "v0.app",
+export async function generateMetadata(): Promise<Metadata> {
+  const siteSettings = await ContentService.getSiteSettings()
+  const title = siteSettings.site_title ?? "IACES - International Association of Civil Engineering Students"
+  const description =
+    siteSettings.site_description ??
+    "Connecting civil engineering students worldwide through education, collaboration, and professional development opportunities."
+
+  return {
+    title,
+    description,
+    generator: "v0.app",
+  }
 }
 
 export default function RootLayout({
