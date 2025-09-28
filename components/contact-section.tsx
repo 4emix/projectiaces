@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,12 +11,36 @@ import { Label } from "@/components/ui/label"
 import { Mail, MapPin } from "lucide-react"
 
 export function ContactSection() {
+  const [siteSettings, setSiteSettings] = useState({
+    contactEmail: "info@iaces.network",
+    contactAddress: "123 Technology Drive\nInnovation City, IC 12345",
+  })
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   })
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch("/api/settings")
+        if (!response.ok) {
+          return
+        }
+        const data = await response.json()
+        setSiteSettings((prev) => ({
+          contactEmail: data.contact_email ?? prev.contactEmail,
+          contactAddress: data.contact_address ?? prev.contactAddress,
+        }))
+      } catch (error) {
+        console.error("Failed to load site settings for contact section:", error)
+      }
+    }
+
+    fetchSettings()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -52,11 +76,7 @@ export function ContactSection() {
                   <MapPin className="w-5 h-5 text-accent mt-0.5" />
                   <div>
                     <p className="font-medium text-foreground">Address</p>
-                    <p className="text-muted-foreground text-sm">
-                      123 Technology Drive
-                      <br />
-                      Innovation City, IC 12345
-                    </p>
+                    <p className="text-muted-foreground text-sm whitespace-pre-line">{siteSettings.contactAddress}</p>
                   </div>
                 </div>
 
@@ -64,7 +84,7 @@ export function ContactSection() {
                   <Mail className="w-5 h-5 text-accent mt-0.5" />
                   <div>
                     <p className="font-medium text-foreground">Email</p>
-                    <p className="text-muted-foreground text-sm">info@iaces.network</p>
+                    <p className="text-muted-foreground text-sm">{siteSettings.contactEmail}</p>
                   </div>
                 </div>
               </CardContent>
