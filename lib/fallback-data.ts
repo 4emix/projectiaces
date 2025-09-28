@@ -221,9 +221,16 @@ export const fallbackLocalCommittees: LocalCommittee[] = [
 ]
 
 export const fallbackSiteSettings: Record<string, string> = {
+  site_title: "IACES - International Association of Civil Engineering Students",
+  site_description: "Connecting civil engineering students worldwide",
   contact_email: "info@iaces.network",
-  contact_phone: "+1 (555) 123-4567",
-  headquarters_city: "Innovation City",
+  contact_address: "123 Technology Drive, Innovation City, IC 12345",
+  social_facebook: "https://facebook.com/iaces",
+  social_twitter: "https://twitter.com/iaces",
+  social_linkedin: "https://linkedin.com/company/iaces",
+  maintenance_mode: "false",
+  allow_registrations: "true",
+  enable_analytics: "true",
 }
 
 export interface AdminEventFallback {
