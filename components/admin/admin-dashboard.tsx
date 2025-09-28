@@ -1,38 +1,54 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import type { LucideIcon } from "lucide-react"
 import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Plus, Globe } from "lucide-react"
 import Link from "next/link"
 
-export function AdminDashboard() {
-  const stats = [
+import { ContentService } from "@/lib/content-service"
+import { getEvents } from "@/lib/data/events"
+import { splitEventsByTime } from "@/lib/event-utils"
+
+type Stat = {
+  title: string
+  value: string
+  icon: LucideIcon
+  change?: string
+  changeType?: "positive" | "negative" | "neutral"
+}
+
+export async function AdminDashboard() {
+  const [boardMembers, localCommittees, magazineArticles, events] = await Promise.all([
+    ContentService.getAllBoardMembers(),
+    ContentService.getAllLocalCommittees(),
+    ContentService.getActiveMagazineArticles(),
+    getEvents(),
+  ])
+
+  const { upcoming } = splitEventsByTime(events)
+
+  const formatNumber = (value: number) => value.toLocaleString()
+
+  const stats: Stat[] = [
     {
       title: "Total Board Members",
-      value: "4",
+      value: formatNumber(boardMembers.length),
       icon: Users,
-      change: "+0",
-      changeType: "neutral" as const,
     },
     {
       title: "Local Committees",
-      value: "4",
+      value: formatNumber(localCommittees.length),
       icon: Globe,
-      change: "+1",
-      changeType: "positive" as const,
     },
     {
       title: "Magazine Issues",
-      value: "3",
+      value: formatNumber(magazineArticles.length),
       icon: FileText,
-      change: "+1",
-      changeType: "positive" as const,
     },
     {
       title: "Upcoming Events",
-      value: "3",
+      value: formatNumber(upcoming.length),
       icon: Calendar,
-      change: "+2",
-      changeType: "positive" as const,
     },
   ]
 
@@ -127,12 +143,23 @@ export function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-semibold text-foreground">{stat.value}</div>
-                <div className="mt-2 flex items-center space-x-2 text-xs">
-                  <Badge variant={stat.changeType === "positive" ? "default" : "secondary"} className="text-xs">
-                    {stat.change}
-                  </Badge>
-                  <span className="text-muted-foreground">vs. last month</span>
-                </div>
+                {stat.change ? (
+                  <div className="mt-2 flex items-center space-x-2 text-xs">
+                    <Badge
+                      variant={
+                        stat.changeType === "positive"
+                          ? "default"
+                          : stat.changeType === "negative"
+                            ? "destructive"
+                            : "secondary"
+                      }
+                      className="text-xs"
+                    >
+                      {stat.change}
+                    </Badge>
+                    <span className="text-muted-foreground">vs. last month</span>
+                  </div>
+                ) : null}
               </CardContent>
             </Card>
           )
