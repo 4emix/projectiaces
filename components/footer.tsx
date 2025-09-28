@@ -3,18 +3,32 @@ import { Linkedin, Twitter, Mail } from "lucide-react"
 
 import { ContentService } from "@/lib/content-service"
 
-export async function Footer() {
-  const siteSettings = await ContentService.getSiteSettings()
-  const siteTitle = siteSettings.site_title ?? "IACES"
+type FooterProps = {
+  siteSettings?: Record<string, string>
+}
+
+export async function Footer({ siteSettings }: FooterProps) {
+  const resolvedSiteSettings = siteSettings ?? (await ContentService.getSiteSettings())
+  const siteTitleValue = resolvedSiteSettings.site_title
+  const siteDescriptionValue = resolvedSiteSettings.site_description
+  const contactEmailValue = resolvedSiteSettings.contact_email
+  const contactAddressValue = resolvedSiteSettings.contact_address
+
+  const siteTitle = siteTitleValue && siteTitleValue.trim().length > 0 ? siteTitleValue : "IACES"
   const siteDescription =
-    siteSettings.site_description ??
-    "International Association of Civil Engineering Students - Connecting future engineers worldwide."
-  const contactEmail = siteSettings.contact_email ?? "info@iaces.network"
-  const contactAddress = siteSettings.contact_address ?? "123 Technology Drive\nInnovation City, IC 12345"
+    siteDescriptionValue && siteDescriptionValue.trim().length > 0
+      ? siteDescriptionValue
+      : "International Association of Civil Engineering Students - Connecting future engineers worldwide."
+  const contactEmail =
+    contactEmailValue && contactEmailValue.trim().length > 0 ? contactEmailValue : "info@iaces.network"
+  const contactAddress =
+    contactAddressValue && contactAddressValue.trim().length > 0
+      ? contactAddressValue
+      : "123 Technology Drive\nInnovation City, IC 12345"
 
   const socialLinks = [
-    { href: siteSettings.social_twitter, icon: Twitter },
-    { href: siteSettings.social_linkedin, icon: Linkedin },
+    { href: resolvedSiteSettings.social_twitter, icon: Twitter },
+    { href: resolvedSiteSettings.social_linkedin, icon: Linkedin },
     { href: contactEmail ? `mailto:${contactEmail}` : null, icon: Mail },
   ].filter((link) => typeof link.href === "string" && link.href.trim().length > 0) as {
     href: string

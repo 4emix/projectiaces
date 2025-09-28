@@ -10,17 +10,33 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Mail, MapPin } from "lucide-react"
 
-export function ContactSection() {
-  const [siteSettings, setSiteSettings] = useState({
-    contactEmail: "info@iaces.network",
-    contactAddress: "123 Technology Drive\nInnovation City, IC 12345",
-  })
+type ContactSectionProps = {
+  contactEmail?: string | null
+  contactAddress?: string | null
+}
+
+const DEFAULT_CONTACT_EMAIL = "info@iaces.network"
+const DEFAULT_CONTACT_ADDRESS = "123 Technology Drive\nInnovation City, IC 12345"
+
+export function ContactSection({ contactEmail, contactAddress }: ContactSectionProps) {
+  const [siteSettings, setSiteSettings] = useState(() => ({
+    contactEmail: contactEmail?.trim() || DEFAULT_CONTACT_EMAIL,
+    contactAddress: contactAddress?.trim() || DEFAULT_CONTACT_ADDRESS,
+  }))
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   })
+
+  useEffect(() => {
+    setSiteSettings((prev) => ({
+      ...prev,
+      contactEmail: contactEmail?.trim() || DEFAULT_CONTACT_EMAIL,
+      contactAddress: contactAddress?.trim() || DEFAULT_CONTACT_ADDRESS,
+    }))
+  }, [contactEmail, contactAddress])
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -31,8 +47,8 @@ export function ContactSection() {
         }
         const data = await response.json()
         setSiteSettings((prev) => ({
-          contactEmail: data.contact_email ?? prev.contactEmail,
-          contactAddress: data.contact_address ?? prev.contactAddress,
+          contactEmail: data.contact_email?.trim() || prev.contactEmail,
+          contactAddress: data.contact_address?.trim() || prev.contactAddress,
         }))
       } catch (error) {
         console.error("Failed to load site settings for contact section:", error)
