@@ -1,62 +1,26 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ExternalLink, MapPin } from "lucide-react"
 import Image from "next/image"
+
+import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ContentService } from "@/lib/content-service"
 import type { LocalCommittee } from "@/lib/types"
+import { ExternalLink, MapPin } from "lucide-react"
 
-export default function CommitteesPage() {
-  const [committees, setCommittees] = useState<LocalCommittee[]>([])
-  const [loading, setLoading] = useState(true)
+export const revalidate = 60
 
-  useEffect(() => {
-    const fetchCommittees = async () => {
-      try {
-        console.log("[v0] Fetching committees from API...")
-        const response = await fetch("/api/committees")
-        if (response.ok) {
-          const data = await response.json()
-          console.log("[v0] Committees data received:", data)
-          setCommittees(data)
-        } else {
-          console.error("[v0] Failed to fetch committees:", response.status)
-        }
-      } catch (error) {
-        console.error("[v0] Error fetching committees:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchCommittees()
-  }, [])
-
-  if (loading) {
-    return (
-      <main className="min-h-screen">
-        <Navigation />
-        <div className="pt-20 pb-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Local Committees</h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                Our local committees across Europe work tirelessly to promote civil engineering education, foster
-                international collaboration, and support students and professionals in their regions.
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </main>
-    )
+async function getCommittees(): Promise<LocalCommittee[]> {
+  try {
+    return await ContentService.getActiveLocalCommittees()
+  } catch (error) {
+    console.error("[v0] Error loading committees:", error)
+    return []
   }
+}
+
+export default async function CommitteesPage() {
+  const committees = await getCommittees()
 
   return (
     <main className="min-h-screen">
@@ -97,9 +61,11 @@ export default function CommitteesPage() {
                     <p className="text-muted-foreground text-sm leading-relaxed text-center">{committee.description}</p>
 
                     {committee.website_url && (
-                      <Button className="w-full" size="sm" onClick={() => window.open(committee.website_url, "_blank")}>
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Visit Website
+                      <Button className="w-full" size="sm" asChild>
+                        <a href={committee.website_url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Visit Website
+                        </a>
                       </Button>
                     )}
                   </CardContent>
@@ -116,8 +82,8 @@ export default function CommitteesPage() {
           <div className="text-center mt-16 p-8 bg-secondary/30 rounded-lg">
             <h3 className="text-2xl font-bold text-foreground mb-4">Interested in Starting a Local Committee?</h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              We're always looking to expand our network and support civil engineering communities worldwide. Contact us
-              to learn about establishing a committee in your region.
+              We're always looking to expand our network and support civil engineering communities worldwide. Contact us to
+              learn about establishing a committee in your region.
             </p>
             <Button size="lg">Get in Touch</Button>
           </div>
