@@ -10,6 +10,8 @@ import { ContentService } from "@/lib/content-service"
 
 import "./globals.css"
 
+export const dynamic = "force-dynamic"
+
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await ContentService.getSiteSettings()
   const title = siteSettings.site_title ?? "IACES - International Association of Civil Engineering Students"
