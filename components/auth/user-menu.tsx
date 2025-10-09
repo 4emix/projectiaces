@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,12 +34,12 @@ export function UserMenu() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth])
+  }, [supabase])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -46,11 +47,7 @@ export function UserMenu() {
   }
 
   if (!user) {
-    return (
-      <Button variant="outline" asChild>
-        <a href="/auth/login">Sign In</a>
-      </Button>
-    )
+    return null
   }
 
   const getInitials = (email: string) => {
