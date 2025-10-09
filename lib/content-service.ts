@@ -1,4 +1,6 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { unstable_noStore as noStore } from "next/cache"
+
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import {
   fallbackAboutContent,
   fallbackBoardMembers,
@@ -367,7 +369,10 @@ export class ContentService {
 
   // Site Settings
   static async getSiteSettings(): Promise<Record<string, string>> {
-    const supabase = await this.getSupabase()
+    noStore()
+
+    const serviceRoleClient = createServiceRoleClient()
+    const supabase = serviceRoleClient ?? (await this.getSupabase())
     if (!supabase) {
       return { ...fallbackSiteSettings }
     }

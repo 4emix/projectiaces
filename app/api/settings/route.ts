@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, unstable_noStore as noStore } from "next/cache"
 
 import { ContentService } from "@/lib/content-service"
 import { fallbackSiteSettings } from "@/lib/fallback-data"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 const DEFAULT_SETTINGS = {
   site_title: fallbackSiteSettings.site_title,
@@ -80,6 +80,7 @@ export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
+    noStore()
     const settings = await readSiteSettings()
     return NextResponse.json(settings)
   } catch (error) {
@@ -90,11 +91,13 @@ export async function GET() {
 
 export async function PUT(request: NextRequest) {
   try {
+    noStore()
     if (!isSupabaseConfigured()) {
       return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
     }
 
     const supabase = await createClient()
+    const writer = createServiceRoleClient() ?? supabase
     const {
       data: { user },
       error: authError,
@@ -139,7 +142,7 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString(),
     }))
 
-    const { error } = await supabase.from("site_settings").upsert(updates, { onConflict: "key" })
+    const { error } = await writer.from("site_settings").upsert(updates, { onConflict: "key" })
 
     if (error) {
       console.error("Error updating site settings:", error)
