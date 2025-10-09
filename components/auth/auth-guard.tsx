@@ -1,11 +1,12 @@
 "use client"
 
 import type React from "react"
-
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+
 import { createClient } from "@/lib/supabase/client"
 import type { User } from "@supabase/supabase-js"
+
+import { AdminLoginCard } from "./admin-login-card"
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -15,20 +16,17 @@ interface AuthGuardProps {
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
+    let isMounted = true
+
     const getUser = async () => {
       const {
         data: { user },
-        error,
       } = await supabase.auth.getUser()
 
-      if (error || !user) {
-        router.push("/auth/login")
-        return
-      }
+      if (!isMounted) return
 
       setUser(user)
       setLoading(false)
@@ -38,17 +36,18 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT" || !session) {
-        router.push("/auth/login")
-      } else if (session?.user) {
-        setUser(session.user)
-        setLoading(false)
-      }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) return
+
+      setUser(session?.user ?? null)
+      setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
-  }, [router, supabase.auth])
+    return () => {
+      isMounted = false
+      subscription.unsubscribe()
+    }
+  }, [supabase])
 
   if (loading) {
     return (
@@ -64,7 +63,7 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
   }
 
   if (!user) {
-    return null
+    return <AdminLoginCard />
   }
 
   return <>{children}</>

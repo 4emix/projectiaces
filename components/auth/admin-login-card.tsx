@@ -1,6 +1,7 @@
 "use client"
 
-import type React from "react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
@@ -8,10 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
 
-export default function Page() {
+export function AdminLoginCard() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -25,23 +24,21 @@ export default function Page() {
     setError(null)
 
     try {
-      console.log("[v0] Attempting login with email:", email)
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
         options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/admin`,
+          emailRedirectTo:
+            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/admin`,
         },
       })
 
-      console.log("[v0] Login response:", { data, error })
-
       if (error) throw error
 
-      console.log("[v0] Login successful, redirecting to admin")
-      router.push("/admin")
+      if (data?.user) {
+        router.push("/admin")
+      }
     } catch (error: unknown) {
-      console.log("[v0] Login error:", error)
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
       setIsLoading(false)
