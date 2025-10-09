@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "node scripts/run-next-lint.js",
+    "test": "node --test",
     "start": "next start"
   },
   "dependencies": {
