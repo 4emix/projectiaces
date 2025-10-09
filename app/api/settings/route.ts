@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache"
 
 import { ContentService } from "@/lib/content-service"
 import { fallbackSiteSettings } from "@/lib/fallback-data"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 const DEFAULT_SETTINGS = {
   site_title: fallbackSiteSettings.site_title,
@@ -95,6 +95,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const supabase = await createClient()
+    const mutationClient = createServiceRoleClient() ?? supabase
     const {
       data: { user },
       error: authError,
@@ -139,7 +140,7 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString(),
     }))
 
-    const { error } = await supabase.from("site_settings").upsert(updates, { onConflict: "key" })
+    const { error } = await mutationClient.from("site_settings").upsert(updates, { onConflict: "key" })
 
     if (error) {
       console.error("Error updating site settings:", error)
