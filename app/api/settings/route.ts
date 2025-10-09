@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache"
 
 import { ContentService } from "@/lib/content-service"
 import { fallbackSiteSettings } from "@/lib/fallback-data"
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 
 const DEFAULT_SETTINGS = {
   site_title: fallbackSiteSettings.site_title,
@@ -139,7 +139,13 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString(),
     }))
 
-    const { error } = await supabase.from("site_settings").upsert(updates, { onConflict: "key" })
+    const serviceRoleClient = createServiceRoleClient()
+    if (!serviceRoleClient) {
+      console.error("Service role Supabase client is not configured. Unable to update site settings.")
+      return NextResponse.json({ error: "Failed to save site settings" }, { status: 500 })
+    }
+
+    const { error } = await serviceRoleClient.from("site_settings").upsert(updates, { onConflict: "key" })
 
     if (error) {
       console.error("Error updating site settings:", error)
