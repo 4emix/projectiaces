@@ -23,6 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     generator: "v0.app",
+    icons: {
+      icon: [
+        { url: "/iaces-favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/iaces-favicon.svg",
+      apple: "/iaces-favicon.svg",
+    },
   }
 }
 

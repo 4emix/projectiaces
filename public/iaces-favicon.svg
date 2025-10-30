@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <defs>
+    <linearGradient id="iacesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#iacesGradient)" d="M7.839 40.783 23.869 12.729 20 6 0 40.783h7.839Z" />
+  <path fill="#0b1120" d="M16.053 40.783H40L27.99 19.894l-4.02 7.032 3.976 6.914H20.02l-3.967 6.943Z" />
+</svg>
