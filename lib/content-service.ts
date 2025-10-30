@@ -1,4 +1,4 @@
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { createClient, createServiceRoleClient, isSupabaseConfigured } from "@/lib/supabase/server"
 import {
   fallbackAboutContent,
   fallbackBoardMembers,
@@ -13,6 +13,7 @@ import { toGoogleDriveDirectUrl, toGoogleDriveImageUrl } from "@/lib/utils"
 
 export class ContentService {
   private static supabaseUnavailableLogged = false
+  private static serviceRoleUnavailableLogged = false
 
   private static normalizeRecord<T extends Record<string, any>>(
     record: T,
@@ -57,7 +58,30 @@ export class ContentService {
     return records.map((record) => this.normalizeRecord(record, fields, imageFields))
   }
 
-  private static async getSupabase(): Promise<Awaited<ReturnType<typeof createClient>> | null> {
+  private static getServiceRoleClient() {
+    try {
+      const client = createServiceRoleClient()
+
+      if (!client && !this.serviceRoleUnavailableLogged) {
+        console.warn(
+          "Supabase service role credentials are not configured. Falling back to user-scoped access for content mutations.",
+        )
+        this.serviceRoleUnavailableLogged = true
+      }
+
+      return client
+    } catch (error) {
+      if (!this.serviceRoleUnavailableLogged) {
+        console.error("Failed to initialize Supabase service role client. Falling back to user-scoped access.", error)
+        this.serviceRoleUnavailableLogged = true
+      }
+      return null
+    }
+  }
+
+  private static async getSupabase({
+    preferServiceRole = false,
+  }: { preferServiceRole?: boolean } = {}): Promise<Awaited<ReturnType<typeof createClient>> | null> {
     if (!isSupabaseConfigured()) {
       if (!this.supabaseUnavailableLogged) {
         console.warn("Supabase credentials are not configured. Falling back to static content.")
@@ -67,6 +91,12 @@ export class ContentService {
     }
 
     try {
+      if (preferServiceRole) {
+        const serviceRoleClient = this.getServiceRoleClient()
+        if (serviceRoleClient) {
+          return serviceRoleClient
+        }
+      }
       return await createClient()
     } catch (error) {
       if (!this.supabaseUnavailableLogged) {
@@ -75,6 +105,10 @@ export class ContentService {
       }
       return null
     }
+  }
+
+  private static async getSupabaseForMutations() {
+    return await this.getSupabase({ preferServiceRole: true })
   }
 
   // Hero Content
@@ -103,7 +137,7 @@ export class ContentService {
   }
 
   static async updateHeroContent(id: string, updates: Partial<HeroContent>): Promise<HeroContent | null> {
-    const supabase = await this.getSupabase()
+    const supabase = await this.getSupabaseForMutations()
     if (!supabase) {
       console.warn("Supabase unavailable - skipping hero content update.")
       return null
@@ -152,7 +186,7 @@ export class ContentService {
   }
 
   static async updateAboutContent(id: string, updates: Partial<AboutContent>): Promise<AboutContent | null> {
-    const supabase = await this.getSupabase()
+    const supabase = await this.getSupabaseForMutations()
     if (!supabase) {
       console.warn("Supabase unavailable - skipping about content update.")
       return null
@@ -227,7 +261,7 @@ export class ContentService {
   static async createBoardMember(
     member: Omit<BoardMember, "id" | "created_at" | "updated_at">,
   ): Promise<BoardMember | null> {
-    const supabase = await this.getSupabase()
+    const supabase = await this.getSupabaseForMutations()
     if (!supabase) {
       console.warn("Supabase unavailable - unable to create board member.")
       return null
@@ -245,7 +279,7 @@ export class ContentService {
     console.log("[v0] ContentService: Starting updateBoardMember with id:", id)
     console.log("[v0] ContentService: Updates object:", JSON.stringify(updates, null, 2))
 
-    const supabase = await this.getSupabase()
+    const supabase = await this.getSupabaseForMutations()
     if (!supabase) {
       console.warn("Supabase unavailable - unable to update board member.")
       return null
@@ -270,7 +304,7 @@ export class ContentService {
   }
 
   static async deleteBoardMember(id: string): Promise<boolean> {
-    const supabase = await this.getSupabase()
+    const supabase = await this.getSupabaseForMutations()
     if (!supabase) {
       console.warn("Supabase unavailable - unable to delete board member.")
       return false

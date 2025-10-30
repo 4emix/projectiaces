@@ -112,7 +112,7 @@ CREATE POLICY "Allow users to manage their own about_content" ON public.about_co
 -- Create RLS policies for board_members
 CREATE POLICY "Allow everyone to view active board_members" ON public.board_members FOR SELECT USING (is_active = true);
 CREATE POLICY "Allow authenticated users to view all board_members" ON public.board_members FOR SELECT USING (auth.role() = 'authenticated');
-CREATE POLICY "Allow users to manage their own board_members" ON public.board_members FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Allow authenticated users to manage board_members" ON public.board_members FOR ALL USING (auth.role() = 'authenticated');
 
 -- Create RLS policies for magazine_articles
 CREATE POLICY "Allow everyone to view active magazine_articles" ON public.magazine_articles FOR SELECT USING (is_active = true);
