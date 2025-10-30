@@ -3,15 +3,23 @@
 import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import { Button } from "@/components/ui/button"
 import { UserMenu } from "@/components/auth/user-menu"
 import { Menu, X, Home, Settings, Users, FileText, Calendar, BarChart3 } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
 
 export function AdminNavigation() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+  const supabase = createClient()
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    router.push("/")
+  }
 
   const navItems = [
     { href: "/admin", icon: BarChart3, label: "Dashboard" },
@@ -73,6 +81,13 @@ export function AdminNavigation() {
             <Button variant="outline" className="rounded-full" asChild>
               <Link href="/">View Site</Link>
             </Button>
+            <Button
+              variant="ghost"
+              className="rounded-full"
+              onClick={handleSignOut}
+            >
+              Log out
+            </Button>
             <UserMenu />
           </div>
 
@@ -114,6 +129,14 @@ export function AdminNavigation() {
               <div className="flex items-center justify-between space-x-2 rounded-xl bg-background/80 p-2">
                 <Button variant="outline" size="sm" className="flex-1 rounded-full" asChild>
                   <Link href="/">View Site</Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full"
+                  onClick={handleSignOut}
+                >
+                  Log out
                 </Button>
                 <UserMenu />
               </div>
