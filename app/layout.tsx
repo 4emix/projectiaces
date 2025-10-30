@@ -24,9 +24,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     generator: "v0.app",
     icons: {
-      icon: "/iaces-logo.png",
-      shortcut: "/iaces-logo.png",
-      apple: "/iaces-logo.png",
+      icon: [
+        { url: "/iaces-favicon.svg", type: "image/svg+xml" },
+      ],
+      shortcut: "/iaces-favicon.svg",
+      apple: "/iaces-favicon.svg",
     },
   }
 }
