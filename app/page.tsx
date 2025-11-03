@@ -6,18 +6,27 @@ import { MagazineSection } from "@/components/magazine-section"
 import { EventsSection } from "@/components/events-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
+import { ContentService } from "@/lib/content-service"
 
-export default function HomePage() {
+export default async function HomePage() {
+  const siteSettings = await ContentService.getSiteSettings()
+
   return (
     <main className="min-h-screen">
-      <Navigation />
-      <DynamicHeroSection />
+      <Navigation
+        siteTitle={siteSettings.site_title}
+        siteDescription={siteSettings.site_description}
+      />
+      <DynamicHeroSection siteSettings={siteSettings} />
       <AboutSection />
       <BoardSection />
       <MagazineSection />
       <EventsSection />
-      <ContactSection />
-      <Footer />
+      <ContactSection
+        contactEmail={siteSettings.contact_email}
+        contactAddress={siteSettings.contact_address}
+      />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 }

@@ -6,6 +6,10 @@ import { ContentService } from "@/lib/content-service"
 import type { HeroContent } from "@/lib/types"
 import { ArrowRight, Compass, Globe2, Lightbulb, Users2 } from "lucide-react"
 
+type DynamicHeroSectionProps = {
+  siteSettings?: Record<string, string>
+}
+
 async function getHeroContent(): Promise<HeroContent | null> {
   try {
     return await ContentService.getActiveHeroContent()
@@ -15,12 +19,16 @@ async function getHeroContent(): Promise<HeroContent | null> {
   }
 }
 
-export async function DynamicHeroSection() {
+export async function DynamicHeroSection({ siteSettings }: DynamicHeroSectionProps) {
   const heroContent = await getHeroContent()
+  const fallbackTitle =
+    siteSettings?.site_title?.trim() || "International Association of Civil Engineering Students"
+  const fallbackDescription =
+    siteSettings?.site_description?.trim() ||
+    "Join a global community of civil engineering students and professionals dedicated to innovation, collaboration, and excellence in sustainable infrastructure development."
   const content = heroContent ?? {
-    title: "International Association of Civil Engineering Students",
-    description:
-      "Join a global community of civil engineering students and professionals dedicated to innovation, collaboration, and excellence in sustainable infrastructure development.",
+    title: fallbackTitle,
+    description: fallbackDescription,
     cta_text: "Learn More",
     cta_link: "#about",
   }
