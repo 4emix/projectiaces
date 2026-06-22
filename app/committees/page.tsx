@@ -54,7 +54,7 @@ export default async function CommitteesPage() {
                         src={committee.logo_url || "/placeholder.svg?height=80&width=80"}
                         alt={`${committee.name} logo`}
                         fill
-                        className="object-contain rounded-lg"
+                        className="lc-logo"
                       />
                     </div>
                     <CardTitle className="text-xl">{committee.name}</CardTitle>

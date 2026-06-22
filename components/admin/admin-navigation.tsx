@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import clsx from "clsx"
 import { Button } from "@/components/ui/button"
+import { BrandLogo } from "@/components/brand-logo"
 import { UserMenu } from "@/components/auth/user-menu"
 import { Menu, X, Home, Settings, Users, FileText, Calendar, BarChart3 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
@@ -35,20 +35,12 @@ export function AdminNavigation() {
     <nav className="fixed top-0 z-50 w-full border-b border-border/60 bg-card/80 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-card/70">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
-          <Link href="/admin" className="group flex items-center space-x-3">
-            <Image
-              src="/iaces-logo.png"
-              alt="IACES - International Association of Civil Engineering Students"
-              width={120}
-              height={40}
-              className="h-10 w-auto transition-transform duration-200 group-hover:scale-105"
-              priority
-            />
-            <span className="hidden flex-col text-sm font-semibold leading-tight text-muted-foreground sm:flex">
-              <span className="text-xs font-medium uppercase tracking-widest text-accent-foreground">IACES</span>
+          <Link href="/admin" className="group flex items-center gap-3" aria-label="IACES Admin">
+            <BrandLogo iconOnly className="transition-transform duration-200 group-hover:scale-105" />
+            <span className="hidden flex-col text-sm font-semibold leading-tight sm:flex">
+              <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">IACES</span>
               <span className="text-base text-foreground">Admin Hub</span>
             </span>
-            <span className="sr-only">IACES Admin</span>
           </Link>
 
           {/* Desktop Navigation */}

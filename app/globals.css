@@ -262,6 +262,13 @@
     letter-spacing: -0.03em;
     line-height: 0.95;
   }
+
+  /* Local-committee logos: force pure black silhouette, transparent bg.
+     Works regardless of the uploaded logo's original colors. */
+  .lc-logo {
+    filter: brightness(0) saturate(100%);
+    object-fit: contain;
+  }
 }
 
 /* Leaflet map — white + navy theming */

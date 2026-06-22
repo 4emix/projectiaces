@@ -80,12 +80,12 @@ export function CommitteesSection() {
             <Card key={committee.id} className="group hover:shadow-lg transition-all duration-300 border-border/50">
               <CardContent className="p-6 text-center">
                 <div className="mb-4 flex justify-center">
-                  <div className="w-20 h-20 relative rounded-lg overflow-hidden bg-muted">
+                  <div className="w-20 h-20 relative">
                     <Image
                       src={committee.logo_url || "/placeholder.svg?height=80&width=80"}
                       alt={`${committee.name} logo`}
                       fill
-                      className="object-contain"
+                      className="lc-logo"
                     />
                   </div>
                 </div>

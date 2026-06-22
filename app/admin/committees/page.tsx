@@ -116,12 +116,12 @@ export default function CommitteesAdminPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/40 bg-background/70">
+                    <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-border/40 bg-background">
                       <Image
                         src={committee.logo_url || "/placeholder.svg?height=48&width=48"}
                         alt={`${committee.name} logo`}
                         fill
-                        className="object-contain"
+                        className="lc-logo p-1"
                       />
                     </div>
                     <div>
