@@ -54,7 +54,7 @@ export function AboutSection() {
   const hasMissionOrVision = Boolean(missionStatement || visionStatement)
 
   return (
-    <section id="about" className="py-20 bg-secondary/30">
+    <section id="about" className="py-16 sm:py-20 lg:py-24 bg-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-10">
           <div className="space-y-5">

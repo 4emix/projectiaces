@@ -62,15 +62,17 @@ export async function DynamicHeroSection() {
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl">
-          <h1 className="text-display text-5xl font-bold text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+          <h1 className="text-display text-4xl font-bold text-foreground sm:text-5xl md:text-7xl lg:text-8xl">
             {content.title}
           </h1>
 
           {content.description && (
-            <p className="mt-7 max-w-2xl text-lg text-muted-foreground md:text-xl">{content.description}</p>
+            <p className="mt-5 max-w-2xl text-base text-muted-foreground sm:mt-7 sm:text-lg md:text-xl">
+              {content.description}
+            </p>
           )}
 
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:gap-4">
             {content.cta_text && content.cta_link && (
               <Button size="lg" asChild className="group h-12 px-7 text-base">
                 <Link href={content.cta_link}>
@@ -84,11 +86,11 @@ export async function DynamicHeroSection() {
             </Button>
           </div>
 
-          <dl className="mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-4">
+          <dl className="mt-10 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:mt-14 sm:grid-cols-4">
             {metrics.map((metric) => (
-              <div key={metric.label} className="bg-background px-5 py-5 transition-colors hover:bg-secondary">
-                <dt className="text-3xl font-bold text-primary tabular-nums md:text-4xl">{metric.value}</dt>
-                <dd className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">{metric.label}</dd>
+              <div key={metric.label} className="bg-background px-4 py-4 transition-colors hover:bg-secondary sm:px-5 sm:py-5">
+                <dt className="text-2xl font-bold text-primary tabular-nums sm:text-3xl md:text-4xl">{metric.value}</dt>
+                <dd className="mt-1 text-[11px] uppercase tracking-wide text-muted-foreground sm:text-xs">{metric.label}</dd>
               </div>
             ))}
           </dl>
@@ -96,10 +98,10 @@ export async function DynamicHeroSection() {
       </div>
 
       {/* Animated city marquee */}
-      <div className="marquee-paused group mt-16 w-full select-none border-y border-border py-4">
-        <div className="flex w-max animate-marquee items-center gap-8 whitespace-nowrap [--marquee-duration:40s]">
+      <div className="marquee-paused group mt-12 w-full select-none border-y border-border py-3 sm:mt-16 sm:py-4">
+        <div className="flex w-max animate-marquee items-center gap-6 whitespace-nowrap [--marquee-duration:40s] sm:gap-8">
           {[...cities, ...cities].map((city, index) => (
-            <span key={`${city}-${index}`} className="flex items-center gap-8 text-lg font-medium text-muted-foreground">
+            <span key={`${city}-${index}`} className="flex items-center gap-6 text-base font-medium text-muted-foreground sm:gap-8 sm:text-lg">
               {city}
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
             </span>

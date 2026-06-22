@@ -99,7 +99,7 @@ export default function LCMap() {
         zoom={3}
         minZoom={2}
         scrollWheelZoom={false}
-        style={{ height: "min(70vh, 560px)", width: "100%" }}
+        style={{ height: "clamp(360px, 58vh, 560px)", width: "100%" }}
         worldCopyJump
       >
         <TileLayer
