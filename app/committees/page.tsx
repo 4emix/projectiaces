@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ContentService } from "@/lib/content-service"
 import type { LocalCommittee } from "@/lib/types"
+import { LCMapEmbed } from "@/components/lc-map-embed"
 import { ExternalLink, MapPin } from "lucide-react"
 
 export const revalidate = 60
@@ -35,6 +36,11 @@ export default async function CommitteesPage() {
               Our local committees across Europe work tirelessly to promote civil engineering education, foster
               international collaboration, and support students and professionals in their regions.
             </p>
+          </div>
+
+          {/* Interactive map */}
+          <div className="mb-16">
+            <LCMapEmbed />
           </div>
 
           {/* Committees Grid */}
