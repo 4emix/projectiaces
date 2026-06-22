@@ -292,3 +292,26 @@
   background: color-mix(in oklch, white 80%, transparent) !important;
   font-size: 10px;
 }
+
+/* High-resolution displays (2K / 4K).
+   Scale the root font so all rem-based sizing — text, spacing and the
+   max-width containers — grows proportionally to fill large monitors.
+   Tailwind v4's rem breakpoints resolve against the initial 16px root,
+   so these overrides do not shift any responsive breakpoints. */
+@media (min-width: 2560px) {
+  :root {
+    font-size: 18px;
+  }
+  .leaflet-container {
+    height: 640px !important;
+  }
+}
+
+@media (min-width: 3840px) {
+  :root {
+    font-size: 22px;
+  }
+  .leaflet-container {
+    height: 760px !important;
+  }
+}
