@@ -23,6 +23,7 @@ export async function Footer() {
 
   return (
     <footer className="bg-primary text-primary-foreground">
+      <div className="h-1 bg-gradient-to-r from-accent via-primary-foreground/40 to-accent" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="space-y-4">

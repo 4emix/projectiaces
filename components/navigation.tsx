@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -9,9 +9,23 @@ import { Menu, X } from "lucide-react"
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -30,28 +44,31 @@ export function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <Link href="/#about" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/#about" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 About
               </Link>
-              <Link href="/#board" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/#board" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Board
               </Link>
-              <Link href="/committees" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/committees" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Committees
               </Link>
-              <Link href="/magazines" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/magazines" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Publications
               </Link>
-              <Link href="/events" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/events" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Events
               </Link>
-              <Link href="/#contact" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link href="/#contact" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Contact
               </Link>
             </div>
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <Button size="sm" asChild>
+              <Link href="/#contact">Join Us</Link>
+            </Button>
             <UserMenu />
           </div>
 

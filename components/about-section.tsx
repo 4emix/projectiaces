@@ -92,7 +92,7 @@ export function AboutSection() {
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {pillars.map((pillar) => (
-            <Card key={pillar.title} className="border-none bg-background/80 shadow-md shadow-secondary/20 ring-1 ring-secondary/30">
+            <Card key={pillar.title} className="card-hover border-none bg-background/80 shadow-md shadow-secondary/20 ring-1 ring-secondary/30">
               <CardContent className="p-6 space-y-3">
                 <h4 className="text-lg font-semibold text-foreground">{pillar.title}</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">{pillar.description}</p>
