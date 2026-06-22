@@ -21,6 +21,8 @@ export function ContactSection() {
     subject: "",
     message: "",
   })
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [feedback, setFeedback] = useState("")
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -42,10 +44,36 @@ export function ContactSection() {
     fetchSettings()
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
+    if (status === "sending") return
+
+    setStatus("sending")
+    setFeedback("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        setStatus("error")
+        setFeedback(data?.error ?? "Could not send your message. Please try again.")
+        return
+      }
+
+      setStatus("success")
+      setFeedback("Thanks for reaching out! We'll get back to you soon.")
+      setFormData({ name: "", email: "", subject: "", message: "" })
+    } catch (error) {
+      console.error("Failed to submit contact form:", error)
+      setStatus("error")
+      setFeedback("Network error. Please check your connection and try again.")
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -132,9 +160,19 @@ export function ContactSection() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Send Message
+                <Button type="submit" className="w-full" disabled={status === "sending"}>
+                  {status === "sending" ? "Sending..." : "Send Message"}
                 </Button>
+
+                {feedback && (
+                  <p
+                    role="status"
+                    aria-live="polite"
+                    className={`text-sm ${status === "error" ? "text-destructive" : "text-accent"}`}
+                  >
+                    {feedback}
+                  </p>
+                )}
               </form>
             </CardContent>
           </Card>
