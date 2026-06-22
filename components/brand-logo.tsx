@@ -2,26 +2,27 @@ import { cn } from "@/lib/utils"
 
 interface BrandLogoProps {
   className?: string
-  /** Hide the wordmark, show only the mark. */
-  iconOnly?: boolean
 }
 
-// Navy IACES lockup — bridge "A" mark (from the favicon) + wordmark, all in navy.
-export function BrandLogo({ className, iconOnly = false }: BrandLogoProps) {
+// Original IACES logo, recolored to navy via a CSS mask.
+// The mask uses the PNG's alpha channel, so the result is solid navy
+// regardless of the source logo's own colors (works for the white logo).
+export function BrandLogo({ className }: BrandLogoProps) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5 text-primary", className)}>
-      <svg viewBox="0 0 40 41" className="h-9 w-auto" fill="currentColor" aria-hidden="true">
-        <path d="M7.839 40.783 23.869 12.729 20 6 0 40.783h7.839Z" />
-        <path d="M16.053 40.783H40L27.99 19.894l-4.02 7.032 3.976 6.914H20.02l-3.967 6.943Z" />
-      </svg>
-      {!iconOnly && (
-        <span className="flex flex-col leading-none">
-          <span className="text-xl font-bold tracking-tight">IACES</span>
-          <span className="text-[8.5px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            Civil Engineering Students
-          </span>
-        </span>
-      )}
-    </span>
+    <span
+      role="img"
+      aria-label="IACES"
+      className={cn("block h-10 w-[108px] bg-primary", className)}
+      style={{
+        WebkitMaskImage: "url(/iaces-logo.png)",
+        maskImage: "url(/iaces-logo.png)",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskPosition: "left center",
+        maskPosition: "left center",
+      }}
+    />
   )
 }

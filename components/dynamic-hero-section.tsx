@@ -62,12 +62,7 @@ export async function DynamicHeroSection() {
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            International Association of Civil Engineering Students
-          </span>
-
-          <h1 className="mt-7 text-display text-5xl font-bold text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+          <h1 className="text-display text-5xl font-bold text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
             {content.title}
           </h1>
 

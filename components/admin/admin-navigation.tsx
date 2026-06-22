@@ -36,11 +36,8 @@ export function AdminNavigation() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <Link href="/admin" className="group flex items-center gap-3" aria-label="IACES Admin">
-            <BrandLogo iconOnly className="transition-transform duration-200 group-hover:scale-105" />
-            <span className="hidden flex-col text-sm font-semibold leading-tight sm:flex">
-              <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">IACES</span>
-              <span className="text-base text-foreground">Admin Hub</span>
-            </span>
+            <BrandLogo className="transition-transform duration-200 group-hover:scale-105" />
+            <span className="hidden text-base font-semibold leading-tight text-foreground sm:block">Admin Hub</span>
           </Link>
 
           {/* Desktop Navigation */}
