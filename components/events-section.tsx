@@ -34,7 +34,10 @@ function getEventImageSrc(event: EventItem): string {
 
 export async function EventsSection() {
   const events = (await getEvents()) ?? FALLBACK_EVENTS
-  const { upcoming, past } = splitEventsByTime(events.length > 0 ? events : FALLBACK_EVENTS)
+  const { upcoming: allUpcoming, past: allPast } = splitEventsByTime(events.length > 0 ? events : FALLBACK_EVENTS)
+  // Homepage shows only the next 3 upcoming and the 3 most recent past events.
+  const upcoming = allUpcoming.slice(0, 3)
+  const past = allPast.slice(0, 3)
 
   return (
     <section id="events" className="py-20">

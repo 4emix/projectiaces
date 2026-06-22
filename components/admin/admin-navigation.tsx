@@ -103,7 +103,7 @@ export function AdminNavigation() {
                     className={clsx(
                       "flex items-center space-x-3 rounded-xl px-3 py-2 text-sm font-medium transition",
                       isActive
-                        ? "bg-accent/10 text-accent-foreground"
+                        ? "bg-accent/10 text-accent"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                     onClick={() => setIsOpen(false)}

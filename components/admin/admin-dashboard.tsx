@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { LucideIcon } from "lucide-react"
-import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Plus, Globe } from "lucide-react"
+import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Plus, Globe, Mail, History } from "lucide-react"
 import Link from "next/link"
 
 import { ContentService } from "@/lib/content-service"
@@ -25,16 +25,13 @@ export async function AdminDashboard() {
     getEvents(),
   ])
 
-  const { upcoming } = splitEventsByTime(events)
+  const { upcoming, past } = splitEventsByTime(events)
+  const magazines = magazineArticles.filter((p) => p.publication_type !== "newsletter")
+  const newsletters = magazineArticles.filter((p) => p.publication_type === "newsletter")
 
   const formatNumber = (value: number) => value.toLocaleString()
 
   const stats: Stat[] = [
-    {
-      title: "Total Board Members",
-      value: formatNumber(boardMembers.length),
-      icon: Users,
-    },
     {
       title: "Local Committees",
       value: formatNumber(localCommittees.length),
@@ -42,42 +39,63 @@ export async function AdminDashboard() {
     },
     {
       title: "Magazine Issues",
-      value: formatNumber(magazineArticles.length),
+      value: formatNumber(magazines.length),
       icon: FileText,
+    },
+    {
+      title: "Newsletters",
+      value: formatNumber(newsletters.length),
+      icon: Mail,
     },
     {
       title: "Upcoming Events",
       value: formatNumber(upcoming.length),
       icon: Calendar,
     },
+    {
+      title: "Past Events",
+      value: formatNumber(past.length),
+      icon: History,
+    },
   ]
 
+  const timeAgo = (iso: string | null | undefined): string => {
+    if (!iso) return ""
+    const then = new Date(iso).getTime()
+    if (!Number.isFinite(then)) return ""
+    const seconds = Math.max(0, (Date.now() - then) / 1000)
+    if (seconds < 3600) return `${Math.max(1, Math.round(seconds / 60))}m ago`
+    if (seconds < 86400) return `${Math.round(seconds / 3600)}h ago`
+    const days = Math.round(seconds / 86400)
+    if (days < 30) return `${days}d ago`
+    return new Date(iso).toLocaleDateString()
+  }
+
   const recentActivity = [
-    {
-      action: "New local committee added",
-      item: "IACES Spain",
-      time: "1 hour ago",
+    ...events.map((e) => ({ action: "Event", item: e.title, type: "event", ts: e.updated_at ?? e.created_at })),
+    ...localCommittees.map((c) => ({
+      action: "Local committee",
+      item: c.name,
       type: "committee",
-    },
-    {
-      action: "New magazine issue published",
-      item: "Vol. 15, Issue 3",
-      time: "2 hours ago",
-      type: "magazine",
-    },
-    {
-      action: "Event registration opened",
-      item: "Global Civil Engineering Summit 2024",
-      time: "1 day ago",
-      type: "event",
-    },
-    {
-      action: "Board member profile updated",
-      item: "Dr. Sarah Johnson",
-      time: "3 days ago",
+      ts: c.updated_at ?? c.created_at,
+    })),
+    ...magazineArticles.map((m) => ({
+      action: m.publication_type === "newsletter" ? "Newsletter" : "Publication",
+      item: m.title,
+      type: m.publication_type === "newsletter" ? "newsletter" : "magazine",
+      ts: m.updated_at ?? m.created_at,
+    })),
+    ...boardMembers.map((b) => ({
+      action: "Board member",
+      item: b.name,
       type: "board",
-    },
+      ts: b.updated_at ?? b.created_at,
+    })),
   ]
+    .filter((entry) => Boolean(entry.ts))
+    .sort((a, b) => new Date(b.ts as string).getTime() - new Date(a.ts as string).getTime())
+    .slice(0, 5)
+    .map((entry) => ({ action: entry.action, item: entry.item, type: entry.type, time: timeAgo(entry.ts) }))
 
   const quickActions = [
     {
@@ -111,7 +129,7 @@ export async function AdminDashboard() {
       <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur">
         <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-foreground">Dashboard</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent">Dashboard</p>
             <h1 className="text-3xl font-bold text-foreground sm:text-4xl">Welcome back to the Admin Hub</h1>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Monitor high-level activity, jump into key management areas, and keep your IACES presence looking fresh.
@@ -127,7 +145,7 @@ export async function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
@@ -138,7 +156,7 @@ export async function AdminDashboard() {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground/80">{stat.title}</CardTitle>
                 <span className="rounded-full border border-border/60 bg-background/80 p-2">
-                  <Icon className="h-4 w-4 text-accent-foreground" />
+                  <Icon className="h-4 w-4 text-accent" />
                 </span>
               </CardHeader>
               <CardContent>
@@ -172,7 +190,7 @@ export async function AdminDashboard() {
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="flex items-center space-x-2 text-lg">
               <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
-                <Plus className="h-5 w-5 text-accent-foreground" />
+                <Plus className="h-5 w-5 text-accent" />
               </span>
               <span>Quick Actions</span>
             </CardTitle>
@@ -187,7 +205,7 @@ export async function AdminDashboard() {
                 >
                   <div className="flex items-center space-x-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10">
-                      <Icon className="h-5 w-5 text-accent-foreground" />
+                      <Icon className="h-5 w-5 text-accent" />
                     </div>
                     <div>
                       <h4 className="font-medium text-foreground">{action.title}</h4>
@@ -208,7 +226,7 @@ export async function AdminDashboard() {
           <CardHeader className="border-b border-border/40 pb-4">
             <CardTitle className="flex items-center space-x-2 text-lg">
               <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
-                <TrendingUp className="h-5 w-5 text-accent-foreground" />
+                <TrendingUp className="h-5 w-5 text-accent" />
               </span>
               <span>Recent Activity</span>
             </CardTitle>
@@ -291,7 +309,7 @@ export async function AdminDashboard() {
               <p className="text-sm text-muted-foreground">{section.description}</p>
               <Button variant="outline" size="sm" asChild className="w-full rounded-full">
                 <Link href={section.href}>
-                  <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-accent-foreground">
+                  <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent/10 text-accent">
                     {section.icon}
                   </span>
                   {section.cta}
