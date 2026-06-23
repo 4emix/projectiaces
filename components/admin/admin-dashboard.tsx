@@ -2,12 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { LucideIcon } from "lucide-react"
-import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Plus, Globe, Mail, History } from "lucide-react"
+import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Globe, Mail, History } from "lucide-react"
 import Link from "next/link"
 
 import { ContentService } from "@/lib/content-service"
 import { getEvents } from "@/lib/data/events"
 import { splitEventsByTime } from "@/lib/event-utils"
+import { AdminMessages } from "@/components/admin/admin-messages"
 
 type Stat = {
   title: string
@@ -97,33 +98,6 @@ export async function AdminDashboard() {
     .slice(0, 5)
     .map((entry) => ({ action: entry.action, item: entry.item, type: entry.type, time: timeAgo(entry.ts) }))
 
-  const quickActions = [
-    {
-      title: "Add Board Member",
-      description: "Add a new board member profile",
-      href: "/admin/board/new",
-      icon: Users,
-    },
-    {
-      title: "Add Local Committee",
-      description: "Add a new local committee",
-      href: "/admin/committees/new",
-      icon: Globe,
-    },
-    {
-      title: "Create Magazine Issue",
-      description: "Publish a new magazine issue",
-      href: "/admin/magazine/new",
-      icon: FileText,
-    },
-    {
-      title: "Schedule Event",
-      description: "Add a new upcoming event",
-      href: "/admin/events/new",
-      icon: Calendar,
-    },
-  ]
-
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:px-6 lg:px-8">
       <div className="overflow-hidden rounded-3xl border border-border/60 bg-card/80 shadow-sm backdrop-blur">
@@ -185,41 +159,8 @@ export async function AdminDashboard() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        {/* Quick Actions */}
-        <Card className="border-border/60 bg-card/80 shadow-sm">
-          <CardHeader className="border-b border-border/40 pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-accent/10">
-                <Plus className="h-5 w-5 text-accent" />
-              </span>
-              <span>Quick Actions</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 pt-4">
-            {quickActions.map((action, index) => {
-              const Icon = action.icon
-              return (
-                <div
-                  key={index}
-                  className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/60 p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/60 hover:shadow-md"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/10">
-                      <Icon className="h-5 w-5 text-accent" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-foreground">{action.title}</h4>
-                      <p className="text-sm text-muted-foreground">{action.description}</p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" className="rounded-full" asChild>
-                    <Link href={action.href}>Open</Link>
-                  </Button>
-                </div>
-              )
-            })}
-          </CardContent>
-        </Card>
+        {/* Contact Messages */}
+        <AdminMessages />
 
         {/* Recent Activity */}
         <Card className="border-border/60 bg-card/80 shadow-sm">
