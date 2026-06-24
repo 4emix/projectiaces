@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { LucideIcon } from "lucide-react"
-import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Globe, Mail, History, Megaphone } from "lucide-react"
+import { Users, FileText, Calendar, TrendingUp, Eye, Edit, Globe, Mail, History, Megaphone, Activity } from "lucide-react"
 import Link from "next/link"
 
 import { ContentService } from "@/lib/content-service"
@@ -196,6 +196,13 @@ export async function AdminDashboard() {
       {/* Content Management Overview */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[
+          {
+            title: "Website Traffic",
+            description: "See page views, visitors, top pages and devices.",
+            href: "/admin/analytics",
+            icon: <Activity className="h-4 w-4" />,
+            cta: "View Analytics",
+          },
           {
             title: "Announcements",
             description: "Manage homepage announcements and the announcements page.",

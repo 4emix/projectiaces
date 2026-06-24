@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 
 import { SupabaseListener } from "@/components/auth/supabase-listener"
+import { AnalyticsTracker } from "@/components/analytics-tracker"
 import { ContentService } from "@/lib/content-service"
 
 import "./globals.css"
@@ -43,6 +44,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <SupabaseListener />
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
       </body>
