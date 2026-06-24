@@ -19,7 +19,7 @@ export async function AnnouncementSection() {
 
   return (
     <section id="announcements" className="py-16 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-foreground sm:text-3xl">
             <Megaphone className="h-6 w-6 text-accent" />

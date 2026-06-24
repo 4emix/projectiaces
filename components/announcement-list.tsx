@@ -18,13 +18,10 @@ function pad(n: number) {
   return String(n).padStart(2, "0")
 }
 
-function formatDateTime(iso: string) {
+function formatDate(iso: string) {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return ""
-  return {
-    date: `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`,
-    time: `${pad(d.getHours())}:${pad(d.getMinutes())}`,
-  }
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`
 }
 
 function isExternal(url: string) {
@@ -42,7 +39,7 @@ export function AnnouncementList({ announcements }: { announcements: Announcemen
     <>
       <ul className="divide-y divide-border border-y border-border">
         {announcements.map((a) => {
-          const dt = formatDateTime(a.announced_at)
+          const date = formatDate(a.announced_at)
           return (
             <li key={a.id}>
               <button
@@ -54,11 +51,7 @@ export function AnnouncementList({ announcements }: { announcements: Announcemen
                   <span className="block font-medium text-foreground transition-colors group-hover:text-accent">
                     {a.title}
                   </span>
-                  {dt && (
-                    <span className="mt-1 block text-xs text-muted-foreground">
-                      {dt.date} <span className="text-accent">{dt.time}</span>
-                    </span>
-                  )}
+                  {date && <span className="mt-1 block text-xs text-muted-foreground">{date}</span>}
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-accent" />
               </button>
@@ -73,12 +66,7 @@ export function AnnouncementList({ announcements }: { announcements: Announcemen
             <>
               <DialogHeader>
                 <DialogTitle className="text-xl">{selected.title}</DialogTitle>
-                <DialogDescription>
-                  {(() => {
-                    const dt = formatDateTime(selected.announced_at)
-                    return dt ? `${dt.date} ${dt.time}` : ""
-                  })()}
-                </DialogDescription>
+                <DialogDescription>{formatDate(selected.announced_at)}</DialogDescription>
               </DialogHeader>
 
               {selected.body && (
