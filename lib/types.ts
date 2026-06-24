@@ -92,6 +92,19 @@ export interface LocalCommittee {
   updated_at: string
 }
 
+export interface Announcement {
+  id: string
+  title: string
+  body: string | null
+  link_url: string | null
+  link_label: string | null
+  announced_at: string
+  is_active: boolean
+  created_at: string | null
+  updated_at: string | null
+  user_id: string | null
+}
+
 export interface EventItem {
   id: string
   title: string

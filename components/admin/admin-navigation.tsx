@@ -7,7 +7,7 @@ import clsx from "clsx"
 import { Button } from "@/components/ui/button"
 import { BrandLogo } from "@/components/brand-logo"
 import { UserMenu } from "@/components/auth/user-menu"
-import { Menu, X, Home, Settings, Users, FileText, Calendar, BarChart3 } from "lucide-react"
+import { Menu, X, Home, Settings, Users, FileText, Calendar, BarChart3, Megaphone } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 export function AdminNavigation() {
@@ -23,6 +23,7 @@ export function AdminNavigation() {
 
   const navItems = [
     { href: "/admin", icon: BarChart3, label: "Dashboard" },
+    { href: "/admin/announcements", icon: Megaphone, label: "Announcements" },
     { href: "/admin/hero", icon: Home, label: "Hero" },
     { href: "/admin/about", icon: FileText, label: "About" },
     { href: "/admin/board", icon: Users, label: "Board" },

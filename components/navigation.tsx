@@ -52,6 +52,9 @@ export function Navigation() {
               <Link href="/events" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Events
               </Link>
+              <Link href="/announcements" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
+                Announcements
+              </Link>
               <Link href="/#contact" className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors">
                 Contact
               </Link>
@@ -111,6 +114,13 @@ export function Navigation() {
                 onClick={() => setIsOpen(false)}
               >
                 Events
+              </Link>
+              <Link
+                href="/announcements"
+                className="block px-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Announcements
               </Link>
               <Link
                 href="/#contact"

@@ -8,7 +8,15 @@ import {
   fallbackMagazineArticles,
   fallbackSiteSettings,
 } from "@/lib/fallback-data"
-import type { HeroContent, AboutContent, BoardMember, MagazineArticle, ContactInfo, LocalCommittee } from "@/lib/types"
+import type {
+  HeroContent,
+  AboutContent,
+  BoardMember,
+  MagazineArticle,
+  ContactInfo,
+  LocalCommittee,
+  Announcement,
+} from "@/lib/types"
 import { toGoogleDriveDirectUrl, toGoogleDriveImageUrl } from "@/lib/utils"
 
 export class ContentService {
@@ -551,6 +559,101 @@ export class ContentService {
 
     if (error) {
       console.error("Error deleting local committee:", error)
+      return false
+    }
+    return true
+  }
+
+  // Announcements
+  static async getActiveAnnouncements(limit?: number): Promise<Announcement[]> {
+    const supabase = await this.getSupabase()
+    if (!supabase) {
+      return []
+    }
+    let query = supabase
+      .from("announcements")
+      .select("*")
+      .eq("is_active", true)
+      .order("announced_at", { ascending: false })
+
+    if (typeof limit === "number") {
+      query = query.limit(limit)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error("Error fetching announcements:", error)
+      return []
+    }
+    return (data as Announcement[]) ?? []
+  }
+
+  static async getAllAnnouncements(): Promise<Announcement[]> {
+    const supabase = await this.getSupabase()
+    if (!supabase) {
+      return []
+    }
+    const { data, error } = await supabase
+      .from("announcements")
+      .select("*")
+      .order("announced_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching all announcements:", error)
+      return []
+    }
+    return (data as Announcement[]) ?? []
+  }
+
+  static async createAnnouncement(
+    announcement: Omit<Announcement, "id" | "created_at" | "updated_at" | "user_id">,
+  ): Promise<Announcement | null> {
+    const supabase = await this.getSupabaseForMutations()
+    if (!supabase) {
+      console.warn("Supabase unavailable - unable to create announcement.")
+      return null
+    }
+    const { data, error } = await supabase.from("announcements").insert(announcement).select().single()
+
+    if (error) {
+      console.error("Error creating announcement:", error)
+      return null
+    }
+    return data as Announcement
+  }
+
+  static async updateAnnouncement(id: string, updates: Partial<Announcement>): Promise<Announcement | null> {
+    const supabase = await this.getSupabaseForMutations()
+    if (!supabase) {
+      console.warn("Supabase unavailable - unable to update announcement.")
+      return null
+    }
+    const { id: _ignored, ...rest } = updates
+    const { data, error } = await supabase
+      .from("announcements")
+      .update({ ...rest, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error("Error updating announcement:", error)
+      return null
+    }
+    return data as Announcement
+  }
+
+  static async deleteAnnouncement(id: string): Promise<boolean> {
+    const supabase = await this.getSupabaseForMutations()
+    if (!supabase) {
+      console.warn("Supabase unavailable - unable to delete announcement.")
+      return false
+    }
+    const { error } = await supabase.from("announcements").delete().eq("id", id)
+
+    if (error) {
+      console.error("Error deleting announcement:", error)
       return false
     }
     return true

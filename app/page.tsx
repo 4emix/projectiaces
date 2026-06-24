@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/navigation"
 import { DynamicHeroSection } from "@/components/dynamic-hero-section"
+import { AnnouncementSection } from "@/components/announcement-section"
 import { AboutSection } from "@/components/about-section"
 import { BoardSection } from "@/components/board-section"
 import { NetworkSection } from "@/components/network-section"
@@ -14,6 +15,9 @@ export default function HomePage() {
     <main className="min-h-screen">
       <Navigation />
       <DynamicHeroSection />
+      <Reveal>
+        <AnnouncementSection />
+      </Reveal>
       <Reveal>
         <AboutSection />
       </Reveal>

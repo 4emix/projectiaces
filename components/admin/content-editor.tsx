@@ -203,6 +203,22 @@ export function TextAreaField({
   )
 }
 
+interface DateTimeFieldProps {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  description?: string
+  required?: boolean
+}
+
+export function DateTimeField({ label, value, onChange, description, required }: DateTimeFieldProps) {
+  return (
+    <FormField label={label} description={description}>
+      <Input type="datetime-local" value={value} onChange={(e) => onChange(e.target.value)} required={required} />
+    </FormField>
+  )
+}
+
 interface SwitchFieldProps {
   label: string
   checked: boolean
