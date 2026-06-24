@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { clientIp, rateLimit } from "@/lib/rate-limit"
 
 export const dynamic = "force-dynamic"
 
@@ -8,6 +9,11 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export async function POST(request: NextRequest) {
   try {
+    // At most 5 messages per IP per 10 minutes.
+    if (!rateLimit(`contact:${clientIp(request)}`, 5, 600_000)) {
+      return NextResponse.json({ error: "Too many messages. Please try again later." }, { status: 429 })
+    }
+
     const body = await request.json().catch(() => null)
 
     const name = String(body?.name ?? "").trim()

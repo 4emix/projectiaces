@@ -20,6 +20,15 @@ const toGeoName = (country: string) => ALIAS[country.trim().toLowerCase()] ?? co
 const NAVY = "#1e3a8a"
 const NAVY_HOVER = "#2747a6"
 
+// Escape user/DB-supplied text before injecting into Leaflet popup HTML.
+const esc = (value: unknown) =>
+  String(value ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string,
+  )
+
+// Only allow http(s) links in popups (blocks javascript: and other schemes).
+const safeUrl = (value: string) => (/^https?:\/\//i.test(value.trim()) ? value.trim() : "")
+
 export default function LCMap() {
   const [committees, setCommittees] = useState<LocalCommittee[]>([])
   const [geo, setGeo] = useState<any>(null)
@@ -73,17 +82,16 @@ export default function LCMap() {
     if (!items) return
 
     const rows = items
-      .map(
-        (i) =>
-          `<li style="margin:2px 0">${i.name}${
-            i.website_url && i.website_url.trim()
-              ? ` — <a href="${i.website_url}" target="_blank" rel="noopener noreferrer" style="color:${NAVY};text-decoration:underline">visit</a>`
-              : ""
-          }</li>`,
-      )
+      .map((i) => {
+        const url = safeUrl(i.website_url ?? "")
+        const link = url
+          ? ` — <a href="${esc(url)}" target="_blank" rel="noopener noreferrer" style="color:${NAVY};text-decoration:underline">visit</a>`
+          : ""
+        return `<li style="margin:2px 0">${esc(i.name)}${link}</li>`
+      })
       .join("")
     layer.bindPopup(
-      `<div><p style="font-weight:600;color:${NAVY};margin:0 0 4px">${name} · ${items.length}</p>` +
+      `<div><p style="font-weight:600;color:${NAVY};margin:0 0 4px">${esc(name)} · ${items.length}</p>` +
         `<ul style="margin:0;padding-left:16px;font-size:12px;color:#475569">${rows}</ul></div>`,
     )
     layer.on({

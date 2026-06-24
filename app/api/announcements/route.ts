@@ -6,6 +6,22 @@ export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 })
+    }
+
+    // Admin-only: returns all announcements (including inactive). Public pages
+    // read active announcements directly via ContentService, not this route.
+    const supabase = await createClient()
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     const announcements = await ContentService.getAllAnnouncements()
     return NextResponse.json(announcements)
   } catch (error) {
