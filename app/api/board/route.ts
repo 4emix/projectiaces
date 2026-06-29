@@ -7,7 +7,12 @@ export const dynamic = "force-dynamic"
 export async function GET() {
   try {
     const boardMembers = await ContentService.getAllBoardMembers()
-    return NextResponse.json(boardMembers)
+    // Public endpoint: only active members, never the seed/placeholder
+    // fallback people, and strip private fields (email, linkedin, owner id).
+    const publicMembers = boardMembers
+      .filter((m) => m.is_active && !String(m.id ?? "").startsWith("fallback-"))
+      .map(({ email, linkedin_url, user_id, ...rest }) => rest)
+    return NextResponse.json(publicMembers)
   } catch (error) {
     console.error("Error in GET /api/board:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })

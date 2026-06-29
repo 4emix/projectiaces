@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
 
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { isAdminEmail } from "@/lib/admin"
 
 export const dynamic = "force-dynamic"
 
@@ -14,7 +15,7 @@ async function requireUser() {
     error,
   } = await supabase.auth.getUser()
 
-  if (error || !user) {
+  if (error || !user || !isAdminEmail(user.email)) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
   }
   return { supabase }

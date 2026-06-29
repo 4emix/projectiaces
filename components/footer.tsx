@@ -61,17 +61,17 @@ export async function Footer() {
           <div className="space-y-4">
             <h4 className="font-medium">Resources</h4>
             <div className="space-y-2 text-sm">
-              <Link href="#" className="block text-primary-foreground/80 hover:text-primary-foreground">
-                Membership
+              <Link href="/committees" className="block text-primary-foreground/80 hover:text-primary-foreground">
+                Committees
               </Link>
-              <Link href="#" className="block text-primary-foreground/80 hover:text-primary-foreground">
+              <Link href="/magazines" className="block text-primary-foreground/80 hover:text-primary-foreground">
                 Publications
               </Link>
-              <Link href="#" className="block text-primary-foreground/80 hover:text-primary-foreground">
-                Research
+              <Link href="/announcements" className="block text-primary-foreground/80 hover:text-primary-foreground">
+                Announcements
               </Link>
-              <Link href="#" className="block text-primary-foreground/80 hover:text-primary-foreground">
-                Careers
+              <Link href="#contact" className="block text-primary-foreground/80 hover:text-primary-foreground">
+                Join Us
               </Link>
             </div>
           </div>
@@ -85,10 +85,16 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-sm text-primary-foreground/80">
-          <p>
-            &copy; 2025 {siteTitle}. All rights reserved.
-          </p>
+        <div className="border-t border-primary-foreground/20 mt-8 pt-8 flex flex-col items-center justify-between gap-3 text-sm text-primary-foreground/80 sm:flex-row">
+          <p>&copy; 2026 {siteTitle}. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-primary-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-primary-foreground">
+              Terms of Use
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

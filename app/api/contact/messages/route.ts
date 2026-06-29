@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server"
+import { isAdminEmail } from "@/lib/admin"
 
 export const dynamic = "force-dynamic"
 
@@ -16,7 +17,7 @@ export async function GET() {
       error: authError,
     } = await supabase.auth.getUser()
 
-    if (authError || !user) {
+    if (authError || !user || !isAdminEmail(user.email)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
