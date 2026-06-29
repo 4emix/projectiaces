@@ -15,7 +15,11 @@ async function requireUser() {
     error,
   } = await supabase.auth.getUser()
 
-  if (error || !user || !isAdminEmail(user.email)) {
+  if (error || !user) {
+    return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
+  }
+  const { data: isAdmin } = await supabase.rpc("is_app_admin")
+  if (!isAdmin && !isAdminEmail(user.email)) {
     return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
   }
   return { supabase }

@@ -17,7 +17,11 @@ export async function GET() {
       error: authError,
     } = await supabase.auth.getUser()
 
-    if (authError || !user || !isAdminEmail(user.email)) {
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    const { data: isAdmin } = await supabase.rpc("is_app_admin")
+    if (!isAdmin && !isAdminEmail(user.email)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
