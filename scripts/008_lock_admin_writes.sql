@@ -8,10 +8,13 @@
 -- write/PII access. This script restricts those operations to admin emails.
 --
 -- BEFORE RUNNING:
---   1) In Supabase Dashboard -> Authentication -> Providers/Sign In:
---      DISABLE public email sign-ups (or set to invite-only).
---   2) Insert YOUR admin email(s) below, then run the whole script.
+--   1) Supabase Dashboard -> Authentication -> Sign In / Providers:
+--      DISABLE public email sign-ups (or set invite-only).
+--   2) Put YOUR admin email(s) in the INSERT below, then run the WHOLE script.
 --   3) Also set ADMIN_EMAILS (same addresses, comma-separated) in the app env.
+--
+-- Safe to re-run. Public SELECT of active content is preserved, so the public
+-- site keeps working; only writes + PII reads become admin-only.
 -- =============================================================================
 
 create table if not exists app_admins (
@@ -24,7 +27,6 @@ insert into app_admins (email) values
 on conflict (email) do nothing;
 
 alter table app_admins enable row level security;
--- Only admins may read the admin list (no public access).
 drop policy if exists "admins read app_admins" on app_admins;
 create policy "admins read app_admins" on app_admins
   for select to authenticated
@@ -37,14 +39,32 @@ create or replace function is_app_admin() returns boolean language sql stable as
   );
 $$;
 
--- Content tables: replace permissive write policies with admin-only ones.
+-- ---------------------------------------------------------------------------
+-- Content tables: drop ALL existing non-SELECT (write) policies, then add a
+-- single admin-only write policy. Public SELECT policies are left untouched.
+-- ---------------------------------------------------------------------------
 do $$
-declare t text;
-begin
-  foreach t in array array[
+declare
+  r record;
+  content_tables text[] := array[
     'events','local_committees','announcements','board_members',
     'magazine_articles','hero_content','about_content','contact_info','site_settings'
-  ] loop
+  ];
+  t text;
+begin
+  -- remove every existing write/ALL policy on these tables
+  for r in
+    select policyname, tablename
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = any(content_tables)
+      and cmd <> 'SELECT'
+  loop
+    execute format('drop policy if exists %I on %I;', r.policyname, r.tablename);
+  end loop;
+
+  -- add one admin-only write policy per table
+  foreach t in array content_tables loop
     execute format('alter table %I enable row level security;', t);
     execute format('drop policy if exists %I on %I;', 'admin manage '||t, t);
     execute format(
@@ -54,17 +74,26 @@ begin
   end loop;
 end $$;
 
--- contact_messages: public may INSERT (the form), only admins may read/update/delete.
-drop policy if exists "Authenticated can read messages" on contact_messages;
+-- ---------------------------------------------------------------------------
+-- contact_messages: keep public INSERT (the contact form); admins-only read/edit.
+-- ---------------------------------------------------------------------------
+drop policy if exists "Authenticated can read messages"   on contact_messages;
 drop policy if exists "Authenticated can update messages" on contact_messages;
 drop policy if exists "Authenticated can delete messages" on contact_messages;
+drop policy if exists "admins read messages"   on contact_messages;
+drop policy if exists "admins update messages" on contact_messages;
+drop policy if exists "admins delete messages" on contact_messages;
 create policy "admins read messages"   on contact_messages for select to authenticated using (is_app_admin());
 create policy "admins update messages" on contact_messages for update to authenticated using (is_app_admin()) with check (is_app_admin());
 create policy "admins delete messages" on contact_messages for delete to authenticated using (is_app_admin());
 
--- page_views: public may INSERT (tracking), only admins may read.
+-- ---------------------------------------------------------------------------
+-- page_views: keep public INSERT (tracking); admins-only read.
+-- ---------------------------------------------------------------------------
 drop policy if exists "Authenticated can read page views" on page_views;
+drop policy if exists "admins read page views" on page_views;
 create policy "admins read page views" on page_views for select to authenticated using (is_app_admin());
 
--- NOTE: public SELECT policies on content tables (active rows) are intentionally
--- kept so the website keeps working for visitors.
+-- Quick check (optional): list remaining write policies — should be admin-only.
+-- select tablename, policyname, cmd from pg_policies
+-- where schemaname='public' and cmd <> 'SELECT' order by tablename;
