@@ -26,18 +26,21 @@ insert into app_admins (email) values
   ('generalboard@iaces.info')
 on conflict (email) do nothing;
 
-alter table app_admins enable row level security;
-drop policy if exists "admins read app_admins" on app_admins;
-create policy "admins read app_admins" on app_admins
-  for select to authenticated
-  using (lower((auth.jwt() ->> 'email')) in (select lower(email) from app_admins));
-
-create or replace function is_app_admin() returns boolean language sql stable as $$
+-- SECURITY DEFINER so it reads app_admins bypassing RLS — otherwise the
+-- app_admins read policy (which references app_admins) recurses infinitely.
+create or replace function is_app_admin() returns boolean
+  language sql stable security definer set search_path = public, pg_temp as $$
   select exists (
     select 1 from app_admins a
     where lower(a.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
   );
 $$;
+
+alter table app_admins enable row level security;
+drop policy if exists "admins read app_admins" on app_admins;
+create policy "admins read app_admins" on app_admins
+  for select to authenticated
+  using (is_app_admin());  -- non-recursive: uses the definer function
 
 -- ---------------------------------------------------------------------------
 -- Content tables: drop ALL existing non-SELECT (write) policies, then add a
