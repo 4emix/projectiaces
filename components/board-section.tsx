@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Instagram } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import type { BoardMember } from "@/lib/types"
 
 export function BoardSection() {
@@ -98,15 +98,11 @@ export function BoardSection() {
                 <p className="text-accent font-medium mb-3">{member.position}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{member.bio}</p>
                 {member.instagram_url && (
-                  <a
-                    href={member.instagram_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center justify-center text-muted-foreground hover:text-accent transition-colors"
-                    aria-label={`${member.name} on Instagram`}
-                  >
-                    <Instagram className="h-5 w-5" />
-                  </a>
+                  <Button variant="outline" size="sm" className="mt-3 bg-transparent" asChild>
+                    <a href={member.instagram_url} target="_blank" rel="noopener noreferrer">
+                      Contact
+                    </a>
+                  </Button>
                 )}
               </CardContent>
             </Card>
