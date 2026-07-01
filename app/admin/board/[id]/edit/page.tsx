@@ -16,6 +16,7 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
     image_url: "",
     email: "",
     linkedin_url: "",
+    instagram_url: "",
     display_order: 0,
     is_active: true,
   })
@@ -219,6 +220,14 @@ export default function EditBoardMemberPage({ params }: { params: { id: string }
             onChange={(value) => setBoardMemberData((prev) => ({ ...prev, linkedin_url: value }))}
             placeholder="https://linkedin.com/in/sarahjohnson"
             description="LinkedIn profile URL"
+          />
+
+          <TextField
+            label="Instagram URL"
+            value={boardMemberData.instagram_url || ""}
+            onChange={(value) => setBoardMemberData((prev) => ({ ...prev, instagram_url: value }))}
+            placeholder="https://instagram.com/sarahjohnson"
+            description="Instagram profile URL — shown publicly on the board card"
           />
 
           <div className="grid md:grid-cols-2 gap-6">

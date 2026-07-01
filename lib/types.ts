@@ -33,6 +33,7 @@ export interface BoardMember {
   image_url: string | null
   email: string | null
   linkedin_url: string | null
+  instagram_url: string | null
   display_order: number
   is_active: boolean
   created_at: string

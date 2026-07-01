@@ -25,6 +25,7 @@ export default function NewBoardMemberPage() {
     bio: "",
     image_url: "",
     linkedin_url: "",
+    instagram_url: "",
     email: "",
     display_order: 0,
   })
@@ -170,6 +171,16 @@ export default function NewBoardMemberPage() {
                   placeholder="https://linkedin.com/in/johnsmith"
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="instagram_url">Instagram URL</Label>
+              <Input
+                id="instagram_url"
+                value={formData.instagram_url}
+                onChange={(e) => handleChange("instagram_url", e.target.value)}
+                placeholder="https://instagram.com/johnsmith"
+              />
             </div>
 
             <Button type="submit" disabled={loading} className="w-full">
